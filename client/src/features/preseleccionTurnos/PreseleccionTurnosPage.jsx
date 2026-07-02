@@ -11,15 +11,19 @@ const PreseleccionTurnosPage = () => {
     } = useTurnoCart()
 
     const handleConfirmarTurnos = async () => {
-        try{
-            await confirmarTurnos()
-            alert("¡Turnos confirmados con éxito! Procesando su reserva...")
-        }catch(e){
-            alert("No se pudieron reservar todos los turnos")
+        console.log("Entró al botón");
+
+        try {
+            await confirmarTurnos();
+
+            console.log("Terminó confirmarTurnos");
+
+            alert("¡Turnos confirmados con éxito!");
+        } catch (e) {
+            console.error(e);
+            alert("No se pudieron reservar todos los turnos");
         }
-        
-        
-    }
+    };
 
     return (
         <div className="preseleccion-container">
@@ -58,7 +62,7 @@ const PreseleccionTurnosPage = () => {
                             </button>
 
                             <button
-                                onClick={limpiarTurnos}
+                                onClick={(limpiarTurnos)}
                                 className="btn-vaciar"
                             >
                                 Vaciar selección

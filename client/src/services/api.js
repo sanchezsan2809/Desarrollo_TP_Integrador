@@ -28,13 +28,18 @@ export const turnosService = {
         }
     },
 
-    reservar: async (idTurno) => {
+    reservar: async (idTurno, pacienteId) => {
         try {
-            const response = await api.patch(`/turnos/${idTurno}/reservar`)
+            const response = await api.patch(
+                `/turnos/${idTurno}/reservar`,
+                {
+                    pacienteId
+                }
+            );
 
-            return response.data
+            return response.data;
         } catch (error) {
-            throw error.response?.data || new Error('No se pudo reservar el turno')
+            throw error.response?.data || new Error("No se pudo reservar el turno.");
         }
     }
 };

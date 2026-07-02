@@ -89,12 +89,20 @@ export function TurnoCartProvider({
     }
 
     const confirmarTurnos = async () => {
+        console.log("ENTRÓ A CONFIRMAR TURNOS")
+        console.log(state.turnos)
+
         try {
+            const PACIENTE_ID = "654321abcdef1234567890ab";
+
             await Promise.all(
                 state.turnos.map(turno =>
-                    turnosService.reservar(turno.id || turno._id)
+                    turnosService.reservar(
+                        turno.id || turno._id,
+                        PACIENTE_ID
+                    )
                 )
-            )
+            );
 
             dispatch({ type: "CLEAR_TURNOS" })
 
