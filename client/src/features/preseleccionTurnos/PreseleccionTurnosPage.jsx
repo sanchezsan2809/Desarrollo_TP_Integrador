@@ -1,6 +1,7 @@
 import './PreseleccionTurnos.css'
 import { useTurnoCart } from '../../hooks/useTurnoCart.js'
 import TurnoPreseleccionadoCard from "./TurnoPreseleccionadoCard.jsx"
+import { Link, useNavigate } from 'react-router-dom'
 
 const PreseleccionTurnosPage = () => {
     const {
@@ -10,15 +11,20 @@ const PreseleccionTurnosPage = () => {
         limpiarTurnos
     } = useTurnoCart()
 
-    const handleConfirmarTurnos = async () => {
+    const navigate = useNavigate()
+    const HandleConfirmarTurnos = async () => {
         console.log("Entró al botón");
 
         try {
-            await confirmarTurnos();
+            const reservas = await confirmarTurnos();
 
             console.log("Terminó confirmarTurnos");
 
-            alert("¡Turnos confirmados con éxito!");
+            navigate("/reserva-exitosa",{
+                state: {
+                    reservas
+                }
+            })
         } catch (e) {
             console.error(e);
             alert("No se pudieron reservar todos los turnos");
@@ -55,7 +61,7 @@ const PreseleccionTurnosPage = () => {
                         <div className="resumen-acciones">
                             {/* 🔥 El botón estrella que faltaba */}
                             <button 
-                                onClick={handleConfirmarTurnos}
+                                onClick={HandleConfirmarTurnos}
                                 className="btn-confirmar"
                             >
                                 Confirmar Turnos

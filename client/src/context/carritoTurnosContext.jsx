@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react"
 import { turnosService } from "../services/api";
+import { SEED_IDS } from "../mocks/seedIds";
 
 export const TurnoCartContext = createContext()
 
@@ -93,9 +94,9 @@ export function TurnoCartProvider({
         console.log(state.turnos)
 
         try {
-            const PACIENTE_ID = "654321abcdef1234567890ab";
+            const PACIENTE_ID = SEED_IDS.PACIENTE;
 
-            await Promise.all(
+            const reservas = await Promise.all(
                 state.turnos.map(turno =>
                     turnosService.reservar(
                         turno.id || turno._id,
@@ -106,7 +107,7 @@ export function TurnoCartProvider({
 
             dispatch({ type: "CLEAR_TURNOS" })
 
-            return true
+            return reservas
         } catch (error) {
             console.error(error)
             throw error

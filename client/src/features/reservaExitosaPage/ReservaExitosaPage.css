@@ -1,0 +1,72 @@
+.reserva-exitosa-container{
+
+    max-width:900px;
+    margin:auto;
+    padding:2rem;
+
+    font-family:"Sour Gummy", sans-serif;
+
+}
+
+.reservas-list{
+
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+
+    margin:2rem 0;
+
+}
+
+.reserva-card{
+
+    background:white;
+
+    border:2px solid #418B18;
+
+    border-radius:12px;
+
+    padding:1.5rem;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.acciones{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:1rem;
+
+}
+
+.btn-principal,
+.btn-secundario{
+
+    text-decoration:none;
+
+    padding:.8rem 1.5rem;
+
+    border-radius:8px;
+
+    font-weight:bold;
+
+}
+
+.btn-principal{
+
+    background:#418B18;
+
+    color:white;
+
+}
+
+.btn-secundario{
+
+    border:2px solid #418B18;
+
+    color:#418B18;
+
+}

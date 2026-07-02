@@ -8,6 +8,8 @@ function parseFecha(fechaStr) {
     return new Date(`${anio}-${mes}-${dia}`);
 }
 const TablaHistorialDeTurnos = () =>{
+    //TODO Quitar columna estado
+
     const [filtroServicio,setFiltroServicio] = useState("")
     const [ordenAsc, setOrdenAsc] = useState(true)
     const handleOrdenFecha = () => {

@@ -41,7 +41,36 @@ export const turnosService = {
         } catch (error) {
             throw error.response?.data || new Error("No se pudo reservar el turno.");
         }
+    },
+
+    obtenerTurnosPaciente: async(
+        pacienteId,
+        filtros = {},
+        pagina = 1,
+        limite = 10
+    ) => {
+
+        try {
+
+            const response = await api.get(
+                `/paciente/${pacienteId}/turnos`,
+                {
+                    params: {
+                        ...filtros,
+                        page: pagina, 
+                        limit: limite
+                    }
+                }
+            )
+            
+            return response.data
+        }catch(error){
+            throw error.response?.data || new Error(
+                "No se pudieron recuperar los turnos"
+            )
+        }
     }
+
 };
 
 export default api;

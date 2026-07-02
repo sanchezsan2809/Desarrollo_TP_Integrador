@@ -19,6 +19,8 @@ import MedicosPage from './features/medicosPage/MedicosPage.jsx';
 import ComoFuncionaPage from './features/comoFuncionaPage/ComoFuncionaPage.jsx';
 import MedicoHomePage from './features/medicoHomePage/medicoHomePage.jsx';
 import MedicoDashboard from './features/medicoHomePage/medicoHomePage.jsx';
+import ReservaExitosaPage from './features/reservaExitosaPage/ReservaExitosaPage.jsx';
+import MisTurnosPage from './features/misTurnosPage/MisTurnosPage.jsx';
 function App() {
   return (
 
@@ -38,6 +40,8 @@ function App() {
           <Route path="/medicos" element={<MedicosPage />} />
           <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
+          <Route path="/reserva-exitosa" element={<ReservaExitosaPage />}/>
+          <Route path="/mis-turnos" element={<MisTurnosPage />}/>
           <Route path="/como-funciona" element={<ComoFuncionaPage />} />
           <Route path="/notificaciones" element={<NotificacionesPage/>}/>
           <Route path="/registrar" element={<Registrar />} />
