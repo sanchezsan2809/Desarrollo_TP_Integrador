@@ -26,6 +26,16 @@ export const turnosService = {
         } catch (error) {
             throw error.response?.data || new Error('Error en el sistema de turnos.');
         }
+    },
+
+    reservar: async (idTurno) => {
+        try {
+            const response = await api.patch(`/turnos/${idTurno}/reservar`)
+
+            return response.data
+        } catch (error) {
+            throw error.response?.data || new Error('No se pudo reservar el turno')
+        }
     }
 };
 

@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react"
+import { turnosService } from "../services/api";
 
 export const TurnoCartContext = createContext()
 
@@ -40,8 +41,9 @@ function turnoCartReducer(state, action) {
             return {
                 ...state,
                 turnos: state.turnos.filter(
-                    turno =>
-                        turno.id !== action.payload
+                    turno => (turno.id || turno._id) !== action.payload
+
+                    //TODO Transformar a id todos los _id en el backend
                 )
             }
 
@@ -86,6 +88,24 @@ export function TurnoCartProvider({
         })
     }
 
+    const confirmarTurnos = async () => {
+        try {
+            await Promise.all(
+                state.turnos.map(turno =>
+                    turnosService.reservar(turno.id || turno._id)
+                )
+            )
+
+            dispatch({ type: "CLEAR_TURNOS" })
+
+            return true
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+
     return (
         <TurnoCartContext.Provider
             value={{
@@ -94,7 +114,8 @@ export function TurnoCartProvider({
                     state.turnos.length,
                 agregarTurno,
                 eliminarTurno,
-                limpiarTurnos
+                limpiarTurnos,
+                confirmarTurnos
             }}
         >
             {children}

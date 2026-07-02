@@ -5,13 +5,20 @@ import TurnoPreseleccionadoCard from "./TurnoPreseleccionadoCard.jsx"
 const PreseleccionTurnosPage = () => {
     const {
         turnos,
+        confirmarTurnos,
         cantidadTurnos,
         limpiarTurnos
     } = useTurnoCart()
 
-    const handleConfirmarTurnos = () => {
-        // 🚀 Espacio reservado para la lógica de confirmación final
-        alert("¡Turnos confirmados con éxito! Procesando su reserva...")
+    const handleConfirmarTurnos = async () => {
+        try{
+            await confirmarTurnos()
+            alert("¡Turnos confirmados con éxito! Procesando su reserva...")
+        }catch(e){
+            alert("No se pudieron reservar todos los turnos")
+        }
+        
+        
     }
 
     return (
