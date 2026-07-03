@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import "./MisTurnosPage.css"
 import { turnosService } from "../../services/api";
-import TurnoReservadoCard from "../../components/turnoReservadoCard/TurnoReservadoCard"
+import TurnoReservadoCard from "./TurnoReservadoCard"
+import MisTurnosTabs from "./MisTurnosTabs";
+import { SEED_IDS } from "../../mocks/seedIds";
 
 const MisTurnosPage = () => {
 
     const [turnos, setTurnos] = useState([])
     const [loading, setLoading] = useState(true)
+    const [estadoSeleccionado, setEstadoSeleccionado] = useState("RESERVADO")
 
     useEffect(() => {
         async function cargarTurnos(){
@@ -15,13 +18,19 @@ const MisTurnosPage = () => {
 
                 const respuesta = 
                     await turnosService.obtenerTurnosPaciente(
-                        "654321abcdef1234567890ab",
+                        SEED_IDS.PACIENTE,
                         {
-                            estado: "RESERVADO"
-                        }
+                            estado: estadoSeleccionado
+                        },
                     )
 
+                console.log("Respuesta:", respuesta);
+                console.log("¿Es array?", Array.isArray(respuesta));
+                console.log("respuesta.data:", respuesta.data);
+                console.log("¿data es array?", Array.isArray(respuesta.data));
+
                     setTurnos(respuesta.data)
+
             }catch(e){
                 console.error(e)
             }finally{
@@ -31,42 +40,75 @@ const MisTurnosPage = () => {
         }
         cargarTurnos()
     }
-, [])
+, [estadoSeleccionado])
+
+    useEffect(() => {
+        console.log("Turnos: ", turnos)
+    }, [turnos])
 
 return(
+    
     <main className="mis-turnos-page">
-        <h1>Mis Turnos</h1>
-
-        <p className="subtitulo">
-            Consultá todos tus turnos reservados
-        </p>
-
-        {
-            loading && <p>Cargando...</p>
-        }
-
-        {!loading && turnos.length === 0 && 
-            
-            <p>No tenés turnos reservados</p>
+        <header className="mis-turnos-header">
+            <h1>Mis Turnos</h1>
         
-        }
+            <p>
+                Acá podés ver todos tus turnos reservados y próximos
+            </p>
 
-        <section className="turnos-container">
+        </header>
+        
+        
+        <section className="mis-turnos-content">
 
-            {turnos.map(turno => (
+            <div className="panel-turnos">
 
-                <TurnoReservadoCard
-                    key={turno.id}
-                    turno={turno}
+                <MisTurnosTabs
+                    estadoSeleccionado={estadoSeleccionado}
+                    onSeleccionar={setEstadoSeleccionado}
                 />
-            ))}
+
+                {loading ? (
+                    <p>Cargando...</p>
+                ) : turnos.length === 0 ? (
+                    <p>No tenés turnos.</p>
+                ) : (
+                    <div className="turnos-container">
+                        {turnos.map(turno => (
+                            <TurnoReservadoCard
+                                key={turno.id}
+                                turno={turno}
+                            />
+                        ))}
+                    </div>
+                )}
+
+            </div>
 
         </section>
 
+        <section className="panel-calendario">
+
+            <h2>Calendario</h2>
+
+            <p>Próximamente vas a poder visualizar tus turnos en un calendario mensual.</p>
+
+        </section>
+
+        <section className="mis-turnos-info">
+
+            {/* Información útil */}
+
+        </section>
+        
     </main>
 
 )
 
 }
+
+/*
+
+*/
 
 export default MisTurnosPage

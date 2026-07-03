@@ -49,7 +49,7 @@ const ReservaExitosaPage = () => {
 
                 <Link
                     className="btn-principal"
-                    to="/historial-turnos"
+                    to="/mis-turnos"
                 >
                     Ver mis turnos 
                 </Link>

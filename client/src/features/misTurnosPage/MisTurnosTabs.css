@@ -1,0 +1,47 @@
+.mis-turnos-tabs{
+
+    display:flex;
+
+    gap:2rem;
+
+    margin-top:1rem;
+
+    margin-bottom:2rem;
+
+}
+
+.tab{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    font-family:"Sour Gummy",sans-serif;
+
+    font-size:1.1rem;
+
+    padding-bottom:.5rem;
+
+    color:#666;
+
+    transition:.2s;
+
+}
+
+.tab:hover{
+
+    color:#418B18;
+
+}
+
+.tab.active{
+
+    color:#418B18;
+
+    border-bottom:3px solid #418B18;
+
+    font-weight:bold;
+
+}

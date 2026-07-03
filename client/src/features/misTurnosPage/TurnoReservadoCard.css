@@ -1,0 +1,248 @@
+.turno-reservado-card{
+
+    display:flex;
+
+    gap:2rem;
+
+    padding:2rem;
+
+    border:2px solid #418B18;
+
+    border-radius:16px;
+
+    background:white;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+    transition:.2s;
+
+    min-height:240px;
+
+    width: 100%;
+    box-sizing: border-box;
+
+}
+
+.turnos-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mis-turnos-content{
+    display:grid;
+
+    grid-template-columns:minmax(700px, 1fr) 420px;
+
+    gap:2rem;
+
+    align-items:start;
+}
+
+.panel-turnos{
+    width:100%;
+}
+
+.turno-reservado-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+
+
+
+
+/* ===== FECHA ===== */
+
+.fecha-card{
+
+    width:85px;
+    min-width:85px;
+
+
+    border:2px solid #d7e9d0;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    text-align:center;
+
+    background:#fafdf8;
+
+}
+
+.mes{
+
+    background:#418B18;
+
+    color:white;
+
+    padding:.6rem;
+
+    font-weight:bold;
+
+    font-size:1.6rem;
+
+    font-size:1.3rem;
+
+}
+
+.dia{
+
+     font-size:2.7rem;
+
+}
+
+
+.dia-semana{
+
+    font-size:1.3rem;
+
+}
+
+.hora{
+
+    font-size:1rem;
+
+}
+
+
+
+
+
+
+/* ===== INFO ===== */
+
+.turno-info{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.card-header{
+
+    font-size:2.3rem;
+
+    display:grid;
+
+    grid-template-columns:1fr auto;
+
+    gap:1rem;
+
+    align-items:start;
+
+    margin-bottom:1.2rem;
+
+}
+
+.card-header h2{
+
+    font-size:2.4rem;
+
+    line-height:1.1;
+
+    margin:0;
+
+}
+
+.estado{
+
+    background:#418B18;
+
+    color:white;
+
+    padding:.45rem .9rem;
+
+    font-size:.8rem;
+
+    border-radius:18px;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    white-space:nowrap;
+
+    padding:.55rem 1rem;
+
+}
+
+
+
+.detalle{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+    margin-bottom:.7rem;
+
+}
+
+.icono{
+
+    color:#418B18;
+
+    font-size:1.5rem;
+
+    min-width:24px;
+
+}
+
+.detalle p{
+
+    margin:0;
+
+    font-size:1.35rem;
+
+}
+
+.detalle strong{
+
+    color:#222;
+
+}
+
+
+
+
+
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:900px){
+
+    .turno-reservado-card{
+
+        align-items:center;
+
+        flex-direction:column;
+
+    }
+
+    .fecha-card{
+
+        width:100%;
+
+    }
+
+    .card-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+}
