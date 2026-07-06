@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { Paciente } from "../../domain/paciente.js";
-import { UsuarioModel } from "./usuarioSchema.js";
 
 const pacienteSchema = new mongoose.Schema({
     usuario: {

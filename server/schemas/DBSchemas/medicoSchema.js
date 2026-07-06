@@ -3,7 +3,6 @@ import { Medico } from "../../domain/medico.js"
 import { especialidadEmbeddedSchema } from "./especialidadEmbeddedSchema.js";
 import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
 import { disponibilidadHorariaEmbeddedSchema } from "./disponibilidadHorariaEmbeddedSchema.js";
-import { Usuario } from "../../domain/usuario.js";
 
 const medicoSchema = new mongoose.Schema({
     usuario:{

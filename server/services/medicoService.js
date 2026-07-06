@@ -12,7 +12,7 @@ export class MedicoService {
     }
 
     async consultarTurnos({ idMedico, idPaciente, page, limit}) {
-        const { turnos, total, totalPages } = await this.turnoRepository.findall({
+        const { turnos, total, totalPages } = await this.turnoRepository.findAll({
             filtros: { idMedico, idPaciente },
             page, 
             limit

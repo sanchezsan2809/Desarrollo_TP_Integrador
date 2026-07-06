@@ -28,7 +28,7 @@ const controller = new MedicoController(service)
 router.get(
     "/:id/turnos",
     validate(consultarTurnosSchema),
-    asyncHandler()
+    asyncHandler(controller.consultarTurnos)
 )
 
 router.get(

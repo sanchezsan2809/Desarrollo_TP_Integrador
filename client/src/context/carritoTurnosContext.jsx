@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react"
 import { turnosService } from "../services/api";
-import { SEED_IDS } from "../mocks/seedIds";
+import { SEED_IDS } from "../mockdata/seedIDs";
 
 export const TurnoCartContext = createContext()
 

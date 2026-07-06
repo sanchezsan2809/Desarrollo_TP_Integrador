@@ -9,28 +9,70 @@ import { useNavigate } from 'react-router-dom'
 import AgendaCalendar from '../../components/calendar/AgendaCalendar'
 import { useEffect } from 'react'
 import { turnosService } from '../../services/api'
+import { useState } from 'react'
+import { SEED_IDS } from '../../mockdata/seedIDs'
 
 export default function MedicoDashboard() {
 
     const navigate = useNavigate()
 
     const [turnos, setTurnos] = useState([])
+    const [estado, setEstado] = useState("RESERVADO")
     const [loading, setLoading] = useState(true)
+    const [turnoSeleccionado, setTurnoSeleccionado] = useState(null)
 
     useEffect(() => {
-        async function cargarTurnos(){
-
-            try {
-
-                const respuesta = 
-                    await turnosService.ob
+            async function cargarTurnos(){
+    
+                try {
+    
+                    const respuesta = 
+                        await turnosService.obtenerTurnosReservadosMedico(
+                            SEED_IDS.MEDICO_MILK
+                        )
+    
+                    console.log("Respuesta:", respuesta);
+                    console.log("¿Es array?", Array.isArray(respuesta));
+                    console.log("respuesta.data:", respuesta.data);
+                    console.log("¿data es array?", Array.isArray(respuesta.data));
+    
+                        setTurnos(respuesta.data)
+    
+                }catch(e){
+                    console.error(e)
+                }finally{
+                    
+                    setLoading(false)
+                }
             }
+            cargarTurnos()
         }
-    })
+    , [estado])
 
-    const eventos =
-        convertirTurnosAgenda(turnos)
+    const eventosCalendario = turnos.map(turno => {
 
+        const inicio = new Date(turno.fechaHora);
+
+        const fin = new Date(
+            inicio.getTime() +
+            turno.servicio.duracionTurnoEnMins * 60000
+        );
+
+        return {
+
+            ...turno,
+
+            title: turno.servicio.nombre,
+
+            start: inicio,
+
+            end: fin
+
+        };
+
+    });
+
+    
     return (
         
             <Paper
@@ -60,7 +102,11 @@ export default function MedicoDashboard() {
                     ...
                 </Stack>
 
-                <AgendaCalendar />
+                <AgendaCalendar
+                    turnos={eventosCalendario}
+
+                    onSelectTurno={setTurnoSeleccionado}    
+                />
             </Paper>
         
     )

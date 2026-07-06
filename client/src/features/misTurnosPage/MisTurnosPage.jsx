@@ -3,7 +3,7 @@ import "./MisTurnosPage.css"
 import { turnosService } from "../../services/api";
 import TurnoReservadoCard from "./TurnoReservadoCard"
 import MisTurnosTabs from "./MisTurnosTabs";
-import { SEED_IDS } from "../../mocks/seedIds";
+import { SEED_IDS } from "../../mockdata/seedIDs";
 import AgendaCalendar from "../../components/calendar/AgendaCalendar";
 
 const MisTurnosPage = () => {

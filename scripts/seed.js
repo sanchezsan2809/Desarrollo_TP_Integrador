@@ -7,6 +7,7 @@ import { TurnoModel } from "../server/schemas/DBSchemas/turnoSchema.js";
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js";
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js";
 import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js";
+import { SEED_IDS } from './seedIDs.js';
 
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
 const DB_NAME = process.env.MONGODB_NAME || 'GD1C2026';
@@ -40,7 +41,9 @@ async function ejecutarSeed() {
         const sedeNorte = await SedeModel.create({ nombre: "Sede Norte", direccion: "Av Cabildo 4500" });
 
         // MÉDICO 1: Gregory House
+        const MEDICO_HOUSE_ID = SEED_IDS.MEDICO_HOUSE
         const medicoHouse = await MedicoModel.create({
+            _id: MEDICO_HOUSE_ID,
             usuario: usuarioHouse._id,
             matricula: "MN-45821",
             nombre: "Gregory House",
@@ -57,7 +60,9 @@ async function ejecutarSeed() {
         });
 
         // MÉDICO 2: Sapo Milk
+        const MEDICO_MILK_ID = SEED_IDS.MEDICO_MILK
         const medicoMilk = await MedicoModel.create({
+            _id: MEDICO_MILK_ID,
             usuario: usuarioMilk._id,
             matricula: "MN-99999",
             nombre: "Sapo Milk",
@@ -88,7 +93,7 @@ async function ejecutarSeed() {
 
         const obraSocial = await ObraSocialModel.create({ nombre: "OSDE", planes: [plan._id] });
 
-        const PACIENTE_ID = "654321abcdef1234567890ab";
+        const PACIENTE_ID = SEED_IDS.PACIENTE;
         await PacienteModel.create({
             _id: new mongoose.Types.ObjectId(PACIENTE_ID),
             usuario: usuarioPaciente._id,
@@ -168,5 +173,6 @@ async function ejecutarSeed() {
         await mongoose.disconnect();
     }
 }
+
 
 ejecutarSeed();
