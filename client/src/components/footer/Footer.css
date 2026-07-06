@@ -2,9 +2,29 @@
 
 
 footer{
-    width: 100%;
-    background-color:  rgba(65,139,24,1.000);
+width: 100%;
+    background-color: rgba(65,139,24,1.000);
     color: white;
-    text-align: center;
     font-family: "Sour Gummy", sans-serif;
+    
+    display: flex;
+    flex-direction: row; 
+    
+
+    justify-content: center; 
+    
+
+    align-items: center; 
+    
+
+    gap: 3rem; 
+    
+
+    padding: 0.5rem 0; 
+    
+    box-sizing: border-box;
+}
+
+footer p {
+    margin: 0;
 }

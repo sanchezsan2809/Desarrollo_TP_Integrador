@@ -113,7 +113,7 @@ async function ejecutarSeed() {
         // TURNO 2: House - Clínica Médica
         await TurnoModel.create({
             medico: medicoHouse._id,
-            fechaHora: new Date("2026-07-15T11:30:00"),
+            fechaHora: new Date("2026-07-15T13:30:00"),
             sede: sedeCentral._id,
             servicio: { tipo: "ESPECIALIDAD", especialidad: { id: "1234", nombre: "Clínica Médica", duracionTurnoEnMins: 30, costo: 15000 } },
             estado: "DISPONIBLE", costo: 15000,

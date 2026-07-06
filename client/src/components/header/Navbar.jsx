@@ -10,12 +10,14 @@ import LoginCard from '../loginCard/LoginCard.jsx'
 import SearchIcon from '@mui/icons-material/Search';
 import HistoryIcon from '@mui/icons-material/History';
 import Searchbar from './Searchbar.jsx'
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 
 const Navbar = () => {
 
-
+    const [menuOpen, setMenuOpen] = useState(false);
     const [mostrarLogin, setMostrarLogin] = useState(false)
 
     const {
@@ -66,7 +68,7 @@ const Navbar = () => {
                             <SearchIcon className="action-icon" />
 
                             <span className="action-text">
-                                Buscar Turnos
+                                Reservar Turnos
                             </span>
 
                         </Link>
@@ -94,11 +96,10 @@ const Navbar = () => {
                     <CarritoIndicador />
                     
                     <Searchbar />
-
+                    <div class="notificaciones-container">
+                        <NotificacionesIndicador />
+                    </div>
                     <div className="user-container">
-
-                    
-
                         {
                             isAuthenticated
                             ?(
@@ -132,14 +133,52 @@ const Navbar = () => {
                             />
                         )}
 
+                    </div>           
+                </div>
+                <button
+                    className="hamburger-button"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
+                    {
+                        menuOpen
+                            ? <CloseIcon />
+                            : <MenuIcon />
+                    }
+                </button>
+            </nav>
+            {
+                menuOpen && (
+
+                    <div className="mobile-menu">
+
+                        <Link to="/servicios">
+                            Servicios
+                        </Link>
+
+                        <Link to="/medicos">
+                            Médicos
+                        </Link>
+
+                        <Link to="/como-funciona">
+                            Cómo funciona
+                        </Link>
+
+                        <Link to="/busquedaDeTurnos">
+                            Reservar Turnos
+                        </Link>
+
+                        <Link to="/historialDeTurnos">
+                            Historial
+                        </Link>
+
+                        <CarritoIndicador />
+
+                        <NotificacionesIndicador />
+
                     </div>
 
-                    <div class="notificaciones-container">
-                        <NotificacionesIndicador />
-                    </div>
-                    
-                </div>
-            </nav>
+                )
+            }
         </header>
     );
 };

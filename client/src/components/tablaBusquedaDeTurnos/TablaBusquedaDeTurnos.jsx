@@ -4,19 +4,23 @@ import { useTurnoCart } from "../../hooks/useTurnoCart.js"
 import { useState, useEffect } from "react"
 import { turnosService } from '../../services/api.js' 
 import BusquedaItem from '../busquedaItem/BusquedaItem.jsx';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const TablaBusquedaDeTurnos = () => {
     const { agregarTurno } = useTurnoCart()
     const location = useLocation();
 
     const servicioInicial = location.state?.servicioSeleccionado || "";
-
-    const [filtroServicio, setFiltroServicio] = useState(servicioInicial);
-
     const medicoInicial = location.state?.medicoSeleccionado || "";
 
+    const [inputServicio, setInputServicio] = useState(servicioInicial);
+    const [inputMedico, setInputMedico] = useState(medicoInicial);
+    const [inputSede, setInputSede] = useState("");
+    const [inputFechaDesde, setInputFechaDesde] = useState("");
+    const [inputFechaHasta, setInputFechaHasta] = useState("");
+    
+    const [filtroServicio, setFiltroServicio] = useState(servicioInicial);
     const [filtroMedico, setFiltroMedico] = useState(medicoInicial);
-
     const [filtroSede, setFiltroSede] = useState("")
     const [fechaDesde, setFechaDesde] = useState("")
     const [fechaHasta, setFechaHasta] = useState("")
@@ -25,7 +29,16 @@ const TablaBusquedaDeTurnos = () => {
     const [paginacion, setPaginacion] = useState({ page: 1, totalPages: 1 });
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
-
+    
+    const handleBuscar = () => {
+ 
+        setFiltroServicio(inputServicio);
+        setFiltroMedico(inputMedico);
+        setFiltroSede(inputSede);
+        setFechaDesde(inputFechaDesde);
+        setFechaHasta(inputFechaHasta);
+        setPaginacion(prev => ({ ...prev, page: 1 }));
+    };
     useEffect(() => {
         const fetchTurnos = async () => {
             setCargando(true);
@@ -65,48 +78,56 @@ const TablaBusquedaDeTurnos = () => {
                     <input
                         type="text"
                         placeholder="Buscar por servicio..."
-                        value={filtroServicio}
-                        onChange={(e) => setFiltroServicio(e.target.value)}
+                        value={inputServicio}
+                        onChange={(e) => setInputServicio(e.target.value)}
                     />
                     <input
                         type="text"
                         placeholder="Buscar por médico..."
-                        value={filtroMedico}
-                        onChange={(e) => setFiltroMedico(e.target.value)}
+                        value={inputMedico}
+                        onChange={(e) => setInputMedico(e.target.value)}
                     />
                     <input
                         type="text"
                         placeholder="Elegir Sede"
-                        value={filtroSede}
-                        onChange={(e) => setFiltroSede(e.target.value)}
+                        value={inputSede}
+                        onChange={(e) => setInputSede(e.target.value)}
                     />
-                   <input
-                        type={fechaDesde ? "date" : "text"}
-                        placeholder="Fecha Desde"
-                        value={fechaDesde}
-                        onClick={(e) => {
-                            e.currentTarget.type = "date";
-                            if (e.currentTarget.showPicker) e.currentTarget.showPicker();
-                        }}
-                        onBlur={(e) => {
-                            if (!fechaDesde) e.currentTarget.type = "text";
-                        }}
-                        onChange={(e) => setFechaDesde(e.target.value)}
-                    />
-
+                 
                     <input
-                        type={fechaHasta ? "date" : "text"}
-                        placeholder="Fecha Hasta"
-                        value={fechaHasta}
+                        type={inputFechaDesde ? "date" : "text"}
+                        placeholder="Fecha Desde 📅"
+                        value={inputFechaDesde}
                         onClick={(e) => {
                             e.currentTarget.type = "date";
                             if (e.currentTarget.showPicker) e.currentTarget.showPicker();
                         }}
                         onBlur={(e) => {
-                            if (!fechaHasta) e.currentTarget.type = "text";
+                            if (!inputFechaDesde) e.currentTarget.type = "text";
                         }}
-                        onChange={(e) => setFechaHasta(e.target.value)}
+                        onChange={(e) => setInputFechaDesde(e.target.value)}
+                    />     
+                    <input
+                        type={inputFechaHasta ? "date" : "text"}
+                        placeholder="Fecha Hasta 📅" //ta feo este calendario, luego encontrar uno mejor
+                        value={inputFechaHasta}
+                        onClick={(e) => {
+                            e.currentTarget.type = "date";
+                            if (e.currentTarget.showPicker) e.currentTarget.showPicker();
+                        }}
+                        onBlur={(e) => {
+                            if (!inputFechaHasta) e.currentTarget.type = "text";
+                        }}
+                        onChange={(e) => setInputFechaHasta(e.target.value)}
                     />
+    
+                     <button
+                        type="button"
+                        className="botonBuscarTurnos"
+                        onClick={handleBuscar}
+                    >
+                        Buscar
+                    </button>
                 </div>
             </div>
 

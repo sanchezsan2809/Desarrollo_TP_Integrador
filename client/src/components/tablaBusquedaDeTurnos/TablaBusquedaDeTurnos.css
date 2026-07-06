@@ -99,3 +99,24 @@
         text-align: left;
     }
 }
+.botonBuscarTurnos {
+    color: white;
+    background-color: rgba(65,139,24,1.000);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+.botonBuscarTurnos:hover {
+    background-color: rgba(52,111,19,1.000);
+    transform: translateY(-2px);
+}
+
+.botonBuscarTurnos:active {
+    transform: translateY(0);
+}
