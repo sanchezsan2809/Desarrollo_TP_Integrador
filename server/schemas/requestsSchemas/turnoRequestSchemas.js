@@ -63,7 +63,6 @@ export const modificarFechaTurnoSchema = z.object({
 })
 
 
-//TODO Buscar por nombre de médico, especialidad, práctica y sede
 export const busquedaDeTurnosDisponiblesSchema = z.object({
     body: z.object({
         idPaciente: z.string(),

@@ -101,14 +101,11 @@ export class TurnoService{
 
     async obtenerHistorial({ filtros, page, limit}){
         
-        const { turnos, total } = await this.turnoRepository.findAll({
+        const { turnos, total, totalPages } = await this.turnoRepository.findAll({
             filtros: filtros, 
             page: page, 
             limit: limit
         })
-
-
-        const totalPages = Math.ceil(total / limit)
 
         return {
             turnos,

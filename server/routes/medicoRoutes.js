@@ -8,7 +8,8 @@ import { consultarDisponibilidadSchema,
         modificarDisponibilidadSchema,
         agregarServicioSchema,
         eliminarServicioSchema,
-        modificarServicioSchema
+        modificarServicioSchema,
+        consultarTurnosSchema
 } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 import { TurnoService } from '../services/turnoService.js'
 import { asyncHandler } from '../middlewares/asyncHandler.js'
@@ -20,9 +21,15 @@ const turnoRepository = new MongoTurnoRepository()
 
 const turnoService = new TurnoService(turnoRepository)
 
-const service = new MedicoService(medicoRepository, turnoService)
+const service = new MedicoService(medicoRepository, turnoRepository, turnoService)
 const controller = new MedicoController(service)
 
+
+router.get(
+    "/:id/turnos",
+    validate(consultarTurnosSchema),
+    asyncHandler()
+)
 
 router.get(
     "/:id/disponibilidades",

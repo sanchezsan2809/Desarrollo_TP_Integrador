@@ -2,10 +2,28 @@ import {
     BadRequestError
 } from "../errors/appError.js";
 
+//TODO Implementar EntityFinder para centralizar búsquedas en repositorios
+
 export class MedicoService {
-    constructor(medicoRepository, turnoService) {
+    constructor(medicoRepository, turnoRepository, turnoService) {
         this.medicoRepository = medicoRepository
+        this.turnoRepository = turnoRepository
         this.turnoService = turnoService 
+    }
+
+    async consultarTurnos({ idMedico, idPaciente, page, limit}) {
+        const { turnos, total, totalPages } = await this.turnoRepository.findall({
+            filtros: { idMedico, idPaciente },
+            page, 
+            limit
+        })
+
+        return {
+            turnos,
+            totalPages,
+            total
+        }
+
     }
 
     async consultarDisponibilidades({ idMedico, tipoServicio, idServicio }) {

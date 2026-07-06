@@ -2,11 +2,37 @@ import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilid
 import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
 import { Practica } from "../domain/practica.js";
 import { Especialidad } from "../domain/especialidad.js";
+import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
 
 export class MedicoController {
   
   constructor(medicoService) {
     this.medicoService = medicoService;
+  }
+
+  consultarTurnos = async (req, res) => {
+    const { idMedico } = req.params
+    const { idPaciente, 
+      page, 
+      limit } = req.query
+
+      const { turnos, totalPages, total } = await this.medicoService.consultarTurnos({
+        idMedico,
+        idPaciente,
+        page, 
+        limit
+      })
+
+      res.status(200).json({
+        data: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
+        paginacion: {
+          page,
+          limit, 
+          total: total,
+          totalPages: totalPages
+        }
+      })
+
   }
 
   consultarDisponibilidades = async (req, res) => {

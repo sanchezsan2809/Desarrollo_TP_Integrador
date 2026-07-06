@@ -4,7 +4,7 @@ import {
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 export class MongoTurnoRepository {
 
@@ -62,6 +62,12 @@ export class MongoTurnoRepository {
 
         const query = {}
 
+        if(filtros.medicoId) {
+            query.medico = new Mongoose.Types.ObjectId(filtros.medicoId)
+        }
+
+    
+
         if (filtros.pacienteId) {
             //query.paciente = filtros.pacienteId
             query.paciente = new mongoose.Types.ObjectId(filtros.pacienteId)
@@ -88,9 +94,12 @@ export class MongoTurnoRepository {
         const turnos = await Promise.all(documents.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
 
         const total = await this.model.countDocuments(query)
+
+        const totalPages = Math.ceil(total / limit)
         return {
             turnos,
-            total
+            total,
+            totalPages
         }
     }
 

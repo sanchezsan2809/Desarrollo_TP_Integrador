@@ -1,5 +1,18 @@
 import { z } from "zod";
 
+export const consultarTurnosSchema = z.object({
+    params: z.object({
+        id: z.string()
+    }),
+    query: z.object({
+        idPaciente: z.string().optional(),
+        
+        page: z.coerce.number().int().min(1).default(1),
+
+        limit: z.coerce.number().int().min(1).max(100).default(10)
+    })
+})
+
 export const consultarDisponibilidadSchema = z.object({
     params: z.object({
         id: z.string()

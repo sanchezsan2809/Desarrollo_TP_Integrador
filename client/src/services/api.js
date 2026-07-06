@@ -71,9 +71,24 @@ export const turnosService = {
         }
     },
 
-    obtenerTurnosMedico: async(
-        
-    )
+    obtenerTurnosReservadosMedico: async(
+        medicoId,
+        filtros = {},
+        pagina = 1,
+        limite = 10
+    ) =>{
+        try{
+            const response = await api.get(
+                `/medico/${medicoId}/turnos`
+            )
+
+            return response.data
+        }catch(error){
+            throw error.response?.data || new Error(
+                "No se pudieron recuperar los turnos del médico"
+            )
+        }
+    }
 
 };
 
