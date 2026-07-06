@@ -69,7 +69,11 @@ export const turnosService = {
                 "No se pudieron recuperar los turnos"
             )
         }
-    }
+    },
+
+    obtenerTurnosMedico: async(
+        
+    )
 
 };
 

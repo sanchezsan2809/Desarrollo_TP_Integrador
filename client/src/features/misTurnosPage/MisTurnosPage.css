@@ -40,15 +40,23 @@
 
     margin-top:3rem;
 
+    padding:2rem;
+
     border:2px solid #418B18;
 
     border-radius:16px;
 
-    padding:2rem;
-
-    background:#fff;
+    background:white;
 
     box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+}
+
+.panel-calendario h2{
+
+    color:#418B18;
+
+    margin-bottom:1.5rem;
 
 }
 

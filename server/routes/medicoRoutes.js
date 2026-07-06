@@ -55,4 +55,6 @@ router.put(
     asyncHandler(controller.modificarServicio)
 )
 
+//TODO Implementar búsqueda de turnos reservados del médico
+
 export default router

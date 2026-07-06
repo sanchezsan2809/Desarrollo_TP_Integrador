@@ -4,6 +4,7 @@ import { turnosService } from "../../services/api";
 import TurnoReservadoCard from "./TurnoReservadoCard"
 import MisTurnosTabs from "./MisTurnosTabs";
 import { SEED_IDS } from "../../mocks/seedIds";
+import AgendaCalendar from "../../components/calendar/AgendaCalendar";
 
 const MisTurnosPage = () => {
 
@@ -45,6 +46,25 @@ const MisTurnosPage = () => {
     useEffect(() => {
         console.log("Turnos: ", turnos)
     }, [turnos])
+
+    const eventosCalendario = turnos.map(turno => {
+        const inicio = new Date(turno.fechaHora)
+
+        const fin = new Date(
+            inicio.getTime() + turno.servicio.duracionTurnoEnMins * 60000
+        )
+
+        return {
+            ...turno,
+
+            title: turno.servicio.nombre,
+
+            start: inicio, 
+
+            end: fin
+        }
+    })
+
 
 return(
     
@@ -91,7 +111,13 @@ return(
 
             <h2>Calendario</h2>
 
-            <p>Próximamente vas a poder visualizar tus turnos en un calendario mensual.</p>
+            <AgendaCalendar
+                turnos={eventosCalendario}
+
+                onSelectTurno={(turno)=>{
+                    console.log(turno)
+                }}
+            />
 
         </section>
 

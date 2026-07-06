@@ -6,11 +6,30 @@ import {
 } from '@mui/material'
 
 import { useNavigate } from 'react-router-dom'
-import AgendaCalendar from '../../components/medico/AgendaCalendar'
+import AgendaCalendar from '../../components/calendar/AgendaCalendar'
+import { useEffect } from 'react'
+import { turnosService } from '../../services/api'
 
 export default function MedicoDashboard() {
 
     const navigate = useNavigate()
+
+    const [turnos, setTurnos] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function cargarTurnos(){
+
+            try {
+
+                const respuesta = 
+                    await turnosService.ob
+            }
+        }
+    })
+
+    const eventos =
+        convertirTurnosAgenda(turnos)
 
     return (
         
