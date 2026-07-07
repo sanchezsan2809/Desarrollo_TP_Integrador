@@ -87,4 +87,13 @@ export class MedicoService {
         const medicoGuardado = await this.medicoRepository.save(medico)
         return medicoGuardado
     }
+
+    async obtenerServicios({ idMedico }) {
+        const medico = await this.medicoRepository.findById(idMedico);
+
+        return {
+            especialidad: medico.especialidades || [],
+            practica: medico.practicas || []
+        };
+    }
 }

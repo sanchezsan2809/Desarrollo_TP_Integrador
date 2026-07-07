@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const consultarTurnosSchema = z.object({
     params: z.object({
-        id: z.string()
+        idMedico: z.string()
     }),
     query: z.object({
         idPaciente: z.string().optional(),
@@ -15,7 +15,7 @@ export const consultarTurnosSchema = z.object({
 
 export const consultarDisponibilidadSchema = z.object({
     params: z.object({
-        id: z.string()
+        idMedico: z.string()
     }),
     body: z.object({
         tipo: z.enum(["practica", "especialidad"]),
@@ -25,7 +25,7 @@ export const consultarDisponibilidadSchema = z.object({
 
 export const modificarDisponibilidadSchema = z.object({
     params: z.object({
-        id: z.string()
+        idMedico: z.string()
     }),
     body: z.array(
         z.object({
@@ -76,4 +76,10 @@ export const modificarServicioSchema = z.object({
         idServicio: z.string()
     }),
     body: z.union([especialidadSchema, practicaSchema])
+})
+
+export const obtenerServiciosSchema = z.object({
+    params: z.object({
+        idMedico: z.string()
+    })
 })

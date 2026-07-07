@@ -1,15 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./GestionServicios.css";
-import {serviciosIniciales} from "../../mockdata/Servicios"
+import { medicoService } from "../../services/api";
+import { SEED_IDS } from "../../mockdata/seedIDs";
 
 const formVacio = { tipo: "", nombre: "", duracionTurnoEnMins: "", costo: "" };
 
 export default function GestionServicios() {
-  const [listas, setListas] = useState(serviciosIniciales);
-  const [accion, setAccion] = useState(null); // 'alta' | 'modificar' | 'baja'
+  const idMedico = SEED_IDS.MILK?.id || SEED_IDS.MEDICO_MILK;
+  
+  const [listas, setListas] = useState({ especialidad: [], practica: [] });
+  const [accion, setAccion] = useState(null); 
   const [form, setForm] = useState(formVacio);
   const [errores, setErrores] = useState({});
   const [alerta, setAlerta] = useState(null);
+
+  useEffect(() => {
+    async function cargarServicios() {
+      try {
+        const data = await medicoService.obtenerServicios(idMedico);
+        if (data) {
+          setListas(data);
+        }
+      } catch (error) {
+        mostrarAlerta("Error al conectar con el servidor y cargar servicios.", "advertencia");
+      }
+    }
+    cargarServicios();
+  }, [idMedico]);
 
   const todosLosServicios = [
     ...listas.especialidad.map((s) => ({ ...s, tipo: "especialidad" })),
@@ -34,7 +51,7 @@ export default function GestionServicios() {
   };
 
   // ALTA
-  const handleAlta = () => {
+  const handleAlta = async () => {
     const e = {};
     if (!form.id || form.id <= 0) e.id = "El ID es obligatorio.";
     if (!form.tipo) e.tipo = "Seleccioná un tipo.";
@@ -44,19 +61,27 @@ export default function GestionServicios() {
     if (Object.keys(e).length) { setErrores(e); return; }
 
     const nuevo = {
-      id: Number(form.id),
+      id: String(form.id),
       nombre: form.nombre.trim(),
       duracionTurnoEnMins: Number(form.duracionTurnoEnMins),
       costo: Number(form.costo),
+      ...(form.tipo === "practica" && { codigo: `PRAC-${form.id}` })
     };
-    // Payload al backend: { ...nuevo, tipo: form.tipo }
-    setListas((p) => ({ ...p, [form.tipo]: [...p[form.tipo], nuevo] }));
-    setForm(formVacio);
-    mostrarAlerta("Servicio dado de alta correctamente.");
+
+    try {
+      await medicoService.agregarServicio(idMedico, form.tipo, nuevo);
+
+      setListas((p) => ({ ...p, [form.tipo]: [...p[form.tipo], nuevo] }));
+      setForm(formVacio);
+      mostrarAlerta("Servicio dado de alta correctamente.");
+    } catch (error) {
+      const msgError = error.error?.[0]?.message || error.message || "No se pudo dar de alta el servicio";
+      mostrarAlerta(msgError, "advertencia");
+    }
   };
 
   // MODIFICAR
-  const handleModificar = () => {
+  const handleModificar = async () => {
     const e = {};
     if (!form.id) e.id = "Seleccioná un servicio.";
     if (!form.nombre.trim()) e.nombre = "El nombre es obligatorio.";
@@ -66,44 +91,76 @@ export default function GestionServicios() {
 
     const tipo = form.tipo;
     const actualizado = {
-      id: Number(form.id),
+      id: form.id,
       nombre: form.nombre.trim(),
       duracionTurnoEnMins: Number(form.duracionTurnoEnMins),
       costo: Number(form.costo),
     };
-    // Payload al backend: { ...actualizado, tipo }
-    setListas((p) => ({
-      ...p,
-      [tipo]: p[tipo].map((s) => s.id === actualizado.id ? actualizado : s),
-    }));
-    setForm(formVacio);
-    mostrarAlerta("Servicio modificado correctamente.");
+
+    try {
+      // Llamada real al backend
+      const tipoBackend = tipo.toUpperCase();
+      await medicoService.modificarServicio(idMedico, tipoBackend, actualizado.id, actualizado);
+
+      setListas((p) => ({
+        ...p,
+        [tipo]: p[tipo].map((s) => 
+          s.id.toString() === actualizado.id.toString() ? actualizado : s
+        ),
+      }));
+      setForm(formVacio);
+      mostrarAlerta("Servicio modificado correctamente.");
+    } catch (error) {
+      mostrarAlerta(error.message || "No se pudo modificar el servicio", "advertencia");
+    }
   };
 
   // BAJA
-  const handleBaja = () => {
+  const handleBaja = async () => {
     if (!form.id) { setErrores({ id: "Seleccioná un servicio." }); return; }
     const tipo = form.tipo;
-    // Payload al backend: { id: Number(form.id), tipo }
-    setListas((p) => ({
-      ...p,
-      [tipo]: p[tipo].filter((s) => s.id !== Number(form.id)),
-    }));
-    setForm(formVacio);
-    mostrarAlerta("Servicio dado de baja.", "advertencia");
+    const idServicio = form.id;
+
+    try {
+      // Llamada real al backend
+      const tipoBackend = tipo.toUpperCase();
+      await medicoService.eliminarServicio(idMedico, tipoBackend, idServicio);
+
+      setListas((p) => ({
+        ...p,
+        [tipo]: p[tipo].filter((s) => s.id.toString() !== idServicio.toString()),
+      }));
+      setForm(formVacio);
+      mostrarAlerta("Servicio dado de baja.", "advertencia");
+    } catch (error) {
+      mostrarAlerta(error.message || "No se pudo eliminar el servicio", "advertencia");
+    }
   };
 
   const seleccionarServicio = (e) => {
-    const id = Number(e.target.value);
-    const servicio = todosLosServicios.find((s) => s.id === id);
-    if (!servicio) { setForm((p) => ({ ...p, id: "", tipo: "", nombre: "", duracionTurnoEnMins: "", costo: "" })); return; }
+    const valorSeleccionado = e.target.value;
+    if (!valorSeleccionado) {
+      setForm(formVacio);
+      return;
+    }
+
+    const servicio = todosLosServicios.find(
+      (s) => s.id.toString() === valorSeleccionado.toString()
+    );
+
+    if (!servicio) {
+      setForm(formVacio);
+      return;
+    }
+
     setForm({
-      id: servicio.id,
+      id: servicio.id, // Mantiene su tipo original
       tipo: servicio.tipo,
       nombre: servicio.nombre,
       duracionTurnoEnMins: servicio.duracionTurnoEnMins,
       costo: servicio.costo,
     });
+
     if (errores.id) setErrores((p) => ({ ...p, id: null }));
   };
 
@@ -133,7 +190,7 @@ export default function GestionServicios() {
             </thead>
             <tbody>
               {todosLosServicios.map((s) => (
-                <tr key={s.id}>
+                <tr key={`${s.tipo}-${s.id}`}>
                   <td>{s.nombre}</td>
                   <td>
                     <span className={`gs-badge gs-badge--${s.tipo}`}>
@@ -238,7 +295,9 @@ export default function GestionServicios() {
               className={errores.id ? "gs-input--error" : ""}>
               <option value="">Seleccioná un servicio</option>
               {todosLosServicios.map((s) => (
-                <option key={s.id} value={s.id}>{s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})</option>
+                <option key={`${s.tipo}-${s.id}`} value={s.id}>
+                  {s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})
+                </option>
               ))}
             </select>
             {errores.id && <span className="gs-error">{errores.id}</span>}
@@ -292,7 +351,9 @@ export default function GestionServicios() {
               className={errores.id ? "gs-input--error" : ""}>
               <option value="">Seleccioná un servicio</option>
               {todosLosServicios.map((s) => (
-                <option key={s.id} value={s.id}>{s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})</option>
+                <option key={`${s.tipo}-${s.id}`} value={s.id}>
+                  {s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})
+                </option>
               ))}
             </select>
             {errores.id && <span className="gs-error">{errores.id}</span>}
