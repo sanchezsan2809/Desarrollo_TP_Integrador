@@ -79,13 +79,35 @@ export const turnosService = {
     ) =>{
         try{
             const response = await api.get(
-                `/medico/${medicoId}/turnos`
+                `/medico/${medicoId}/turnos/`
             )
 
             return response.data
         }catch(error){
             throw error.response?.data || new Error(
                 "No se pudieron recuperar los turnos del médico"
+            )
+        }
+    },
+
+    proponerCambioFecha: async(
+        turnoId,
+        usuarioId,
+        nuevaFecha
+    ) => {
+        try{
+            const { nuevoTurno, notificacionEnviada } = await api.post(
+                `/turnos/${turnoId}/modificacionFecha`,
+                {
+                    idUsuario: usuarioId,
+                    nuevaFecha: nuevaFecha
+                }
+            )
+
+            return { nuevoTurno, notificacionEnviada }
+        }catch(error){
+            throw error.response || new Error(
+                "No se pudo solicitar la modificación de la fecha del turno"
             )
         }
     }

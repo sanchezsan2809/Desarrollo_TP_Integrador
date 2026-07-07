@@ -11,9 +11,13 @@ export class MedicoService {
         this.turnoService = turnoService 
     }
 
-    async consultarTurnos({ idMedico, idPaciente, page, limit}) {
+    async obtenerTurnosReservados({ idMedico, idPaciente, page, limit}) {
         const { turnos, total, totalPages } = await this.turnoRepository.findAll({
-            filtros: { idMedico, idPaciente },
+            filtros: { 
+                medicoId: idMedico, 
+                pacienteId: idPaciente,
+                estado: "RESERVADO" 
+            },
             page, 
             limit
         })

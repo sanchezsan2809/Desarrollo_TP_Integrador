@@ -17,6 +17,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 
+//TODO Al cerrar sesión se debería retornar a Home
+
 const LoginCard = ({ onClose }) => {
 
     const [username, setUsername] = useState('')

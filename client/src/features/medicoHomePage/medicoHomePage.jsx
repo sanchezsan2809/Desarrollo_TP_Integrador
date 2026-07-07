@@ -11,6 +11,11 @@ import { useEffect } from 'react'
 import { turnosService } from '../../services/api'
 import { useState } from 'react'
 import { SEED_IDS } from '../../mockdata/seedIDs'
+import {
+    CircularProgress,
+    Box
+} from "@mui/material";
+import TurnoDialog from '../../components/medico/TurnoDialog'
 
 export default function MedicoDashboard() {
 
@@ -72,6 +77,19 @@ export default function MedicoDashboard() {
 
     });
 
+
+    if (loading) {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="60vh"
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
     
     return (
         
@@ -102,11 +120,21 @@ export default function MedicoDashboard() {
                     ...
                 </Stack>
 
+                    
+
                 <AgendaCalendar
                     turnos={eventosCalendario}
 
                     onSelectTurno={setTurnoSeleccionado}    
                 />
+
+            <TurnoDialog
+                open={Boolean(turnoSeleccionado)}
+                turno={turnoSeleccionado}
+                onClose={() => setTurnoSeleccionado(null)}
+            />
+
+            Con eso:
             </Paper>
         
     )

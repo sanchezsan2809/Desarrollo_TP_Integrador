@@ -7,7 +7,7 @@ import {
 
 const AuthContext = createContext()
 
-
+//  TODO Comenzar a gestionar contexto a partir del usuario autenticado
 
 export function AuthProvider({ children }) {
 

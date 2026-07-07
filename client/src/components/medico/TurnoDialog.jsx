@@ -11,6 +11,10 @@ import {
     TextField
 } from '@mui/material'
 
+import { turnosService } from '../../services/api'
+
+import { useAuth } from '../../context/AuthContext'
+
 export default function TurnoDialog({
     open,
     turno,
@@ -82,7 +86,7 @@ export default function TurnoDialog({
     }
 
     const proponerCambio =
-        () => {
+        async () => {
 
         const fechaInvalida =
             !nuevaFecha
@@ -100,6 +104,11 @@ export default function TurnoDialog({
             nuevaFecha
         )
 
+        const { turnoModificado, notificacionEnviada} = 
+           await turnosService.proponerCambioFecha(turno.id, authConte)
+
+
+
         onClose()
     }
 
@@ -113,7 +122,7 @@ export default function TurnoDialog({
             maxWidth="sm"
         >
             <DialogTitle>
-                Paciente: {turno.paciente}
+                Paciente: {turno.paciente.nombre}
             </DialogTitle>
 
             <DialogContent>
@@ -127,7 +136,7 @@ export default function TurnoDialog({
                         <strong>
                             Práctica:
                         </strong>{' '}
-                        {turno.practica}
+                        {turno.servicio.nombre}
                     </Typography>
 
                     <Typography>

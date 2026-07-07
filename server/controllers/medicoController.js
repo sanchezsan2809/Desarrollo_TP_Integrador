@@ -10,13 +10,13 @@ export class MedicoController {
     this.medicoService = medicoService;
   }
 
-  consultarTurnos = async (req, res) => {
+  obtenerTurnosReservados = async (req, res) => {
     const { idMedico } = req.params
     const { idPaciente, 
       page, 
       limit } = req.query
 
-      const { turnos, totalPages, total } = await this.medicoService.consultarTurnos({
+      const { turnos, totalPages, total } = await this.medicoService.obtenerTurnosReservados({
         idMedico,
         idPaciente,
         page, 

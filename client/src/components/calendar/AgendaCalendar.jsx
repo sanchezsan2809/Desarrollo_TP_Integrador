@@ -22,6 +22,39 @@ export default function AgendaCalendar({
         new Date()
     )
 
+    const eventStyleGetter = (evento) => {
+
+        const colores = {
+            RESERVADO: "#418B18",
+            CONFIRMADO: "#1976D2",
+            CANCELADO: "#D32F2F",
+            REALIZADO: "#757575"
+        };
+
+        return {
+            style: {
+                backgroundColor: colores[evento.estado] || "#418B18",
+                border: "none",
+                borderRadius: "8px",
+                color: "white"
+            }
+        };
+    };
+
+    const messages = {
+        today: "Hoy",
+        previous: "Anterior",
+        next: "Siguiente",
+        month: "Mes",
+        week: "Semana",
+        day: "Día",
+        agenda: "Agenda",
+        date: "Fecha",
+        time: "Hora",
+        event: "Turno",
+        noEventsInRange: "No hay turnos para este período."
+    };
+
     return (
 
         <div
@@ -35,20 +68,24 @@ export default function AgendaCalendar({
                 events={turnos}
 
                 startAccessor="start"
-
                 endAccessor="end"
 
                 date={fechaActual}
-
                 onNavigate={setFechaActual}
 
-                defaultDate="month"
+                defaultView="month"
 
                 views={[
                     "month",
                     "week",
                     "day"
                 ]}
+
+                messages= {messages}
+
+                eventPropGetter={eventStyleGetter}
+                
+                events={turnos}
 
                 onSelectEvent={onSelectTurno}
             />
