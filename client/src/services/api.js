@@ -124,5 +124,42 @@ export const usuariosService = {
     }
 
 }
+export const notificacionesService = {
+    obtenerNoLeidas: async (idUsuario) => {
+        try {
+            const response = await api.get(`/usuario/${idUsuario}/notificaciones`, {
+                params: { leidas: false }
+            });
+
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudieron obtener las notificaciones.");
+        }
+    },
+
+    obtenerLeidas: async (idUsuario) => {
+        try {
+            const response = await api.get(`/usuario/${idUsuario}/notificaciones`, {
+                params: { leidas: true }
+            });
+
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudieron obtener las notificaciones.");
+        }
+    },
+
+    marcarComoLeida: async (idUsuario, idNotificacion) => {
+        try {
+            const response = await api.patch(
+                `/usuario/${idUsuario}/notificaciones/${idNotificacion}`
+            );
+
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo marcar la notificación como leída.");
+        }
+    }
+};
 
 export default api;

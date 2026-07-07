@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa'; 
-import { mockNotificaciones } from '../../mockdata/Notificaciones';
+import { notificacionesService } from '../../services/api';
+import { SEED_IDS } from '../../mockdata/seedIDs';
 import './NotificacionesIndicador.css';
 
+const ID_USUARIO = SEED_IDS.USUARIO_PACIENTE;
+
 const NotificacionesIndicador = () => {
-    
-    // calcula no leídas
-    const cantidadSinLeer = mockNotificaciones.filter(notif => !notif.leida).length;
+
+    const [cantidadSinLeer, setCantidadSinLeer] = useState(0);
+
+    useEffect(() => {
+        let activo = true;
+
+        const cargarConteo = async () => {
+            try {
+                const noLeidas = await notificacionesService.obtenerNoLeidas(ID_USUARIO);
+
+                if (activo) {
+                    setCantidadSinLeer(noLeidas.length);
+                }
+            } catch (err) {
+                if (activo) {
+                    setCantidadSinLeer(0);
+                }
+            }
+        };
+
+        cargarConteo();
+
+        return () => {
+            activo = false;
+        };
+    }, []);
 
     return (
         <Link 

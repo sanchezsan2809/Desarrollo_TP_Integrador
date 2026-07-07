@@ -1,3 +1,5 @@
+import { notificacionMapper } from "../middlewares/mappers/notificacionMapper.js"
+
 export class NotificacionController{
     
     constructor(notificacionService) {
@@ -9,7 +11,7 @@ export class NotificacionController{
         const { leidas } = req.query
 
         const notificaciones = await this.notificacionService.mostrarNotificaciones({ idUsuario, leidas })
-        res.status(200).json(notificaciones)
+        res.status(200).json(notificaciones.map(n => notificacionMapper.notificacionToDTO(n)))
     }
 
 
@@ -17,8 +19,8 @@ export class NotificacionController{
 
         const { idUsuario, idNotificacion } = req.params
 
-        const data = await this.notificacionService.marcarComoLeida({ idUsuario, idNotificacion })
-        res.status(200).json(data)
+        const notificacion = await this.notificacionService.marcarComoLeida({ idUsuario, idNotificacion })
+        res.status(200).json(notificacionMapper.notificacionToDTO(notificacion))
 
     }
 }

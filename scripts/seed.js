@@ -187,6 +187,32 @@ async function ejecutarSeed() {
             historialEstados: [{ fechaHoraIngreso: new Date(), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" }]
         });
 
+        console.log('🔔 Sembrando notificaciones de ejemplo...');
+        await NotificacionModel.create([
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Su turno de Electrocardiograma fue confirmado.",
+                fechaHoraCreacion: new Date(),
+                leida: false
+            },
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Se reservó un turno para Clínica Médica.",
+                fechaHoraCreacion: new Date(),
+                leida: false
+            },
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Recordatorio: mañana tiene un turno agendado.",
+                fechaHoraCreacion: new Date(),
+                leida: true,
+                fechaHoraLeida: new Date()
+            }
+        ]);
+
         console.log('🚀 Base de datos poblada con éxito con múltiples médicos y servicios.');
 
     } catch (error) {
