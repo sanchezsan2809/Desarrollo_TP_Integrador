@@ -58,6 +58,15 @@
     background-color: #2e6112;
 }
 
+.notificaciones-error {
+    background-color: #fff0ef;
+    color: #b3261e;
+    border: 1px solid #f2b8b5;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
 .separador-seccion {
     border: 0;
     height: 1px;

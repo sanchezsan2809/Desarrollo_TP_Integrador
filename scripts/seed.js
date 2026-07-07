@@ -32,9 +32,9 @@ async function ejecutarSeed() {
         console.log('🌱 Insertando datos maestros...');
 
         // USUARIOS
-        const usuarioHouse = await UsuarioModel.create({ nombre: "Gregory_House", password: "1234" });
+        const usuarioHouse = await UsuarioModel.create({ _id: SEED_IDS.USUARIO_HOUSE, nombre: "Gregory_House", password: "1234" });
         const usuarioMilk = await UsuarioModel.create({ nombre: "Sapo_Milk", password: "1234" });
-        const usuarioPaciente = await UsuarioModel.create({ nombre: "Juan_Perez", password: "1234" });
+        const usuarioPaciente = await UsuarioModel.create({ _id: SEED_IDS.USUARIO_PACIENTE, nombre: "Juan_Perez", password: "1234" });
 
         // SEDES
         const sedeCentral = await SedeModel.create({ nombre: "Sede Central", direccion: "Av Siempre Viva 123" });
@@ -164,6 +164,32 @@ async function ejecutarSeed() {
             estado: "DISPONIBLE", costo: 25000,
             historialEstados: [{ fechaHoraIngreso: new Date(), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" }]
         });
+
+        console.log('🔔 Sembrando notificaciones de ejemplo...');
+        await NotificacionModel.create([
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Su turno de Electrocardiograma fue confirmado.",
+                fechaHoraCreacion: new Date(),
+                leida: false
+            },
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Se reservó un turno para Clínica Médica.",
+                fechaHoraCreacion: new Date(),
+                leida: false
+            },
+            {
+                destinatario: SEED_IDS.USUARIO_PACIENTE,
+                remitente: SEED_IDS.USUARIO_HOUSE,
+                mensaje: "Recordatorio: mañana tiene un turno agendado.",
+                fechaHoraCreacion: new Date(),
+                leida: true,
+                fechaHoraLeida: new Date()
+            }
+        ]);
 
         console.log('🚀 Base de datos poblada con éxito con múltiples médicos y servicios.');
 

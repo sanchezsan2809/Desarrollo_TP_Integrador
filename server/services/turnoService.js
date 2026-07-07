@@ -70,27 +70,25 @@ export class TurnoService{
         return {turnoCancelado, notificacionGuardada}
     }
 
-    async confirmar({id,idUsuario})
+    async marcarComoConfirmado({ id, idUsuario })
     {
         const turnoSinConfirmar = await this.turnoRepository.findById(id)
 
-        const motivo="El turno fue confirmado"
+        const usuario = turnoSinConfirmar.obtenerUsuario(idUsuario)
 
-        const usuario = turno.obtenerUsuario(idUsuario)
-        
-        if(!usuario || turnoSinConfirmar.remitenteUltimoCambioEstado().id !== idUsuario){
+        if(!usuario || turnoSinConfirmar.destinatarioUltimoCambioEstado().id !== idUsuario){
             throw new NotAllowedError("El usuario no puede confirmar este turno")
         }
 
         turnoSinConfirmar.actualizarEstado(
             EstadoTurno.CONFIRMADO,
             usuario,
-            motivo
+            "El turno fue confirmado"
         )
 
-        const notificacionConfirmado = factoryNotificacion.crearSegunEstadoTurno(turno)
+        const notificacionConfirmado = factoryNotificacion.crearSegunEstadoTurno(turnoSinConfirmar)
 
-        const {turno, notificacion} =
+        const [turno, notificacion] =
             await Promise.all([
                 this.turnoRepository.save(turnoSinConfirmar),
                 this.notificacionRepository.save(notificacionConfirmado)

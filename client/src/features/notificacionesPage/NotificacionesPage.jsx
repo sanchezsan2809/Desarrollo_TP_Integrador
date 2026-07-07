@@ -1,29 +1,74 @@
-import React, { useState } from 'react';
-import { mockNotificaciones } from '../../mockdata/Notificaciones';
+import React, { useState, useEffect, useCallback } from 'react';
+import { notificacionesService } from '../../services/api';
+import { SEED_IDS } from '../../mockdata/seedIDs';
 import './NotificacionesPage.css';
 
+const ID_USUARIO = SEED_IDS.USUARIO_PACIENTE;
+
 const NotificacionesPage = () => {
-    // Iniciamos el estado local con nuestros datos de mentira
-    const [notificaciones, setNotificaciones] = useState(mockNotificaciones);
+    const [noLeidas, setNoLeidas] = useState([]);
+    const [leidas, setLeidas] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState('');
 
-    // Filtramos para cumplir con los requerimientos de la cátedra
-    const noLeidas = notificaciones.filter(notif => !notif.leida);
-    const leidas = notificaciones.filter(notif => notif.leida);
+    const cargarNotificaciones = useCallback(async () => {
+        setCargando(true);
+        setError('');
 
-    // Función para actualizar el estado (simulando el endpoint)
-    const handleMarcarLeida = (id) => {
-        const estadoActualizado = notificaciones.map(notif => {
-            if (notif.id === id) {
-                return { ...notif, leida: true, fechaHoraLeida: new Date().toISOString() };
-            }
-            return notif;
-        });
-        setNotificaciones(estadoActualizado);
+        try {
+            const [sinLeer, yaLeidas] = await Promise.all([
+                notificacionesService.obtenerNoLeidas(ID_USUARIO),
+                notificacionesService.obtenerLeidas(ID_USUARIO)
+            ]);
+
+            setNoLeidas(sinLeer);
+            setLeidas(yaLeidas);
+        } catch (err) {
+            setError('No pudimos cargar tus notificaciones. Intentá de nuevo.');
+        } finally {
+            setCargando(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        cargarNotificaciones();
+    }, [cargarNotificaciones]);
+
+    const handleMarcarLeida = async (id) => {
+        try {
+            await notificacionesService.marcarComoLeida(ID_USUARIO, id);
+
+            setNoLeidas(prev => {
+                const notif = prev.find(n => n.id === id);
+
+                if (notif) {
+                    setLeidas(prevLeidas => [
+                        ...prevLeidas,
+                        { ...notif, leida: true, fechaHoraLeida: new Date().toISOString() }
+                    ]);
+                }
+
+                return prev.filter(n => n.id !== id);
+            });
+        } catch (err) {
+            setError('No pudimos marcar la notificación como leída.');
+        }
     };
+
+    if (cargando) {
+        return (
+            <div className="notificaciones-page-container">
+                <h2>Mis Notificaciones</h2>
+                <p>Cargando notificaciones...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="notificaciones-page-container">
             <h2>Mis Notificaciones</h2>
+
+            {error && <p className="notificaciones-error">{error}</p>}
 
             <section className="notificaciones-seccion">
                 <h3>Sin Leer ({noLeidas.length})</h3>
