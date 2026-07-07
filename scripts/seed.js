@@ -63,7 +63,7 @@ async function ejecutarSeed() {
         const sedeNorte = await SedeModel.create({ nombre: "Sede Norte", direccion: "Av Cabildo 4500" });
 
         // MÉDICO 1: Gregory House
-        const MEDICO_HOUSE_ID = SEED_IDS.MEDICO_HOUSE
+        const MEDICO_HOUSE_ID = SEED_IDS.HOUSE.mongoId
         const medicoHouse = await MedicoModel.create({
             _id: MEDICO_HOUSE_ID,
             usuario: usuarioHouse._id,
@@ -82,7 +82,7 @@ async function ejecutarSeed() {
         });
 
         // MÉDICO 2: Sapo Milk
-        const MEDICO_MILK_ID = SEED_IDS.MEDICO_MILK
+        const MEDICO_MILK_ID = SEED_IDS.MILK.mongoId
         const medicoMilk = await MedicoModel.create({
             _id: MEDICO_MILK_ID,
             usuario: usuarioMilk._id,
@@ -115,9 +115,9 @@ async function ejecutarSeed() {
 
         const obraSocial = await ObraSocialModel.create({ nombre: "OSDE", planes: [plan._id] });
 
-        const PACIENTE_ID = SEED_IDS.PACIENTE;
+        const PACIENTE_ID = SEED_IDS.PACIENTE.mongoId;
         await PacienteModel.create({
-            _id: new mongoose.Types.ObjectId(PACIENTE_ID),
+            _id: PACIENTE_ID,
             usuario: usuarioPaciente._id,
             dni: "40111222",
             nombre: "Juan Pérez",
@@ -190,22 +190,22 @@ async function ejecutarSeed() {
         console.log('🔔 Sembrando notificaciones de ejemplo...');
         await NotificacionModel.create([
             {
-                destinatario: SEED_IDS.USUARIO_PACIENTE,
-                remitente: SEED_IDS.USUARIO_HOUSE,
+                destinatario: usuarioPaciente._id,
+                remitente: usuarioHouse._id,
                 mensaje: "Su turno de Electrocardiograma fue confirmado.",
                 fechaHoraCreacion: new Date(),
                 leida: false
             },
             {
-                destinatario: SEED_IDS.USUARIO_PACIENTE,
-                remitente: SEED_IDS.USUARIO_HOUSE,
+                destinatario: usuarioPaciente._id,
+                remitente: usuarioHouse._id,
                 mensaje: "Se reservó un turno para Clínica Médica.",
                 fechaHoraCreacion: new Date(),
                 leida: false
             },
             {
-                destinatario: SEED_IDS.USUARIO_PACIENTE,
-                remitente: SEED_IDS.USUARIO_HOUSE,
+                destinatario: usuarioPaciente._id,
+                remitente: usuarioHouse._id,
                 mensaje: "Recordatorio: mañana tiene un turno agendado.",
                 fechaHoraCreacion: new Date(),
                 leida: true,

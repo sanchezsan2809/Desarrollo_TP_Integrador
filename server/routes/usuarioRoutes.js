@@ -9,30 +9,36 @@ import {
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import { usuarioMeRequestSchema } from "../schemas/requestsSchemas/usuarioRequestSchema.js";
+import { UsuarioController } from "../controllers/usuarioController.js";
+import { UsuarioService } from "../services/usuarioService.js";
+import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
 
 const router=Router()
 
 const notificacionRepository = new MongoNotificacionRepository()
-
 const notificacionService = new NotificacionService(notificacionRepository)
-const controller = new NotificacionController(notificacionService)
+const notificacionController = new NotificacionController(notificacionService)
+
+const usuarioRepository = new MongoUsuarioRepository()
+const usuarioService = new UsuarioService(usuarioRepository)
+const usuarioController = new UsuarioController(usuarioService)
 
 router.get(
     "/:idUsuario/notificaciones",
     validate(mostrarNotificacionesSchema),
-    asyncHandler(controller.mostrarNotificaciones)
+    asyncHandler(notificacionController.mostrarNotificaciones)
 )
 
 router.patch(
     "/:idUsuario/notificaciones/:idNotificacion",
     validate(marcarComoLeidaSchema),
-    asyncHandler(controller.marcarComoLeida)
+    asyncHandler(notificacionController.marcarComoLeida)
 )
 
 router.get(
     "/me",
     validate(usuarioMeRequestSchema),
-    asyncHandler
+    asyncHandler(usuarioController.me)
 )
 
 export default router
