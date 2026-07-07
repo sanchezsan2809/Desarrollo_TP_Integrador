@@ -8,22 +8,27 @@ import { TurnoModel } from "../server/schemas/DBSchemas/turnoSchema.js"
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
 import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js"
-
+import { SEED_IDS } from "./seedIDs.js"
 
 export async function seedTestData() {
     
 
     // usuarios
     const usuarioMedico = await UsuarioModel.create({
-        nombre: "Gregory_House",
-        password: "1234"
+        keycloakId: SEED_IDS.HOUSE.keycloakId,
+        nombreUsuario: SEED_IDS.HOUSE.username,
+        nombre: "Gregory",
+        apellido: "House",
+        email: SEED_IDS.HOUSE.email
     })
 
     const usuarioPaciente = await UsuarioModel.create({
-        nombre: "Juan_Perez",
-        password: "1234",
+        keycloakId: SEED_IDS.PACIENTE.keycloakId,
+        nombreUsuario: SEED_IDS.PACIENTE.username,
+        nombre: "Juan",
+        apellido: "Perez",
+        email: SEED_IDS.PACIENTE.email
     })
-
     // sede
     const sede = await SedeModel.create({
         nombre: "Sede Central",

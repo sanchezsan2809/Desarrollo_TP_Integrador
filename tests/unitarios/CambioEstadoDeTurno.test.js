@@ -86,8 +86,11 @@ describe("CambioEstadoTurno", () => {
 
             usuario = new Usuario(
                 22, 
-                "William", 
-                "Contraseña"
+                23,
+                "will_wiliams", 
+                "Will",
+                "Williams",
+                "willWilliams@gmail.com"
             )
 
             medico = new Medico(
@@ -103,7 +106,14 @@ describe("CambioEstadoTurno", () => {
 
             fechaHora = new Date('2026-05-05T14:00:00')
 
-            usuario2 = new Usuario("5678", "Tomas", "5678")
+            usuario2 = new Usuario(
+                "5678",
+                "6789",
+                "thomas_thompson",
+                "Thomas",
+                "Thompson", 
+                "thomasThompson@yahoo.com.ar")
+                
             cobertura = new CoberturaPractica(revision, "TOTAL")
             plan = new Plan("123", "basico", [], [cobertura])
             obraSocial = new ObraSocial("123", "Osde", [plan])

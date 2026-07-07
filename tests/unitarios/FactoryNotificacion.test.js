@@ -29,8 +29,19 @@ describe("factoryNotificacion", () => {
         let usuario2
         let cobertura
         let plan
+        let costo
+        let obraSocial
+        let paciente
+        let turno2
         beforeEach(() => {
-            usuario = new Usuario( "Roberto", "1234")
+            usuario = new Usuario(
+                22,
+                23,
+                "will_wiliams",
+                "Will",
+                "Williams",
+                "willWilliams@gmail.com"
+            )
 
             revision = new Practica(
                 "4679",
@@ -94,7 +105,13 @@ describe("factoryNotificacion", () => {
             
             costo = 5000
 
-            usuario2 = new Usuario( "Tomas", "5678")
+            usuario2 = new Usuario(
+                "5678",
+                "6789",
+                "thomas_thompson",
+                "Thomas",
+                "Thompson",
+                "thomasThompson@yahoo.com.ar")
             cobertura = new CoberturaPractica(revision, "TOTAL")
             plan = new Plan( "basico", [], [cobertura])
             obraSocial = new ObraSocial( "Osde", [plan])

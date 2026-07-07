@@ -21,7 +21,13 @@ describe("Médico", () => {
     let disponibilidad2
 
     beforeEach(() => {
-        usuario = new Usuario("1234", "pizzaBirraYFaso", "123abc")
+        usuario = new Usuario(
+            "1234",
+            "2345", 
+            "pizzaBirraYFaso",
+            "Gastón",
+            "Pietro",
+            "gastonPietro@hotmail.com")
         
         revision = new Practica(
             "4679",

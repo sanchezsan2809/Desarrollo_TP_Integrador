@@ -104,10 +104,6 @@ export default function TurnoDialog({
             nuevaFecha
         )
 
-        const { turnoModificado, notificacionEnviada} = 
-           await turnosService.proponerCambioFecha(turno.id, authConte)
-
-
 
         onClose()
     }

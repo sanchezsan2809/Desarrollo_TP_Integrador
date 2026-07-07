@@ -2,12 +2,14 @@ import { Usuario } from "../../domain/usuario.js"
 class UsuarioMapper{
     mongoUsuarioToDomain(data){
         
-        const nombreUsuario = data.nombre
-        const password = data.password
-
+        
         const usuario= new Usuario(
-            nombreUsuario,
-            password
+            data.id,
+            data.keycloakId,
+            data.nombreUsuario,
+            data.nombre,
+            data.apellido,
+            data.email
         )
         usuario.id = data._id.toString()
         return usuario
@@ -15,9 +17,10 @@ class UsuarioMapper{
 
     usuarioToDto(usuario){
         return{
-            id: usuario.id,
+            keycloakId: usuario.keycloakId,
             nombreUsuario : usuario.nombreUsuario,
-            password : usuario.password
+            nombre : `${usuario.nombre} ${usuario.apellido}`,
+            email: usuario.email
         }
     }
 }

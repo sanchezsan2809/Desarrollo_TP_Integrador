@@ -2,12 +2,22 @@ import { describe, expect, test, beforeEach } from "@jest/globals";
 import { Notificacion } from "../../server/domain/notificacion.js";
 import { Usuario } from "../../server/domain/usuario.js";
 
+//TODO Continuar corrigiendo tests unitarios para trabajar con nuevo Usuario
+
 describe("Notificacion",()=>{
     let usuario1
     let usuario2
     beforeEach(()=>{
-        usuario1 = new Usuario( "pizzaBirraYFaso", "123abc")
-        usuario2 = new Usuario( "JEJESALU3", "abc123")
+        usuario1 = new Usuario(
+            "1234",
+            "2345",
+            "pizzaBirraYFaso",
+            "Gastón",
+            "Pietro",
+            "gastonPietro@hotmail.com")
+        usuario2 = new Usuario( 
+            "JEJESALU3", 
+            "abc123")
     })
     
     describe("constructor",()=>{

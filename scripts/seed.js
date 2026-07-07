@@ -32,10 +32,32 @@ async function ejecutarSeed() {
         console.log('🌱 Insertando datos maestros...');
 
         // USUARIOS
-        const usuarioHouse = await UsuarioModel.create({ nombre: "Gregory_House", password: "1234" });
-        const usuarioMilk = await UsuarioModel.create({ nombre: "Sapo_Milk", password: "1234" });
-        const usuarioPaciente = await UsuarioModel.create({ nombre: "Juan_Perez", password: "1234" });
+        // USUARIOS
+        const usuarioHouse = await UsuarioModel.create({
+            keycloakId: SEED_IDS.HOUSE.keycloakId,
+            nombreUsuario: SEED_IDS.HOUSE.username,
+            nombre: "Gregory",
+            apellido: "House",
+            email: SEED_IDS.HOUSE.email
+        })
 
+        const usuarioMilk = await UsuarioModel.create({
+            keycloakId: SEED_IDS.MILK.keycloakId,
+            nombreUsuario: SEED_IDS.MILK.username,
+            nombre: "Sapo",
+            apellido: "Milk",
+            email: SEED_IDS.MILK.email
+        })
+
+        const usuarioPaciente = await UsuarioModel.create({
+            keycloakId: SEED_IDS.PACIENTE.keycloakId,
+            nombreUsuario: SEED_IDS.PACIENTE.username,
+            nombre: "Juan",
+            apellido: "Perez",
+            email: SEED_IDS.PACIENTE.email
+        })
+
+        
         // SEDES
         const sedeCentral = await SedeModel.create({ nombre: "Sede Central", direccion: "Av Siempre Viva 123" });
         const sedeNorte = await SedeModel.create({ nombre: "Sede Norte", direccion: "Av Cabildo 4500" });

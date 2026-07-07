@@ -114,4 +114,15 @@ export const turnosService = {
 
 };
 
+export const usuariosService = {
+
+    obtenerUsuarioActual: async () => {
+
+        const response = await api.get("/usuarios/me")
+
+        return response.data
+    }
+
+}
+
 export default api;

@@ -8,6 +8,7 @@ import {
 } from "../schemas/requestsSchemas/notificacionRequestSchema.js"
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
 import { asyncHandler } from "../middlewares/asyncHandler.js";
+import { usuarioMeRequestSchema } from "../schemas/requestsSchemas/usuarioRequestSchema.js";
 
 const router=Router()
 
@@ -26,6 +27,12 @@ router.patch(
     "/:idUsuario/notificaciones/:idNotificacion",
     validate(marcarComoLeidaSchema),
     asyncHandler(controller.marcarComoLeida)
+)
+
+router.get(
+    "/me",
+    validate(usuarioMeRequestSchema),
+    asyncHandler
 )
 
 export default router

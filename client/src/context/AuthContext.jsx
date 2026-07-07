@@ -5,9 +5,10 @@ import {
     useState
 } from 'react'
 
-const AuthContext = createContext()
-
 //  TODO Comenzar a gestionar contexto a partir del usuario autenticado
+
+
+const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
 
@@ -15,7 +16,7 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
 
-        const storedUser = localStorage.getItem('user')
+        const storedUser = localStorage.getItem("user")
 
         if (storedUser) {
             setUser(JSON.parse(storedUser))
@@ -23,38 +24,44 @@ export function AuthProvider({ children }) {
 
     }, [])
 
-    function login(userData) {
+    function login({ token, refreshToken, user }) {
 
-        localStorage.setItem(
-            'user',
-            JSON.stringify(userData)
-        )
+        localStorage.setItem("token", token)
+        localStorage.setItem("refreshToken", refreshToken)
+        localStorage.setItem("user", JSON.stringify(user))
 
-        setUser(userData)
+        setUser(user)
     }
 
     function logout() {
 
-        localStorage.removeItem('token')
-        localStorage.removeItem('refreshToken')
-        localStorage.removeItem('user')
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("user")
 
         setUser(null)
 
         window.location.reload()
     }
 
-    const value = {
-        user,
-        login,
-        logout,
-        isAuthenticated: !!user,
-        isMedico: user?.roles?.includes('MEDICO'),
-        isPaciente: user?.roles?.includes('PACIENTE')
-    }
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider
+            value={{
+                user,
+                login,
+                logout,
+
+                token: localStorage.getItem("token"),
+
+                isAuthenticated: !!user,
+
+                isMedico:
+                    user?.roles?.includes("MEDICO"),
+
+                isPaciente:
+                    user?.roles?.includes("PACIENTE")
+            }}
+        >
             {children}
         </AuthContext.Provider>
     )

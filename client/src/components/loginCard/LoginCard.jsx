@@ -15,6 +15,7 @@ import {
 import { login } from '../../services/authService'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { usuariosService } from '../../services/api'
 
 
 //TODO Al cerrar sesión se debería retornar a Home
@@ -43,37 +44,22 @@ const LoginCard = ({ onClose }) => {
 
             const auth = await login(username, password)
 
-            localStorage.setItem(
-                'token',
-                auth.access_token
-            )
+            const usuario = await usuariosService.obtenerUsuarioActual()
 
-            localStorage.setItem(
-                'refreshToken',
-                auth.refresh_token
-            )
-
-            const decoded = jwtDecode(auth.access_token)
-
-            const roles = decoded.realm_access?.roles || []
-
-        
-            
             authLogin({
-                username: decoded.preferred_username,
-                name: decoded.name,
-                email: decoded.email,
-                roles
+                token: auth.access_token,
+                refreshToken: auth.refresh_token,
+                user: usuario
             })
-            
+
             onClose()
 
-            if(roles.includes('MEDICO')){
-                navigate('/medico')
-            }else if(roles.includes('ADMIN')){
-                navigate('/admin')
-            }else{
-                navigate('/')
+            if (usuario.roles.includes("MEDICO")) {
+                navigate("/medico")
+            } else if (usuario.roles.includes("ADMIN")) {
+                navigate("/admin")
+            } else {
+                navigate("/")
             }
             
             
