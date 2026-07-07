@@ -16,8 +16,8 @@ export const SEED_IDS = {
     },
 
     PACIENTE: {
-        id: "6cd52810-7216-41ce-9872-2f8299e82f9f",
-        keycloakId: "cba6e8cf-6b44-4d8b-a2f3-...",
+        id: "64a333333333333333333333",
+        keycloakId: "6cd52810-7216-41ce-9872-2f8299e82f9f",
         username: "Juan_Perez",
         email:"juan@hospital.com"
     }

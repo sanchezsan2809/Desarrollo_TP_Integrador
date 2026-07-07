@@ -79,7 +79,7 @@ export const turnosService = {
     ) =>{
         try{
             const response = await api.get(
-                `/medico/${medicoId}/turnos/`
+                `/medico/${medicoId}/turnos`
             )
 
             return response.data
@@ -158,6 +158,56 @@ export const notificacionesService = {
             return response.data;
         } catch (error) {
             throw error.response?.data || new Error("No se pudo marcar la notificación como leída.");
+        }
+    }
+};
+
+export const medicoService = {
+    obtenerServicios: async (idMedico) => {
+        try {
+            const response = await api.get(`/medico/${idMedico}/servicios`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudieron obtener los servicios.");
+        }
+    },
+    
+    agregarServicio: async (idMedico, tipoServicio, nuevoServicio) => {
+        try {
+            const response = await api.post(`/medico/${idMedico}/servicios`, {
+                tipoServicio: tipoServicio.toLowerCase(),
+                nuevoServicioDTO: nuevoServicio 
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo agregar el servicio médico.");
+        }
+    },
+
+    modificarServicio: async (idMedico, tipo, idServicio, servicioModificado) => {
+        try {
+            const response = await api.put(
+                `/medico/${idMedico}/servicios/${tipo.toLowerCase()}/${idServicio}`,
+                { 
+                    ...servicioModificado,
+                    id: String(servicioModificado.id), // Aseguramos formato string por Zod
+                    ...(tipo.toLowerCase() === 'practica' && { codigo: `PRAC-${servicioModificado.id}` })
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo modificar el servicio médico.");
+        }
+    },
+
+    eliminarServicio: async (idMedico, tipo, idServicio) => {
+        try {
+            const response = await api.delete(
+                `/medico/${idMedico}/servicios/${tipo.toLowerCase()}/${idServicio}`
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo eliminar el servicio médico.");
         }
     }
 };

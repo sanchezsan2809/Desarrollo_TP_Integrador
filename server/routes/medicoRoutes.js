@@ -9,7 +9,8 @@ import { consultarDisponibilidadSchema,
         agregarServicioSchema,
         eliminarServicioSchema,
         modificarServicioSchema,
-        consultarTurnosSchema
+        consultarTurnosSchema,
+        obtenerServiciosSchema
 } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 import { TurnoService } from '../services/turnoService.js'
 import { asyncHandler } from '../middlewares/asyncHandler.js'
@@ -26,20 +27,25 @@ const controller = new MedicoController(service)
 
 
 router.get(
-    "/:id/turnos",
+    "/:idMedico/turnos",
     validate(consultarTurnosSchema),
     asyncHandler(controller.obtenerTurnosReservados)
 )
 
 router.get(
-    "/:id/disponibilidades",
+    "/:idMedico/disponibilidades",
     validate(consultarDisponibilidadSchema),
     asyncHandler(controller.consultarDisponibilidades)
 )
 
+router.get(
+    "/:idMedico/servicios",
+    validate(obtenerServiciosSchema),
+    asyncHandler(controller.obtenerServicios)
+)
 
 router.patch(
-    "/:id/disponibilidades",
+    "/:idMedico/disponibilidades",
     validate(modificarDisponibilidadSchema),
     asyncHandler(controller.modificarDisponibilidades)
 )

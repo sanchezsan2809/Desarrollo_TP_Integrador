@@ -139,4 +139,12 @@ export class MedicoController {
     res.status(200).json(medicoActualizado);
 
   };
+
+  obtenerServicios = async (req, res) => {
+    const { idMedico } = req.params;
+
+    const servicios = await this.medicoService.obtenerServicios({ idMedico });
+
+    res.status(200).json(servicios);
+  };
 }
