@@ -4,16 +4,16 @@ import { useAuth } from "../context/AuthContext";
 export default function ProtectedRoute({
     children,
     allowedRoles
-}){
-    const { user } = useAuth()
+}) {
+    const { user } = useAuth();
 
-    if(!user){
-        return <Navigate to="/"/>
+    if (!user) {
+        return <Navigate to="/" />;
     }
 
-    const hasRole = allowedRoles.some(role =>
-        user.roles.includes(role)
-    )
+    const hasRole = allowedRoles.includes(user.rol);
 
-    return hasRole ? children : <Navigate to="/"/>
+    return hasRole
+        ? children
+        : <Navigate to="/" />;
 }

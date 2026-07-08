@@ -54,10 +54,20 @@ export async function login(
     return data
 }
 
-export function decodeJwt(token) {
-    const payload = token.split(".")[1];
+export async function obtenerUsuarioActual(token) {
 
-    return JSON.parse(
-        atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+    const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/usuarios/me`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
     );
+
+    if (!response.ok) {
+        throw new Error("No se pudo obtener el usuario.");
+    }
+
+    return response.json();
 }

@@ -35,5 +35,18 @@ export class MongoMedicoRepository {
     return Promise.all(
       medicosMongo.map((m) => medicoMapper.mongoMedicoToDomain(m)),
     );
+
+  }
+
+  async findByUser(userId) {
+    const medicoDB = await this.model.findOne({
+      usuario: userId
+    });
+
+    if (!medicoDB) {
+      throw new MedicoNotFoundError(`No se encontró un medico con id de usuario ${userId}`);
+    }
+
+    return medicoMapper.mongoMedicoToDomain(medicoDB)
   }
 }

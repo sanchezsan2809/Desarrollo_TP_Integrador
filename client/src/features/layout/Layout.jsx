@@ -15,7 +15,7 @@ const Layout = (/*{ carrito }*/) => {
     return (
         <div className="layout-container">
         <Header
-          username={user?.nombreUsuario}
+          username={user?.usuario.nombre}
         />
         {
           (user?.roles ?? []).includes("MEDICO")

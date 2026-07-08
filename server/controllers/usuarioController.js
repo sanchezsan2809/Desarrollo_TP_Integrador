@@ -7,14 +7,18 @@ export class UsuarioController {
     }
 
     me = async (req, res) => {
-        const usuario =
+        const { usuario, rol, perfilId} =
             await this.usuarioService.obtenerUsuarioActual(
                 req.auth.keycloakId
             );
 
-        
+        const data = {
+            usuario: usuarioMapper.usuarioToDto(usuario),
+            rol: rol,
+            perfilId: perfilId
+        }
 
-        res.json(usuarioMapper.usuarioToDto(usuario));
+        res.status(200).json(data)
     } 
     
     

@@ -1,4 +1,3 @@
-import {z} from "zod"
 import { BadRequestError } from "../errors/appError.js"
 
 export const validate = (schema) => (req, res, next) => {

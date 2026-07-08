@@ -15,6 +15,7 @@ import {
     CircularProgress,
     Box
 } from "@mui/material";
+import { useAuth } from '../../context/AuthContext'
 import TurnoDialog from '../../components/medico/TurnoDialog'
 
 export default function MedicoDashboard() {
@@ -26,15 +27,19 @@ export default function MedicoDashboard() {
     const [loading, setLoading] = useState(true)
     const [turnoSeleccionado, setTurnoSeleccionado] = useState(null)
 
+    const { user } = useAuth();
+
     useEffect(() => {
             async function cargarTurnos(){
     
                 try {
     
-                    const respuesta = 
+                    
+
+                    const respuesta =
                         await turnosService.obtenerTurnosReservadosMedico(
-                            SEED_IDS.MILK.mongoId
-                        )
+                            user.perfilId
+                        );
     
                     console.log("Respuesta:", respuesta);
                     console.log("¿Es array?", Array.isArray(respuesta));

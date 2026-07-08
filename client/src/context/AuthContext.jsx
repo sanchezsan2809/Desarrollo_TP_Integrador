@@ -26,11 +26,11 @@ export function AuthProvider({ children }) {
 
     function login({ token, refreshToken, user }) {
 
-        localStorage.setItem("token", token)
-        localStorage.setItem("refreshToken", refreshToken)
-        localStorage.setItem("user", JSON.stringify(user))
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(user));
 
-        setUser(user)
+        setUser(user);
     }
 
     function logout() {
@@ -56,10 +56,13 @@ export function AuthProvider({ children }) {
                 isAuthenticated: !!user,
 
                 isMedico:
-                    user?.roles?.includes("MEDICO"),
+                    user?.rol === "MEDICO",
 
                 isPaciente:
-                    user?.roles?.includes("PACIENTE")
+                    user?.rol === "PACIENTE",
+
+                isAdmin:
+                    user?.rol === "ADMIN",
             }}
         >
             {children}

@@ -12,6 +12,8 @@ import { UsuarioController } from "../controllers/usuarioController.js";
 import { UsuarioService } from "../services/usuarioService.js";
 import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
 import { authenticate } from "../middlewares/authenticate.js";
+import { MongoPacienteRepository } from "../repositories/pacienteRepository.js";
+import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
 
 const router=Router()
 
@@ -20,7 +22,9 @@ const notificacionService = new NotificacionService(notificacionRepository)
 const notificacionController = new NotificacionController(notificacionService)
 
 const usuarioRepository = new MongoUsuarioRepository()
-const usuarioService = new UsuarioService(usuarioRepository)
+const pacienteRepository = new MongoPacienteRepository()
+const medicoRepository = new MongoMedicoRepository()
+const usuarioService = new UsuarioService(usuarioRepository, medicoRepository, pacienteRepository)
 const usuarioController = new UsuarioController(usuarioService)
 
 router.get(

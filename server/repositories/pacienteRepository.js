@@ -27,4 +27,16 @@ export class MongoPacienteRepository{
 
         return pacienteMapper.mongoPacienteToDomain(mongoPaciente)
     }
+
+    async findByUser(userId) {
+        const pacienteDB = await this.model.findOne({
+            usuario: userId
+        });
+
+        if (!pacienteDB) {
+            throw new PacienteNotFoundError(`No se encontró un paciente con id de usuario ${userId}`)
+        }
+
+        return pacienteMapper.mongoPacienteToDomain(pacienteDB)
+    }
 }

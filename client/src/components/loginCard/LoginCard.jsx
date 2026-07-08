@@ -44,35 +44,30 @@ const LoginCard = ({ onClose }) => {
 
             const tokens = await login(username, password);
 
-            const payload = jwtDecode(tokens.access_token);
-
-            console.log(payload);
-
-            const usuario = await usuariosService.obtenerUsuarioActual(
-                tokens.access_token
-            )
-
-            
-            const roles = payload.realm_access?.roles ?? [];
+            const me = await usuariosService.obtenerUsuarioActual(tokens.access_token);
 
             authLogin({
                 token: tokens.access_token,
                 refreshToken: tokens.refresh_token,
-                user: {
-                    ...usuario,
-                    roles
-                }
+                user: me
             });
 
             onClose();
 
-            if (roles.includes("MEDICO")) {
-                navigate("/medico");
-            } else if (roles.includes("ADMIN")) {
-                navigate("/admin");
-            } else {
-                navigate("/");
+            switch (me.rol) {
+                case "MEDICO":
+                    navigate("/medico");
+                    break;
+
+                case "ADMIN":
+                    navigate("/admin");
+                    break;
+
+                default:
+                    navigate("/");
+                    break;
             }
+
             
 
         } catch(err){
