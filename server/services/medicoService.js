@@ -40,10 +40,9 @@ export class MedicoService {
 
         const servicio = medico.buscarServicio(idServicio, tipoServicio)
 
-        const disponibilidades = medico.disponibilidades.filter(
-            (disponibilidad) => {
-                disponibilidad.validarSesion(servicio)
-            })
+        const disponibilidades = medico.disponibilidades.filter((disponibilidad) => {
+            return disponibilidad.validarSesion(servicio);
+        });
 
         return disponibilidades
     }

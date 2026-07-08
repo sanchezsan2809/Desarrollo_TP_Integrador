@@ -15,11 +15,9 @@ export const consultarTurnosSchema = z.object({
 
 export const consultarDisponibilidadSchema = z.object({
     params: z.object({
-        idMedico: z.string()
-    }),
-    body: z.object({
-        tipo: z.enum(["practica", "especialidad"]),
-        idServicio: z.string().min(5)
+        idMedico: z.string(),
+        tipoServicio: z.enum(["practica", "especialidad"]),
+        idServicio: z.string().min(4)
     })
 })
 

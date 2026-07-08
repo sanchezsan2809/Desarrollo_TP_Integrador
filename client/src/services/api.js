@@ -222,6 +222,32 @@ export const medicoService = {
         } catch (error) {
             throw error.response?.data || new Error("No se pudo eliminar el servicio médico.");
         }
+    },
+
+    consultarDisponibilidades: async (idMedico, tipoServicio, idServicio) => {
+        try {
+            const response = await api.get(
+                `/medico/${idMedico}/disponibilidades/${tipoServicio.toLowerCase()}/${idServicio}`
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudieron obtener las disponibilidades.");
+        }
+    },
+
+    modificarDisponibilidades: async (idMedico, arrayDisponibilidades) => {
+        try {
+            const bodyFormateado = arrayDisponibilidades.map(disp => ({
+                diaSemana: disp.diaSemana.toUpperCase().trim(), 
+                horaDesde: disp.horaDesde.trim(),              // ej: "08:00"
+                horaHasta: disp.horaHasta.trim()               // ej: "12:00"
+            }));
+
+            const response = await api.patch(`/medico/${idMedico}/disponibilidades`, bodyFormateado);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudieron modificar las disponibilidades.");
+        }
     }
 };
 

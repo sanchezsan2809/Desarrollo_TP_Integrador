@@ -7,9 +7,15 @@ export class DisponibilidadHoraria {
         this.horaHasta = horaHasta;
     }
 
-    validarSesion(servicio){
-        const duracionDisponibilidad = horaAMinutos(this.horaHasta - this.horaDesde);
-        return duracionDisponibilidad >= servicio.duracionTurnoEnMins;
+    validarSesion(servicio) {
+        const minutosDesde = horaAMinutos(this.horaDesde);
+        const minutosHasta = horaAMinutos(this.horaHasta);
+
+        const duracionDisponibilidad = minutosHasta - minutosDesde;
+        
+        const duracionServicio = servicio.duracionTurnoEnMins;
+
+        return duracionDisponibilidad >= duracionServicio;
     }
     
 }

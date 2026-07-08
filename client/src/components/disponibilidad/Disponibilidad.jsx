@@ -1,11 +1,14 @@
-import { useState } from "react";
-import "./Disponibilidad.css" 
+import { useState, useEffect } from "react";
+import { medicoService } from "../../services/api";
+import "./Disponibilidad.css";
 
-const mockDisponibilidad = [ //por ahora mock, despues supongo que podemos poner la del medico
-  { dia: "lunes",    horaDesde: "09:00", horaHasta: "13:00" },
-  { dia: "miercoles", horaDesde: "14:00", horaHasta: "18:00" },
-  { dia: "viernes",  horaDesde: "08:00", horaHasta: "12:00" },
-];
+// ID simulado para la cursada/desarrollo local sacado de tus logs de consola
+const ID_MEDICO_MOCK = "64a111111111111111111111";
+// Datos mínimos exigidos por el esquema de Zod en el GET
+const SERVICIO_CONTESTO_MOCK = {
+  tipo: "practica",
+  idServicio: "1236" // Un ID que tu médico tenga asignado
+};
 
 const DIAS = [
   { value: "lunes",     label: "Lunes" },
@@ -16,7 +19,7 @@ const DIAS = [
   { value: "sabado",    label: "Sábado" },
   { value: "domingo",   label: "Domingo" },
 ];
-// de 6 a 22 horas , horarios disponibles, se crea cada 30 minutos las opciones
+
 const HORARIOS = (() => {
   const slots = [];
   for (let h = 6; h <= 22; h++) {
@@ -26,30 +29,58 @@ const HORARIOS = (() => {
   return slots;
 })();
 
-const filaVacia = () => ({ dia: "", horaDesde: "", horaHasta: "" });
+const filaVacia = () => ({ diaSemana: "", horaDesde: "", horaHasta: "" });
 const labelDia = (value) => DIAS.find((d) => d.value === value)?.label ?? value;
 
 const horasHasta = (horaDesde) => { 
-  if (!horaDesde) return HORARIOS; //si no tengo hora desde, no puedo poner hora hasta
+  if (!horaDesde) return HORARIOS;
   return HORARIOS.filter((h) => h > horaDesde);
 };
 
-export default function Disponibilidad(){
-    const [disponibilidades, setDisponibilidades] = useState(mockDisponibilidad);
-    const [editando, setEditando] = useState(false);
-    const [filas, setFilas] = useState([]);
-    const [errores, setErrores] = useState([]);
-    const [errorGlobal, setErrorGlobal] = useState(null);
-    const [alerta, setAlerta] = useState(null);
+export default function Disponibilidad() {
+  const [disponibilidades, setDisponibilidades] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  
+  const [editando, setEditando] = useState(false);
+  const [filas, setFilas] = useState([]);
+  const [errores, setErrores] = useState([]);
+  const [errorGlobal, setErrorGlobal] = useState(null);
+  const [alerta, setAlerta] = useState(null);
 
-    const mostrarAlerta = (mensaje, variante = "exito") => {
-        setAlerta({ mensaje, variante });
-        setTimeout(() => setAlerta(null), 3000);
-    };
+  useEffect(() => {
+    async function cargarDatos() {
+      try {
+        setCargando(true);
+        const data = await medicoService.consultarDisponibilidades(
+          ID_MEDICO_MOCK,
+          SERVICIO_CONTESTO_MOCK.tipo,
+          SERVICIO_CONTESTO_MOCK.idServicio
+        );
+        
+        const normalizadas = data.map(d => ({
+          diaSemana: d.diaSemana || d.dia,
+          horaDesde: d.horaDesde,
+          horaHasta: d.horaHasta
+        }));
+        
+        setDisponibilidades(normalizadas);
+      } catch (error) {
+        setErrorGlobal(error.message || "Error al cargar las disponibilidades.");
+      } finally {
+        setCargando(false);
+      }
+    }
+    cargarDatos();
+  }, []);
 
-     const abrirEdicion = () => {
+  const mostrarAlerta = (mensaje, variante = "exito") => {
+    setAlerta({ mensaje, variante });
+    setTimeout(() => setAlerta(null), 3000);
+  };
+
+  const abrirEdicion = () => {
     setFilas(disponibilidades.map((d) => ({ ...d })));
-    setErrores([]);
+    setErrores(disponibilidades.map(() => ({})));
     setErrorGlobal(null);
     setEditando(true);
   };
@@ -61,7 +92,6 @@ export default function Disponibilidad(){
     setErrorGlobal(null);
   };
 
-  
   const agregarFila = () => {
     setFilas((prev) => [...prev, filaVacia()]);
     setErrores((prev) => [...prev, {}]);
@@ -71,17 +101,19 @@ export default function Disponibilidad(){
     setFilas((prev) => prev.filter((_, i) => i !== idx));
     setErrores((prev) => prev.filter((_, i) => i !== idx));
   };
+
   const handleChange = (idx, campo, valor) => {
     setFilas((prev) => {
       const copia = prev.map((f) => ({ ...f }));
       copia[idx][campo] = valor;
-      // Si cambia horaDesde y horaHasta ya no es válida, la limpiamos
-      if (campo === "horaDesde" && copia[idx].horaHasta <= valor) {
+      
+      // 🌟 Corrección que aplicamos antes
+      if (campo === "horaDesde" && copia[idx].horaHasta && copia[idx].horaHasta <= valor) {
         copia[idx].horaHasta = "";
       }
       return copia;
     });
-    // Limpiar error del campo tocado
+
     setErrores((prev) => {
       const copia = prev.map((e) => ({ ...e }));
       if (copia[idx]) delete copia[idx][campo];
@@ -89,7 +121,8 @@ export default function Disponibilidad(){
     });
     setErrorGlobal(null);
   };
-   const validar = () => {
+
+  const validar = () => {
     if (filas.length === 0) {
       setErrorGlobal("Agregá al menos una disponibilidad.");
       return false;
@@ -97,7 +130,7 @@ export default function Disponibilidad(){
     
     const nuevosErrores = filas.map((f) => {
       const e = {};
-      if (!f.dia)       e.dia       = "Requerido";
+      if (!f.diaSemana) e.diaSemana = "Requerido";
       if (!f.horaDesde) e.horaDesde = "Requerido";
       if (!f.horaHasta) e.horaHasta = "Requerido";
       return e;
@@ -112,14 +145,37 @@ export default function Disponibilidad(){
 
     return true;
   };
-  const handleConfirmar = () => {
+
+  const handleConfirmar = async () => {
     if (!validar()) return;
-    // Payload al backend: filas (lista completa que sobreescribe)
-    setDisponibilidades(filas.map((f) => ({ ...f })));
-    cerrarEdicion();
-    mostrarAlerta("Disponibilidad actualizada correctamente.");
+    setErrorGlobal(null);
+
+    try {
+      const dataActualizada = await medicoService.modificarDisponibilidades(ID_MEDICO_MOCK, filas);
+      
+      if (dataActualizada && dataActualizada.disponibilidades) {
+        setDisponibilidades(dataActualizada.disponibilidades.map(d => ({
+          diaSemana: d.diaSemana || d.dia,
+          horaDesde: d.horaDesde,
+          horaHasta: d.horaHasta
+        })));
+      } else {
+        setDisponibilidades(filas.map((f) => ({ ...f })));
+      }
+
+      cerrarEdicion();
+      mostrarAlerta("Disponibilidad actualizada correctamente en el servidor.");
+    } catch (error) {
+      setErrorGlobal(error.message || "No se pudieron guardar las disponibilidades.");
+      mostrarAlerta("Error al guardar.", "advertencia");
+    }
   };
-   return (
+
+  if (cargando) {
+    return <div className="gs-page"><p className="gs-vacio">Cargando disponibilidades...</p></div>;
+  }
+
+  return (
     <div className="gs-page">
       {alerta && (
         <div className={`gs-toast gs-toast--${alerta.variante}`}>
@@ -136,7 +192,7 @@ export default function Disponibilidad(){
         <div className="gs-cards">
           {disponibilidades.map((d, i) => (
             <div className="gs-card" key={i}>
-              <span className="gs-card__dia">{labelDia(d.dia)}</span>
+              <span className="gs-card__dia">{labelDia(d.diaSemana)}</span>
               <span className="gs-card__horario">
                 <span>{d.horaDesde}</span> — <span>{d.horaHasta}</span>
               </span>
@@ -149,10 +205,7 @@ export default function Disponibilidad(){
       {/* ── Botón de acción ── */}
       {!editando && (
         <div className="gs-acciones">
-          <button
-            className="gs-btn gs-btn--activo"
-            onClick={abrirEdicion}
-          >
+          <button className="gs-btn gs-btn--activo" onClick={abrirEdicion}>
             ✎ Modificar disponibilidades
           </button>
         </div>
@@ -163,7 +216,7 @@ export default function Disponibilidad(){
         <div className="gs-form">
           <h2 className="gs-form__titulo">Modificar disponibilidades</h2>
           <p className="gs-form__subtitulo">
-            Definí la nueva lista completa. Al confirmar se reemplaza la anterior.
+            Definí la nueva lista completa. Al confirmar se reemplaza la anterior y se sincronizarán los turnos futuros.
           </p>
 
           {filas.length > 0 && (
@@ -180,9 +233,9 @@ export default function Disponibilidad(){
                   <div className="gs-disp-fila" key={idx}>
                     {/* Día */}
                     <select
-                      value={fila.dia}
-                      onChange={(e) => handleChange(idx, "dia", e.target.value)}
-                      className={errores[idx]?.dia ? "gs-input--error" : ""}
+                      value={fila.diaSemana}
+                      onChange={(e) => handleChange(idx, "diaSemana", e.target.value)}
+                      className={errores[idx]?.diaSemana ? "gs-input--error" : ""}
                     >
                       <option value="">Día</option>
                       {DIAS.map((d) => (
@@ -231,11 +284,7 @@ export default function Disponibilidad(){
           )}
 
           {/* Agregar fila */}
-          <button
-            type="button"
-            className="gs-btn--secundario"
-            onClick={agregarFila}
-          >
+          <button type="button" className="gs-btn--secundario" onClick={agregarFila}>
             + Agregar franja horaria
           </button>
 
@@ -256,5 +305,4 @@ export default function Disponibilidad(){
       )}
     </div>
   );
-
 }
