@@ -33,7 +33,7 @@ export default function MedicoDashboard() {
     
                     const respuesta = 
                         await turnosService.obtenerTurnosReservadosMedico(
-                            SEED_IDS.MEDICO_MILK
+                            SEED_IDS.MILK.mongoId
                         )
     
                     console.log("Respuesta:", respuesta);

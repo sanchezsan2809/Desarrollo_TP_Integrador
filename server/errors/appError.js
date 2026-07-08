@@ -46,3 +46,7 @@ export class UnprocessableEntityError extends AppError{
 export class ValidationError extends AppError{
     constructor(message){super(message, 403)}
 }
+
+export class UnauthorizedError extends AppError{
+    constructor(message){super(message, 401)}
+}

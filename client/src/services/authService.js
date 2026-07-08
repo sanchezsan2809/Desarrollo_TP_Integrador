@@ -10,11 +10,6 @@ const CLIENT_ID =
     process.env
         .REACT_APP_KEYCLOAK_CLIENT_ID
 
-console.log({
-    KEYCLOAK_URL,
-    REALM,
-    CLIENT_ID
-})
 
 export async function login(
     username,
@@ -57,4 +52,12 @@ export async function login(
     }
 
     return data
+}
+
+export function decodeJwt(token) {
+    const payload = token.split(".")[1];
+
+    return JSON.parse(
+        atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+    );
 }

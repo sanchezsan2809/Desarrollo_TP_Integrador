@@ -1,24 +1,22 @@
 import {z} from "zod"
 import { BadRequestError } from "../errors/appError.js"
 
-export const validate = (schema) => (req, res, next) =>{
-    try{
+export const validate = (schema) => (req, res, next) => {
+    try {
         const result = schema.parse({
-            body: req.body, 
+            body: req.body,
             params: req.params,
-            query: req.query
-        })
+            query: req.query,
+            headers: req.headers
+        });
 
-        if (result.body)
-            req.body = result.body
+        if (result.body) Object.assign(req.body, result.body);
+        if (result.params) Object.assign(req.params, result.params);
+        if (result.query) Object.assign(req.query, result.query);
 
-        if (result.params)
-            req.params = result.params
-        next()
-    }catch(error){
-        console.log(error)
-        next(new BadRequestError("Request mal formada"))
+        next();
+    } catch (error) {
+        console.error(error);
+        next(new BadRequestError("Request mal formada"));
     }
-}
-
-export const validateQuery = (schema) => validate(z.object({ query: schema }))
+};

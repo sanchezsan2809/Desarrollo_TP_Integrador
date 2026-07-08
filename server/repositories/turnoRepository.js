@@ -4,7 +4,7 @@ import {
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 export class MongoTurnoRepository {
 
@@ -63,7 +63,7 @@ export class MongoTurnoRepository {
         const query = {}
 
         if(filtros.medicoId) {
-            query.medico = new Mongoose.Types.ObjectId(filtros.medicoId)
+            query.medico = new mongoose.Types.ObjectId(filtros.medicoId)
         }
 
     

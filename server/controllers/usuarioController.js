@@ -9,7 +9,7 @@ export class UsuarioController {
     me = async (req, res) => {
         const usuario =
             await this.usuarioService.obtenerUsuarioActual(
-                req.auth.sub
+                req.auth.keycloakId
             );
 
         

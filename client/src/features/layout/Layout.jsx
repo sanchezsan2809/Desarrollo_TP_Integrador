@@ -10,13 +10,15 @@ const Layout = (/*{ carrito }*/) => {
 
   const { user } = useAuth()
 
+  console.log(user)
+
     return (
         <div className="layout-container">
         <Header
-          username={user?.username}
+          username={user?.nombreUsuario}
         />
         {
-          user?.roles.includes('MEDICO') 
+          (user?.roles ?? []).includes("MEDICO")
             ? <MedicoNavbar />
             : <Navbar />
         }

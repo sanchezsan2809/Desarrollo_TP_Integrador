@@ -134,7 +134,7 @@ const Navbar = () => {
 
                     </div>
 
-                    <div class="notificaciones-container">
+                    <div className="notificaciones-container">
                         <NotificacionesIndicador />
                     </div>
                     

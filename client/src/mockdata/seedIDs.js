@@ -1,7 +1,24 @@
 export const SEED_IDS = {
-    PACIENTE: "654321abcdef1234567890ab",
-    MEDICO_HOUSE: "64a111111111111111111111",
-    MEDICO_MILK: "64a222222222222222222222",
-    USUARIO_PACIENTE: "64b111111111111111111111",
-    USUARIO_HOUSE: "64b222222222222222222222"
-};
+
+    HOUSE: {
+        mongoId: "64a111111111111111111111",
+        keycloakId: "fe4ac27e-13df-4d72-aac4-c64efce3ffe7",
+        username: "Gregory_House",
+        email: "house@hospital.com",
+    },
+
+    MILK: {
+        mongoId: "64a222222222222222222222",
+        keycloakId: "a2a47e7e-c185-4e54-a964-19fb373e135b",
+        username: "Sapo_Milk",
+        email: "milk@hospital.com"
+    },
+
+    PACIENTE: {
+        mongoId: "64a333333333333333333333",
+        keycloakId: "6cd52810-7216-41ce-9872-2f8299e82f9f",
+        username: "Juan_Perez",
+        email: "juan@hospital.com"
+    }
+
+}

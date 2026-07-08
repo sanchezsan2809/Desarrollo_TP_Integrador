@@ -8,10 +8,10 @@ import {
 } from "../schemas/requestsSchemas/notificacionRequestSchema.js"
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
 import { asyncHandler } from "../middlewares/asyncHandler.js";
-import { usuarioMeRequestSchema } from "../schemas/requestsSchemas/usuarioRequestSchema.js";
 import { UsuarioController } from "../controllers/usuarioController.js";
 import { UsuarioService } from "../services/usuarioService.js";
 import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const router=Router()
 
@@ -37,7 +37,7 @@ router.patch(
 
 router.get(
     "/me",
-    validate(usuarioMeRequestSchema),
+    authenticate,
     asyncHandler(usuarioController.me)
 )
 

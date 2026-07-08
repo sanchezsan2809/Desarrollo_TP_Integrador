@@ -12,7 +12,7 @@ import {
     Alert
 } from '@mui/material'
 
-import { login } from '../../services/authService'
+import { login, decodeJwt } from '../../services/authService'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { usuariosService } from '../../services/api'
@@ -42,26 +42,37 @@ const LoginCard = ({ onClose }) => {
 
         try{
 
-            const auth = await login(username, password)
+            const tokens = await login(username, password);
 
-            const usuario = await usuariosService.obtenerUsuarioActual()
+            const payload = jwtDecode(tokens.access_token);
+
+            console.log(payload);
+
+            const usuario = await usuariosService.obtenerUsuarioActual(
+                tokens.access_token
+            )
+
+            
+            const roles = payload.realm_access?.roles ?? [];
 
             authLogin({
-                token: auth.access_token,
-                refreshToken: auth.refresh_token,
-                user: usuario
-            })
+                token: tokens.access_token,
+                refreshToken: tokens.refresh_token,
+                user: {
+                    ...usuario,
+                    roles
+                }
+            });
 
-            onClose()
+            onClose();
 
-            if (usuario.roles.includes("MEDICO")) {
-                navigate("/medico")
-            } else if (usuario.roles.includes("ADMIN")) {
-                navigate("/admin")
+            if (roles.includes("MEDICO")) {
+                navigate("/medico");
+            } else if (roles.includes("ADMIN")) {
+                navigate("/admin");
             } else {
-                navigate("/")
+                navigate("/");
             }
-            
             
 
         } catch(err){
