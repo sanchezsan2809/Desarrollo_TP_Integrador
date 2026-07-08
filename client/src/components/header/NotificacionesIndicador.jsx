@@ -2,21 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa'; 
 import { notificacionesService } from '../../services/api';
-import { SEED_IDS } from '../../mockdata/seedIDs';
+import { useAuth } from '../../context/AuthContext';
 import './NotificacionesIndicador.css';
 
-const ID_USUARIO = SEED_IDS.USUARIO_PACIENTE;
-
 const NotificacionesIndicador = () => {
+    const { user } = useAuth();
+    const idUsuario = user?.usuario?.id;
 
     const [cantidadSinLeer, setCantidadSinLeer] = useState(0);
 
     useEffect(() => {
+        if (!idUsuario) {
+            return;
+        }
+
         let activo = true;
 
         const cargarConteo = async () => {
             try {
-                const noLeidas = await notificacionesService.obtenerNoLeidas(ID_USUARIO);
+                const noLeidas = await notificacionesService.obtenerNoLeidas(idUsuario);
 
                 if (activo) {
                     setCantidadSinLeer(noLeidas.length);
@@ -30,10 +34,17 @@ const NotificacionesIndicador = () => {
 
         cargarConteo();
 
+        const intervalId = setInterval(cargarConteo, 15000);
+
         return () => {
             activo = false;
+            clearInterval(intervalId);
         };
-    }, []);
+    }, [idUsuario]);
+
+    if (!idUsuario) {
+        return null;
+    }
 
     return (
         <Link 
