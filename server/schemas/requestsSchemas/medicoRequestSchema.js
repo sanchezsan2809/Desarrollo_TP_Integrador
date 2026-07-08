@@ -25,13 +25,15 @@ export const modificarDisponibilidadSchema = z.object({
     params: z.object({
         idMedico: z.string()
     }),
-    body: z.array(
-        z.object({
-            diaSemana: z.string().min(5), // duda, porque es un enum
-            horaDesde: z.string().min(4),
-            horaHasta: z.string().min(4)
-        })
-    ).nonempty("La lista no puede estar vacía")
+    body: z.object({
+        nuevasDisponibilidadesDTO: z.array(
+            z.object({
+                diaSemana: z.enum(["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"]),
+                horaDesde: z.string(),
+                horaHasta: z.string()
+            })
+        )
+    })
 })
 
 export const especialidadSchema = z.object({

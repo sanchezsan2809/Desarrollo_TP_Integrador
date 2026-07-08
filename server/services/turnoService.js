@@ -252,17 +252,13 @@ export class TurnoService{
         return turnosDelMedico
     }
 
-    async sincronizarTurnosDisponibles({idMedico, nuevaDisponibilidades}){
+    async sincronizarTurnosDisponibles({ medico }){
         const ahora = new Date()
 
-        const medico = await this.medicoRepository.findById(idMedico)
-
-        medico.disponibilidades = nuevaDisponibilidades
-
-        await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
+        await this.turnoRepository.eliminarDisponiblesFuturos(medico.id, ahora) 
         
         const nuevosTurnosPosibles = (await this.generarTurnosParaMedico(medico))
-        .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
+            .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
 
         const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnosPosibles) 
 

@@ -4,9 +4,10 @@ import { medicoService } from "../../services/api";
 import { SEED_IDS } from "../../mockdata/seedIDs";
 
 const formVacio = { tipo: "", nombre: "", duracionTurnoEnMins: "", costo: "" };
+const ID_RESPALDO_MONGO = "64a111111111111111111111";
 
 export default function GestionServicios() {
-  const idMedico = SEED_IDS.MILK?.id || SEED_IDS.MEDICO_MILK;
+  const idMedico = SEED_IDS.MILK?.id || SEED_IDS.MEDICO_MILK || ID_RESPALDO_MONGO;
   
   const [listas, setListas] = useState({ especialidad: [], practica: [] });
   const [accion, setAccion] = useState(null); 
@@ -16,6 +17,12 @@ export default function GestionServicios() {
 
   useEffect(() => {
     async function cargarServicios() {
+      // 🌟 CLÁUSULA DE GUARDA: Evita mandar 'undefined' al backend
+      if (!idMedico || idMedico === "undefined") {
+        console.warn("⚠️ idMedico no está definido aún en el sistema.");
+        return;
+      }
+
       try {
         const data = await medicoService.obtenerServicios(idMedico);
         if (data) {
@@ -70,7 +77,6 @@ export default function GestionServicios() {
 
     try {
       await medicoService.agregarServicio(idMedico, form.tipo, nuevo);
-
       setListas((p) => ({ ...p, [form.tipo]: [...p[form.tipo], nuevo] }));
       setForm(formVacio);
       mostrarAlerta("Servicio dado de alta correctamente.");
@@ -98,14 +104,13 @@ export default function GestionServicios() {
     };
 
     try {
-      // Llamada real al backend
       const tipoBackend = tipo.toUpperCase();
       await medicoService.modificarServicio(idMedico, tipoBackend, actualizado.id, actualizado);
 
       setListas((p) => ({
         ...p,
         [tipo]: p[tipo].map((s) => 
-          s.id.toString() === actualizado.id.toString() ? actualizado : s
+          s.id.toString() === actualizado.id.toString() ? { ...s, ...actualizado } : s
         ),
       }));
       setForm(formVacio);
@@ -122,7 +127,6 @@ export default function GestionServicios() {
     const idServicio = form.id;
 
     try {
-      // Llamada real al backend
       const tipoBackend = tipo.toUpperCase();
       await medicoService.eliminarServicio(idMedico, tipoBackend, idServicio);
 
@@ -138,14 +142,15 @@ export default function GestionServicios() {
   };
 
   const seleccionarServicio = (e) => {
-    const valorSeleccionado = e.target.value;
+    const valorSeleccionado = e.target.value; // formato: "tipo-id"
     if (!valorSeleccionado) {
       setForm(formVacio);
       return;
     }
 
+    const [tipo, id] = valorSeleccionado.split("-");
     const servicio = todosLosServicios.find(
-      (s) => s.id.toString() === valorSeleccionado.toString()
+      (s) => s.tipo === tipo && s.id.toString() === id.toString()
     );
 
     if (!servicio) {
@@ -154,7 +159,7 @@ export default function GestionServicios() {
     }
 
     setForm({
-      id: servicio.id, // Mantiene su tipo original
+      id: servicio.id,
       tipo: servicio.tipo,
       nombre: servicio.nombre,
       duracionTurnoEnMins: servicio.duracionTurnoEnMins,
@@ -174,7 +179,6 @@ export default function GestionServicios() {
 
       <h1 className="gs-titulo">Gestión de Servicios</h1>
 
-      {/* Tabla de servicios actuales */}
       <div className="gs-tabla-wrapper">
         {todosLosServicios.length === 0 ? (
           <p className="gs-vacio">No hay servicios registrados.</p>
@@ -206,7 +210,6 @@ export default function GestionServicios() {
         )}
       </div>
 
-      {/* Botones de acción */}
       <div className="gs-acciones">
         <button
           className={`gs-btn ${accion === "alta" ? "gs-btn--activo" : ""}`}
@@ -228,7 +231,6 @@ export default function GestionServicios() {
         </button>
       </div>
 
-      {/* Formulario dinámico */}
       {accion === "alta" && (
         <div className="gs-form">
           <h2 className="gs-form__titulo">Alta de servicio</h2>
@@ -291,11 +293,11 @@ export default function GestionServicios() {
 
           <div className="gs-campo">
             <label htmlFor="sel-modificar">Servicio a modificar</label>
-            <select id="sel-modificar" value={form.id || ""} onChange={seleccionarServicio}
+            <select id="sel-modificar" value={`${form.tipo}-${form.id}`.includes("undefined") ? "" : `${form.tipo}-${form.id}`} onChange={seleccionarServicio}
               className={errores.id ? "gs-input--error" : ""}>
               <option value="">Seleccioná un servicio</option>
               {todosLosServicios.map((s) => (
-                <option key={`${s.tipo}-${s.id}`} value={s.id}>
+                <option key={`${s.tipo}-${s.id}`} value={`${s.tipo}-${s.id}`}>
                   {s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})
                 </option>
               ))}
@@ -347,11 +349,11 @@ export default function GestionServicios() {
 
           <div className="gs-campo">
             <label htmlFor="sel-baja">Servicio a dar de baja</label>
-            <select id="sel-baja" value={form.id || ""} onChange={seleccionarServicio}
+            <select id="sel-baja" value={`${form.tipo}-${form.id}`.includes("undefined") ? "" : `${form.tipo}-${form.id}`} onChange={seleccionarServicio}
               className={errores.id ? "gs-input--error" : ""}>
               <option value="">Seleccioná un servicio</option>
               {todosLosServicios.map((s) => (
-                <option key={`${s.tipo}-${s.id}`} value={s.id}>
+                <option key={`${s.tipo}-${s.id}`} value={`${s.tipo}-${s.id}`}>
                   {s.nombre} ({s.tipo === "especialidad" ? "Especialidad" : "Práctica"})
                 </option>
               ))}

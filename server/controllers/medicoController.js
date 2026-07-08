@@ -55,6 +55,7 @@ export class MedicoController {
 
   modificarDisponibilidades = async (req, res) => {
     const { idMedico } = req.params;
+
     const { nuevasDisponibilidadesDTO } = req.body;
 
     const nuevasDisponibilidades = nuevasDisponibilidadesDTO.map((dto) =>

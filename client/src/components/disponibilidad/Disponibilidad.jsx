@@ -11,13 +11,13 @@ const SERVICIO_CONTESTO_MOCK = {
 };
 
 const DIAS = [
-  { value: "lunes",     label: "Lunes" },
-  { value: "martes",    label: "Martes" },
-  { value: "miercoles", label: "Miércoles" },
-  { value: "jueves",    label: "Jueves" },
-  { value: "viernes",   label: "Viernes" },
-  { value: "sabado",    label: "Sábado" },
-  { value: "domingo",   label: "Domingo" },
+  { value: "LUNES",     label: "Lunes" },
+  { value: "MARTES",    label: "Martes" },
+  { value: "MIERCOLES", label: "Miércoles" },
+  { value: "JUEVES",    label: "Jueves" },
+  { value: "VIERNES",   label: "Viernes" },
+  { value: "SABADO",    label: "Sábado" },
+  { value: "DOMINGO",   label: "Domingo" },
 ];
 
 const HORARIOS = (() => {

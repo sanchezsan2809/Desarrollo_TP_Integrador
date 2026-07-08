@@ -53,7 +53,7 @@ export class MedicoService {
         const medico = await this.medicoRepository.findById(idMedico)
 
         medico.definirDisponibilidad(nuevasDisponibilidades)
-        await this.turnoService.sincronizarTurnosDisponibles({idMedico, nuevasDisponibilidades})
+        await this.turnoService.sincronizarTurnosDisponibles({ medico })
 
         const medicoGuardado = await this.medicoRepository.save(medico)
         

@@ -237,13 +237,24 @@ export const medicoService = {
 
     modificarDisponibilidades: async (idMedico, arrayDisponibilidades) => {
         try {
-            const bodyFormateado = arrayDisponibilidades.map(disp => ({
-                diaSemana: disp.diaSemana.toUpperCase().trim(), 
-                horaDesde: disp.horaDesde.trim(),              // ej: "08:00"
-                horaHasta: disp.horaHasta.trim()               // ej: "12:00"
-            }));
+            const bodyFormateado = arrayDisponibilidades.map(disp => {
+                // Limpiamos acentos de forma segura por si acaso
+                let diaLimpio = disp.diaSemana
+                    .toUpperCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "") // Remueve tildes
+                    .trim();
 
-            const response = await api.patch(`/medico/${idMedico}/disponibilidades`, bodyFormateado);
+                return {
+                    diaSemana: diaLimpio, 
+                    horaDesde: disp.horaDesde.trim(), // ej: "08:00"
+                    horaHasta: disp.horaHasta.trim()  // ej: "12:00"
+                };
+            });
+
+            const response = await api.patch(`/medico/${idMedico}/disponibilidades`, {
+                nuevasDisponibilidadesDTO: bodyFormateado
+            });
             return response.data;
         } catch (error) {
             throw error.response?.data || new Error("No se pudieron modificar las disponibilidades.");
