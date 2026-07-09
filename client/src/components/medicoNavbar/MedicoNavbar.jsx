@@ -12,61 +12,89 @@ import { useAuth } from '../../context/AuthContext'
 
 import NotificacionesIndicador from '../header/NotificacionesIndicador'
 
+import { useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import MobileMenu from "../header/MobileMenu.jsx";
+
 export default function MedicoNavbar() {
 
+    const [menuOpen, setMenuOpen] = useState(false)
     const { user, logout } = useAuth()
 
     return (
-        <nav className="medico-navbar">
+        <>
+            <nav className="medico-navbar">
 
-            <div className="medico-navbar-left">
+                <div className="medico-navbar-left">
 
-                <Link to="/medico">
-                    <img
-                        src={logo}
-                        alt="Logo"
-                        className="logoHeader"
-                    />
-                </Link>
+                    <Link to="/medico">
+                        <img
+                            src={logo}
+                            alt="Logo"
+                            className="logoHeader"
+                        />
+                    </Link>
 
-                <Link
-                    to="/medico"
-                    className="medico-link"
-                >
-                    <EventNoteIcon />
-                    Agenda
-                </Link>
+                    <Link
+                        to="/medico"
+                        className="medico-link"
+                    >
+                        <EventNoteIcon />
+                        Agenda
+                    </Link>
 
-                <Link
-                    to="/dh"
-                    className="medico-link"
-                >
-                    <ScheduleIcon />
-                    Disponibilidad
-                </Link>
+                    <Link
+                        to="/dh"
+                        className="medico-link"
+                    >
+                        <ScheduleIcon />
+                        Disponibilidad
+                    </Link>
 
-                <Link
-                    to="/gs"
-                    className="medico-link"
-                >
-                    <MedicalServicesIcon />
-                    Servicios
-                </Link>
+                    <Link
+                        to="/gs"
+                        className="medico-link"
+                    >
+                        <MedicalServicesIcon />
+                        Servicios
+                    </Link>
 
-            </div>
+                </div>
 
-            <div className="medico-navbar-right">
+                <div className="medico-navbar-right">
 
-                <NotificacionesIndicador />
+                    <NotificacionesIndicador />
+
+                    <button
+                        onClick={logout}
+                        classaAme="logout-button"
+                    >
+                        Cerrar sesión
+                    </button>
+
+                </div>
 
                 <button
-                    onClick={logout}
+                    className="hamburger-button"
+                    onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    Cerrar sesión
+                    {
+                        menuOpen
+                            ? <CloseIcon />
+                            : <MenuIcon />
+                    }
                 </button>
 
-            </div>
+            </nav>
 
-        </nav>
+            {
+                menuOpen && (
+                    <MobileMenu
+                        onClose={() => setMenuOpen(false)}
+                    />
+                )
+            }
+        </>
     )
 }

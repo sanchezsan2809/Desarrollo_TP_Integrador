@@ -199,35 +199,6 @@
     display:none;
 }
 
-.mobile-menu{
-
-    display:flex;
-    flex-direction:column;
-
-    background:white;
-
-    padding:20px;
-
-    gap:20px;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
-
-}
-
-.mobile-menu{
-    display:none;
-}
-
-.mobile-menu{
-    position: fixed;
-    top: 7.8rem;
-    left: 0;
-
-    width: 100%;
-
-    z-index: 99999;
-}
-
 @media (max-width: 1400px) {
 
     .search-input {
@@ -369,16 +340,6 @@
 
     .navbar-seccion.right{
         display:none;
-    }
-
-}
-
-@media (max-width:768px){
-
-    .mobile-menu{
-
-        display:flex;
-
     }
 
 }

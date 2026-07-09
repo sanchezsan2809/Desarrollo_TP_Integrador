@@ -12,6 +12,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import Searchbar from './Searchbar.jsx'
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import MobileMenu from "./MobileMenu";
 
 
 
@@ -148,35 +149,9 @@ const Navbar = () => {
             </nav>
             {
                 menuOpen && (
-
-                    <div className="mobile-menu">
-
-                        <Link to="/servicios">
-                            Servicios
-                        </Link>
-
-                        <Link to="/medicos">
-                            Médicos
-                        </Link>
-
-                        <Link to="/como-funciona">
-                            Cómo funciona
-                        </Link>
-
-                        <Link to="/busquedaDeTurnos">
-                            Reservar Turnos
-                        </Link>
-
-                        <Link to="/historialDeTurnos">
-                            Historial
-                        </Link>
-
-                        <CarritoIndicador />
-
-                        <NotificacionesIndicador />
-
-                    </div>
-
+                    <MobileMenu
+                        onClose={() => setMenuOpen(false)}
+                    />
                 )
             }
         </header>

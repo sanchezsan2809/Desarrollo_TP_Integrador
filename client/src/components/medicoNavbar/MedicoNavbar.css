@@ -51,7 +51,7 @@
     display: block;
 }
 
-.medico-navbar button {
+.logout-button {
     background: #3e8f14;
 
     color: white;
@@ -71,7 +71,32 @@
     white-space: nowrap;
 }
 
-.medico-navbar button:hover {
+.logout-button:hover {
     background: #34780f;
     transform: translateY(-1px);
+}
+
+.hamburger-button{
+    display: none;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+}
+
+@media (max-width:768px){
+
+    .hamburger-button{
+        display:flex;
+    }
+
+    .medico-navbar-left .medico-link{
+        display:none;
+    }
+
+    .medico-navbar-right{
+        display:none;
+    }
+
 }
