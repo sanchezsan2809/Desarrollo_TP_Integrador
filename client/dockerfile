@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────
+# Stage 1 — BUILD
+# Compila la app React en archivos estáticos
+# ─────────────────────────────────────────────
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copiar manifiestos primero para aprovechar cache de capas
+COPY package*.json ./
+
+# Instalar todas las dependencias (incluyendo devDeps necesarias
+# para el build de react-scripts)
+RUN npm install
+
+# Copiar el código fuente
+COPY . .
+
+# Compilar la app para producción (genera la carpeta build/)
+RUN npm run build
+
+# ─────────────────────────────────────────────
+# Stage 2 — SERVE
+# Sirve los archivos estáticos con nginx alpine
+# La imagen final NO contiene Node.js ni el código fuente
+# ─────────────────────────────────────────────
+FROM nginx:alpine
+
+# Copiar el resultado del build al directorio web de nginx
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Script de inyección de variables de entorno en runtime.
+# nginx:alpine ejecuta automáticamente todos los scripts en
+# /docker-entrypoint.d/ antes de arrancar nginx.
+# Permite cambiar REACT_APP_API_URL desde Portainer sin rebuildar la imagen.
+COPY env.sh /docker-entrypoint.d/40-env-config.sh
+RUN chmod +x /docker-entrypoint.d/40-env-config.sh
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
