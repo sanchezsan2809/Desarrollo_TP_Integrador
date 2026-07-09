@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "http://127.0.0.1:5000/api",
+    baseURL: "http://127.0.0.1:8081/api",
     headers: {
         "Content-Type": "application/json",
     },
@@ -18,10 +18,10 @@ api.interceptors.request.use((config) => {
 });
 
 export const turnosService = {
-    buscarDisponibles: async (filtrosFormulario, pagina = 1, limite = 10) => {
+    buscarDisponibles: async ( idPaciente, filtrosFormulario, pagina = 1, limite = 10) => {
         try {
             const body = {
-                idPaciente: "654321abcdef1234567890ab",
+                idPaciente,
                 ...filtrosFormulario 
             };
 

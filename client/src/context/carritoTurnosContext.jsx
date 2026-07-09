@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react"
 import { turnosService } from "../services/api";
+import { useAuth } from "./AuthContext";
 import { SEED_IDS } from "../mockdata/seedIDs";
 
 export const TurnoCartContext = createContext()
@@ -64,6 +65,8 @@ export function TurnoCartProvider({
     children
 }) {
 
+    const { user } = useAuth()
+
     const [state, dispatch] = useReducer(
         turnoCartReducer,
         initialState
@@ -94,7 +97,7 @@ export function TurnoCartProvider({
         console.log(state.turnos)
 
         try {
-            const PACIENTE_ID = SEED_IDS.PACIENTE;
+            const PACIENTE_ID = user.perfilId
 
             const reservas = await Promise.all(
                 state.turnos.map(turno =>

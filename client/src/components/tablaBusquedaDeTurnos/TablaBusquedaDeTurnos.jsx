@@ -3,9 +3,12 @@ import './TablaBusquedaDeTurnos.css'
 import { useTurnoCart } from "../../hooks/useTurnoCart.js"
 import { useState, useEffect } from "react"
 import { turnosService } from '../../services/api.js' 
+import { useAuth } from "../../context/AuthContext";
 import BusquedaItem from '../busquedaItem/BusquedaItem.jsx';
 
 const TablaBusquedaDeTurnos = () => {
+    const { user } = useAuth();
+
     const { agregarTurno } = useTurnoCart()
     const location = useLocation();
 
@@ -40,7 +43,7 @@ const TablaBusquedaDeTurnos = () => {
                     fechaHasta: fechaHasta ? new Date(fechaHasta).toISOString() : undefined
                 };
 
-                const resultado = await turnosService.buscarDisponibles(filtros, paginacion.page, 10);
+                const resultado = await turnosService.buscarDisponibles(user.perfilId ,filtros, paginacion.page, 10);
 
                 setTurnos(resultado.turnosConCobertura || []);
                 if (resultado.paginacion) {

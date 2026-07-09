@@ -40,7 +40,6 @@ const horasHasta = (horaDesde) => {
 };
 
 export default function Disponibilidad() {
-  const { user } = useAuth()
 
   const [disponibilidades, setDisponibilidades] = useState([]);
   const [cargando, setCargando] = useState(true);

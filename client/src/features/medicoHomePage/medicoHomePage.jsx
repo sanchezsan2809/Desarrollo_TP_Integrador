@@ -33,10 +33,7 @@ export default function MedicoDashboard() {
             async function cargarTurnos(){
     
                 try {
-    
-                    
-
-                    const respuesta =
+                        const respuesta =
                         await turnosService.obtenerTurnosReservadosMedico(
                             user.perfilId
                         );
