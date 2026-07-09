@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { medicoService } from "../../services/api";
 import "./Disponibilidad.css";
 
+import { useAuth } from "../../context/AuthContext";
 
 
-// ID simulado para la cursada/desarrollo local sacado de tus logs de consola
-const ID_MEDICO_MOCK = "64a111111111111111111111";
+
 // Datos mínimos exigidos por el esquema de Zod en el GET
 const SERVICIO_CONTESTO_MOCK = {
   tipo: "practica",
@@ -53,10 +53,12 @@ export default function Disponibilidad() {
 
   useEffect(() => {
     async function cargarDatos() {
+      if (!user?.perfilId) return;
+      
       try {
         setCargando(true);
         const data = await medicoService.consultarDisponibilidades(
-          ID_MEDICO_MOCK,
+          user.perfilId,
           SERVICIO_CONTESTO_MOCK.tipo,
           SERVICIO_CONTESTO_MOCK.idServicio
         );
@@ -75,7 +77,7 @@ export default function Disponibilidad() {
       }
     }
     cargarDatos();
-  }, []);
+  }, [user]);
 
   const mostrarAlerta = (mensaje, variante = "exito") => {
     setAlerta({ mensaje, variante });
@@ -111,7 +113,6 @@ export default function Disponibilidad() {
       const copia = prev.map((f) => ({ ...f }));
       copia[idx][campo] = valor;
       
-      // 🌟 Corrección que aplicamos antes
       if (campo === "horaDesde" && copia[idx].horaHasta && copia[idx].horaHasta <= valor) {
         copia[idx].horaHasta = "";
       }
@@ -155,7 +156,7 @@ export default function Disponibilidad() {
     setErrorGlobal(null);
 
     try {
-      const dataActualizada = await medicoService.modificarDisponibilidades(ID_MEDICO_MOCK, filas);
+      const dataActualizada = await medicoService.modificarDisponibilidades(user.perfilId, filas);
       
       if (dataActualizada && dataActualizada.disponibilidades) {
         setDisponibilidades(dataActualizada.disponibilidades.map(d => ({
@@ -174,6 +175,10 @@ export default function Disponibilidad() {
       mostrarAlerta("Error al guardar.", "advertencia");
     }
   };
+
+  if (!user) {
+    return <div className="gs-page"><p className="gs-vacio">Iniciando sesión médica...</p></div>;
+  }
 
   if (cargando) {
     return <div className="gs-page"><p className="gs-vacio">Cargando disponibilidades...</p></div>;
