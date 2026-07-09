@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Capriola&display=swap');
 
 .preseleccion-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
 }
 
 .preseleccion-container h1 {
@@ -64,7 +64,7 @@
     color: #a32d2d;
     border: 2px solid #a32d2d;
     padding: 8px 16px;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
@@ -106,7 +106,7 @@
     color: white;
     border: none;
     padding: 12px 30px;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
     font-size: 1.1rem;
     font-weight: bold;
     border-radius: 8px;
@@ -130,7 +130,7 @@
     color: #666;
     border: 2px solid #ccc;
     padding: 10px 20px;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
     font-size: 1rem;
     font-weight: 500;
     border-radius: 8px;

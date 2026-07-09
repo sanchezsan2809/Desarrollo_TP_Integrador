@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Capriola&display=swap');
 
 .listaDeBotones{
     display: flex;
@@ -12,7 +12,7 @@
 .globoDeTexto{
     font-size: 24px;
     justify-content: space-around;
-    font-family: "Sour Gummy", sans-serif;   
+    font-family: "Capriola", sans-serif;   
     background-color: white;
     padding: 15px;
 }
@@ -51,7 +51,7 @@
     border: none;           
     outline: none;
     cursor: pointer;
-    font-family: "Sour Gummy", sans-serif;   
+    font-family: "Capriola", sans-serif;   
     appearance: none;
 }
 

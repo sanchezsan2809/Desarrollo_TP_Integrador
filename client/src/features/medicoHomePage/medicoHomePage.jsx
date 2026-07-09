@@ -24,7 +24,7 @@ export default function MedicoDashboard() {
                 <Typography
                     variant="h4"
                     sx={{ 
-                        fontFamily: '"Sour Gummy", sans-serif',
+                        fontFamily: '"Capriola", sans-serif',
                         borderRadius: '18px',
                         textTransform: 'none',
                         mb: 2
