@@ -18,7 +18,7 @@ const Layout = (/*{ carrito }*/) => {
           username={user?.usuario.nombre}
         />
         {
-          (user?.roles ?? []).includes("MEDICO")
+            user?.rol === "MEDICO"
             ? <MedicoNavbar />
             : <Navbar />
         }

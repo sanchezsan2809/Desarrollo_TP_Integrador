@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { medicoService } from "../../services/api";
 import "./Disponibilidad.css";
 
+
+
 // ID simulado para la cursada/desarrollo local sacado de tus logs de consola
 const ID_MEDICO_MOCK = "64a111111111111111111111";
 // Datos mínimos exigidos por el esquema de Zod en el GET
@@ -38,6 +40,8 @@ const horasHasta = (horaDesde) => {
 };
 
 export default function Disponibilidad() {
+  const { user } = useAuth()
+
   const [disponibilidades, setDisponibilidades] = useState([]);
   const [cargando, setCargando] = useState(true);
   
