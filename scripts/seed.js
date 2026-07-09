@@ -187,7 +187,142 @@ async function ejecutarSeed() {
             historialEstados: [{ fechaHoraIngreso: new Date(), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" }]
         });
 
+        console.log('🔔 Sembrando turnos reservados de ejemplo...');
+        // TURNO RESERVADO 1: Milk - Pediatría
+        await TurnoModel.create({
+            medico: medicoMilk._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-07-22T09:00:00"),
+            sede: sedeNorte._id,
+            servicio: {
+                tipo: "ESPECIALIDAD",
+                especialidad: {
+                    id: "2001",
+                    nombre: "Pediatría",
+                    duracionTurnoEnMins: 20,
+                    costo: 18000
+                }
+            },
+            estado: "RESERVADO",
+            costo: 18000,
+            historialEstados: [
+                {
+                    fechaHoraIngreso: new Date("2026-07-01T10:00:00"),
+                    estado: "DISPONIBLE",
+                    usuario: usuarioMilk._id,
+                    motivo: "Inicial"
+                },
+                {
+                    fechaHoraIngreso: new Date("2026-07-10T14:00:00"),
+                    estado: "RESERVADO",
+                    usuario: usuarioPaciente._id,
+                    motivo: "Reserva desde portal"
+                }
+            ]
+        });
+
+        // TURNO RESERVADO 2: House - Clínica Médica
+        await TurnoModel.create({
+            medico: medicoHouse._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-07-24T11:00:00"),
+            sede: sedeCentral._id,
+            servicio: {
+                tipo: "ESPECIALIDAD",
+                especialidad: {
+                    id: "1234",
+                    nombre: "Clínica Médica",
+                    duracionTurnoEnMins: 30,
+                    costo: 15000
+                }
+            },
+            estado: "RESERVADO",
+            costo: 15000,
+            historialEstados: [
+                {
+                    fechaHoraIngreso: new Date("2026-07-01T09:00:00"),
+                    estado: "DISPONIBLE",
+                    usuario: usuarioHouse._id,
+                    motivo: "Inicial"
+                },
+                {
+                    fechaHoraIngreso: new Date("2026-07-15T16:30:00"),
+                    estado: "RESERVADO",
+                    usuario: usuarioPaciente._id,
+                    motivo: "Reserva desde portal"
+                }
+            ]
+        });
+        // TURNO RESERVADO 3: House - Electrocardiograma
+        await TurnoModel.create({
+            medico: medicoHouse._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-07-28T10:30:00"),
+            sede: sedeCentral._id,
+            servicio: {
+                tipo: "PRACTICA",
+                practica: {
+                    id: "1236",
+                    codigo: "ECG001",
+                    nombre: "Electrocardiograma",
+                    duracionTurnoEnMins: 20,
+                    costo: 12000
+                }
+            },
+            estado: "RESERVADO",
+            costo: 12000,
+            historialEstados: [
+                {
+                    fechaHoraIngreso: new Date("2026-07-03T09:00:00"),
+                    estado: "DISPONIBLE",
+                    usuario: usuarioHouse._id,
+                    motivo: "Inicial"
+                },
+                {
+                    fechaHoraIngreso: new Date("2026-07-18T15:20:00"),
+                    estado: "RESERVADO",
+                    usuario: usuarioPaciente._id,
+                    motivo: "Reserva desde portal"
+                }
+            ]
+        });
+
+        // TURNO RESERVADO 4: Milk - Radiografía de Tórax
+        await TurnoModel.create({
+            medico: medicoMilk._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-07-30T14:30:00"),
+            sede: sedeNorte._id,
+            servicio: {
+                tipo: "PRACTICA",
+                practica: {
+                    id: "2002",
+                    codigo: "RX002",
+                    nombre: "Radiografía Tórax",
+                    duracionTurnoEnMins: 15,
+                    costo: 14000
+                }
+            },
+            estado: "RESERVADO",
+            costo: 14000,
+            historialEstados: [
+                {
+                    fechaHoraIngreso: new Date("2026-07-04T10:00:00"),
+                    estado: "DISPONIBLE",
+                    usuario: usuarioMilk._id,
+                    motivo: "Inicial"
+                },
+                {
+                    fechaHoraIngreso: new Date("2026-07-20T11:45:00"),
+                    estado: "RESERVADO",
+                    usuario: usuarioPaciente._id,
+                    motivo: "Reserva desde portal"
+                }
+            ]
+        });
+
         console.log('🔔 Sembrando notificaciones de ejemplo...');
+
         await NotificacionModel.create([
             {
                 destinatario: usuarioPaciente._id,
@@ -222,5 +357,4 @@ async function ejecutarSeed() {
     }
 }
 
-
-ejecutarSeed();
+module.exports{ ejecutarSeed }
