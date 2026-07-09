@@ -50,16 +50,20 @@ export default function Disponibilidad() {
   const [errorGlobal, setErrorGlobal] = useState(null);
   const [alerta, setAlerta] = useState(null);
 
+  const { user } = useAuth()
+
   useEffect(() => {
     async function cargarDatos() {
       if (!user?.perfilId) return;
       
       try {
         setCargando(true);
-        const data = await medicoService.consultarDisponibilidades(
-          user.perfilId,
+        const data = await medicoService.consultarDisponibilidades({
+          idMedico:user.perfilId
+          /*
           SERVICIO_CONTESTO_MOCK.tipo,
           SERVICIO_CONTESTO_MOCK.idServicio
+          */}
         );
         
         const normalizadas = data.map(d => ({

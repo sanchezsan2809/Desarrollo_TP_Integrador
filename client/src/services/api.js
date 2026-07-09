@@ -224,11 +224,18 @@ export const medicoService = {
         }
     },
 
-    consultarDisponibilidades: async (idMedico, tipoServicio, idServicio) => {
+    consultarDisponibilidades: async ({idMedico, tipoServicio, idServicio}) => {
         try {
             const response = await api.get(
-                `/medico/${idMedico}/disponibilidades/${tipoServicio.toLowerCase()}/${idServicio}`
+                `/medico/${idMedico}/disponibilidades`,
+                {
+                    params: {
+                        tipoServicio,
+                        idServicio
+                    }
+                }
             );
+            
             return response.data;
         } catch (error) {
             throw error.response?.data || new Error("No se pudieron obtener las disponibilidades.");

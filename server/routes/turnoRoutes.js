@@ -37,6 +37,8 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
+//TODO Generación asincrónica de turnos
+
 
 router.post(
     "/disponibles/busqueda", 

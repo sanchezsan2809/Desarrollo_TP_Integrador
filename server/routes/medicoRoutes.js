@@ -33,7 +33,7 @@ router.get(
 )
 
 router.get(
-    "/:idMedico/disponibilidades/:tipoServicio/:idServicio",
+    "/:idMedico/disponibilidades",
     validate(consultarDisponibilidadSchema),
     asyncHandler(controller.consultarDisponibilidades)
 );

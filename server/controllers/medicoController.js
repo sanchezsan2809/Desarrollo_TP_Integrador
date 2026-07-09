@@ -38,7 +38,9 @@ export class MedicoController {
   }
 
   consultarDisponibilidades = async (req, res) => {
-    const { idMedico, tipoServicio, idServicio } = req.params;
+    const { idMedico } = req.params;
+
+    const  { tipoServicio, idServicio } = req.query
 
     const disponibilidades = await this.medicoService.consultarDisponibilidades({
         idMedico,

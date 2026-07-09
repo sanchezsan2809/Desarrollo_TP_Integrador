@@ -31,20 +31,23 @@ export class MedicoService {
     }
 
     async consultarDisponibilidades({ idMedico, tipoServicio, idServicio }) {
+        const medico = await this.medicoRepository.findById(idMedico);
 
-        const medico = await this.medicoRepository.findById(idMedico)
+        if (tipoServicio && idServicio) {
+            if (!medico.puedeHacerServicio(idServicio, tipoServicio)) {
+                throw new BadRequestError(
+                    "El médico no realiza esta práctica o especialidad"
+                );
+            }
 
-        if (!medico.puedeHacerServicio(idServicio, tipoServicio)) {
-            throw new BadRequestError("El médico no realiza esta práctica o especialidad")
+            const servicio = medico.buscarServicio(idServicio, tipoServicio);
+
+            return medico.disponibilidades.filter(disponibilidad =>
+                disponibilidad.validarSesion(servicio)
+            );
         }
 
-        const servicio = medico.buscarServicio(idServicio, tipoServicio)
-
-        const disponibilidades = medico.disponibilidades.filter((disponibilidad) => {
-            return disponibilidad.validarSesion(servicio);
-        });
-
-        return disponibilidades
+        return medico.disponibilidades;
     }
 
 
