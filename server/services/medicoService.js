@@ -40,10 +40,9 @@ export class MedicoService {
 
         const servicio = medico.buscarServicio(idServicio, tipoServicio)
 
-        const disponibilidades = medico.disponibilidades.filter(
-            (disponibilidad) => {
-                disponibilidad.validarSesion(servicio)
-            })
+        const disponibilidades = medico.disponibilidades.filter((disponibilidad) => {
+            return disponibilidad.validarSesion(servicio);
+        });
 
         return disponibilidades
     }
@@ -54,7 +53,7 @@ export class MedicoService {
         const medico = await this.medicoRepository.findById(idMedico)
 
         medico.definirDisponibilidad(nuevasDisponibilidades)
-        await this.turnoService.sincronizarTurnosDisponibles({idMedico, nuevasDisponibilidades})
+        await this.turnoService.sincronizarTurnosDisponibles({ medico })
 
         const medicoGuardado = await this.medicoRepository.save(medico)
         

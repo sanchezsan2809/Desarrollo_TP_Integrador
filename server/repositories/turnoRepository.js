@@ -204,6 +204,26 @@ export class MongoTurnoRepository {
         return Promise.all(borrados.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
     }
 
+    async obtenerTurnosDelDiaSiguiente() {
+        const manana = new Date()
+        manana.setDate(manana.getDate() + 1)
+
+        const inicio = new Date(manana)
+        inicio.setHours(0, 0, 0, 0)
+
+        const fin = new Date(manana)
+        fin.setHours(23, 59, 59, 999)
+
+        const documents = await this.model.find({
+            estado: { $in: [EstadoTurno.RESERVADO, EstadoTurno.CONFIRMADO] },
+            fechaHora: { $gte: inicio, $lte: fin }
+        })
+
+        return Promise.all(
+            documents.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno))
+        )
+    }
+
     async existeTurnoEnFecha({
         idMedico,
         fecha,

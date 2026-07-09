@@ -38,27 +38,24 @@ export class MedicoController {
   }
 
   consultarDisponibilidades = async (req, res) => {
+    const { idMedico, tipoServicio, idServicio } = req.params;
 
-    const { idMedico } = req.params;
-    const { tipoServicio, idServicio } = req.body;
-
-    const disponibilidades =
-      await this.medicoService.consultarDisponibilidades({
+    const disponibilidades = await this.medicoService.consultarDisponibilidades({
         idMedico,
         tipoServicio,
         idServicio,
-      });
+    });
 
     const disponibilidadesDTO = disponibilidades.map((disponibilidad) =>
-      disponibilidadHorariaMapper.disponibilidadHorariaToDTO(disponibilidad),
+        disponibilidadHorariaMapper.disponibilidadHorariaToDTO(disponibilidad),
     );
 
     res.status(200).json(disponibilidadesDTO);
-
-  };
+};
 
   modificarDisponibilidades = async (req, res) => {
     const { idMedico } = req.params;
+
     const { nuevasDisponibilidadesDTO } = req.body;
 
     const nuevasDisponibilidades = nuevasDisponibilidadesDTO.map((dto) =>

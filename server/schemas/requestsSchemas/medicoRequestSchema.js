@@ -15,11 +15,9 @@ export const consultarTurnosSchema = z.object({
 
 export const consultarDisponibilidadSchema = z.object({
     params: z.object({
-        idMedico: z.string()
-    }),
-    body: z.object({
-        tipo: z.enum(["practica", "especialidad"]),
-        idServicio: z.string().min(5)
+        idMedico: z.string(),
+        tipoServicio: z.enum(["practica", "especialidad"]),
+        idServicio: z.string().min(4)
     })
 })
 
@@ -27,13 +25,15 @@ export const modificarDisponibilidadSchema = z.object({
     params: z.object({
         idMedico: z.string()
     }),
-    body: z.array(
-        z.object({
-            diaSemana: z.string().min(5), // duda, porque es un enum
-            horaDesde: z.string().min(4),
-            horaHasta: z.string().min(4)
-        })
-    ).nonempty("La lista no puede estar vacía")
+    body: z.object({
+        nuevasDisponibilidadesDTO: z.array(
+            z.object({
+                diaSemana: z.enum(["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"]),
+                horaDesde: z.string(),
+                horaHasta: z.string()
+            })
+        )
+    })
 })
 
 export const especialidadSchema = z.object({

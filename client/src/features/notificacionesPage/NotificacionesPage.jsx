@@ -1,24 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { notificacionesService } from '../../services/api';
-import { SEED_IDS } from '../../mockdata/seedIDs';
+import { useAuth } from '../../context/AuthContext';
 import './NotificacionesPage.css';
 
-const ID_USUARIO = SEED_IDS.USUARIO_PACIENTE;
-
 const NotificacionesPage = () => {
+    const { user } = useAuth();
+    const idUsuario = user?.usuario?.id;
+
     const [noLeidas, setNoLeidas] = useState([]);
     const [leidas, setLeidas] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState('');
 
     const cargarNotificaciones = useCallback(async () => {
+        if (!idUsuario) {
+            setCargando(false);
+            return;
+        }
+
         setCargando(true);
         setError('');
 
         try {
             const [sinLeer, yaLeidas] = await Promise.all([
-                notificacionesService.obtenerNoLeidas(ID_USUARIO),
-                notificacionesService.obtenerLeidas(ID_USUARIO)
+                notificacionesService.obtenerNoLeidas(idUsuario),
+                notificacionesService.obtenerLeidas(idUsuario)
             ]);
 
             setNoLeidas(sinLeer);
@@ -28,15 +34,17 @@ const NotificacionesPage = () => {
         } finally {
             setCargando(false);
         }
-    }, []);
+    }, [idUsuario]);
 
     useEffect(() => {
         cargarNotificaciones();
     }, [cargarNotificaciones]);
 
     const handleMarcarLeida = async (id) => {
+        if (!idUsuario) return;
+
         try {
-            await notificacionesService.marcarComoLeida(ID_USUARIO, id);
+            await notificacionesService.marcarComoLeida(idUsuario, id);
 
             setNoLeidas(prev => {
                 const notif = prev.find(n => n.id === id);
@@ -54,6 +62,15 @@ const NotificacionesPage = () => {
             setError('No pudimos marcar la notificación como leída.');
         }
     };
+
+    if (!idUsuario) {
+        return (
+            <div className="notificaciones-page-container">
+                <h2>Mis Notificaciones</h2>
+                <p>Iniciá sesión para ver tus notificaciones.</p>
+            </div>
+        );
+    }
 
     if (cargando) {
         return (

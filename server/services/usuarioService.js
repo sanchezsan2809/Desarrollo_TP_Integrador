@@ -1,3 +1,5 @@
+import { MedicoNotFoundError, PacienteNotFoundError } from "../errors/appError.js";
+
 export class UsuarioService {
     constructor(usuarioRepository, medicoRepository, pacienteRepository){
         this.usuarioRepository = usuarioRepository
@@ -9,7 +11,14 @@ export class UsuarioService {
 
         const usuario = await this.usuarioRepository.findByKeycloakIdOrThrow(keycloakId); 
 
-        const medico = await this.medicoRepository.findByUser(usuario.id)
+        let medico = null
+        try {
+            medico = await this.medicoRepository.findByUser(usuario.id)
+        } catch (error) {
+            if (!(error instanceof MedicoNotFoundError)) {
+                throw error
+            }
+        }
 
         if(medico){
             return {
@@ -19,7 +28,14 @@ export class UsuarioService {
             }
         }
 
-        const paciente = await this.pacienteRepository.findByUser(usuario.id)
+        let paciente = null
+        try {
+            paciente = await this.pacienteRepository.findByUser(usuario.id)
+        } catch (error) {
+            if (!(error instanceof PacienteNotFoundError)) {
+                throw error
+            }
+        }
 
         if(paciente){
             return {
