@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import "./GestionServicios.css";
 import { medicoService } from "../../services/api";
 import { SEED_IDS } from "../../mockdata/seedIDs";
+import { useAuth } from "../../context/AuthContext";
 
 const formVacio = { tipo: "", nombre: "", duracionTurnoEnMins: "", costo: "" };
-const ID_RESPALDO_MONGO = "64a111111111111111111111";
 
 export default function GestionServicios() {
-  const idMedico = SEED_IDS.MILK?.id || SEED_IDS.MEDICO_MILK || ID_RESPALDO_MONGO;
+  const { user } = useAuth();
+  const idMedico = user?.perfilId;
   
   const [listas, setListas] = useState({ especialidad: [], practica: [] });
   const [accion, setAccion] = useState(null); 
@@ -19,7 +20,6 @@ export default function GestionServicios() {
     async function cargarServicios() {
       // 🌟 CLÁUSULA DE GUARDA: Evita mandar 'undefined' al backend
       if (!idMedico || idMedico === "undefined") {
-        console.warn("⚠️ idMedico no está definido aún en el sistema.");
         return;
       }
 
@@ -168,6 +168,10 @@ export default function GestionServicios() {
 
     if (errores.id) setErrores((p) => ({ ...p, id: null }));
   };
+
+  if (!user) {
+    return <div className="gs-page"><p className="gs-vacio">Verificando sesión médica...</p></div>;
+  }
 
   return (
     <div className="gs-page">
