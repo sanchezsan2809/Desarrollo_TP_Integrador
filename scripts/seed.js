@@ -336,4 +336,6 @@ async function ejecutarSeed() {
     }
 }
 
+ejecutarSeed()
+
 export { ejecutarSeed };
