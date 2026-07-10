@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-
 import {
     Dialog,
     DialogTitle,
@@ -8,107 +7,98 @@ import {
     Typography,
     Button,
     Stack,
-    TextField
+    TextField,
+    Alert
 } from '@mui/material'
 
 import { turnosService } from '../../services/api'
-
 import { useAuth } from '../../context/AuthContext'
 
 export default function TurnoDialog({
     open,
     turno,
-    onClose
+    onClose,
+    onTurnoActualizado
 }) {
+    const { user } = useAuth() 
 
-    const [accionActiva, setAccionActiva] = useState(null)
+    const [motivo, setMotivo] = useState('')
+    const [nuevaFecha, setNuevaFecha] = useState('')
 
-    const [motivo, setMotivo] =
-        useState('')
-
-    const [nuevaFecha, setNuevaFecha] =
-        useState('')
-
-    const [errorMotivo,
-        setErrorMotivo] =
-        useState(false)
-
-    const [errorFecha,
-        setErrorFecha] =
-        useState(false)
+    const [errorMotivo, setErrorMotivo] = useState(false)
+    const [errorFecha, setErrorFecha] = useState(false)
+    
+    const [errorApi, setErrorApi] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-
-        setAccionActiva(null)
         setMotivo('')
         setNuevaFecha('')
         setErrorMotivo(false)
         setErrorFecha(false)
-
+        setErrorApi(null)
+        setLoading(false)
     }, [turno])
 
     if (!turno) return null
 
-    const esReservado =
-        turno.estado ===
-        'RESERVADO'
+    const esReservado = turno.estado === 'RESERVADO'
 
-    const cancelarTurno = () => {
+    const cancelarTurno = async () => {
+        const motivoInvalido = !motivo.trim()
+        setErrorMotivo(motivoInvalido)
+        if (motivoInvalido) return
 
-        const motivoInvalido =
-            !motivo.trim()
-
-        setErrorMotivo(
-            motivoInvalido
-        )
-
-        if (motivoInvalido)
-            return
-
-        console.log(
-            'Cancelar turno',
-            turno.id,
-            motivo
-        )
-
-        onClose()
+        try {
+            setLoading(true)
+            setErrorApi(null)
+            
+            await turnosService.cancelar(turno.id, user.id, motivo)
+            
+            if (onTurnoActualizado) onTurnoActualizado()
+            onClose()
+        } catch (error) {
+            setErrorApi(error.message || "Error al intentar cancelar el turno.")
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const marcarRealizado =
-        () => {
+    const marcarRealizado = async () => {
+        try {
+            setLoading(true)
+            setErrorApi(null)
 
-        console.log(
-            'Turno realizado',
-            turno.id
-        )
+            await turnosService.marcarComoRealizado(turno.id, user.id)
 
-        onClose()
+            if (onTurnoActualizado) onTurnoActualizado()
+            onClose()
+        } catch (error) {
+            setErrorApi(error.message || "No se pudo marcar el turno como realizado.")
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const proponerCambio =
-        async () => {
+    const proponerCambio = async () => {
+        const fechaInvalida = !nuevaFecha
+        setErrorFecha(fechaInvalida)
+        if (fechaInvalida) return
 
-        const fechaInvalida =
-            !nuevaFecha
+        try {
+            setLoading(true)
+            setErrorApi(null)
 
-        setErrorFecha(
-            fechaInvalida
-        )
+            await turnosService.proponerCambioFecha(turno.id, user.id, nuevaFecha)
 
-        if (fechaInvalida)
-            return
-
-        console.log(
-            'Propuesta de cambio',
-            turno.id,
-            nuevaFecha
-        )
-
-
-        onClose()
+            if (onTurnoActualizado) onTurnoActualizado()
+            onClose()
+        } catch (error) {
+            setErrorApi(error.response?.data?.message || "No se pudo proponer el cambio de fecha.")
+        } finally {
+            setLoading(false)
+        }
     }
-
-    console.log(turno)
 
     return (
         <Dialog
@@ -118,27 +108,28 @@ export default function TurnoDialog({
             maxWidth="sm"
         >
             <DialogTitle>
-                Paciente: {turno.paciente.nombre}
+                Paciente: {turno.paciente?.nombre || 'Sin Nombre'}
             </DialogTitle>
 
             <DialogContent>
-
                 <Stack
                     spacing={2}
                     mt={1}
                 >
+                    {/* Alerta visible si el backend rechaza la operación */}
+                    {errorApi && (
+                        <Alert severity="error" onClose={() => setErrorApi(null)}>
+                            {errorApi}
+                        </Alert>
+                    )}
 
                     <Typography>
-                        <strong>
-                            Práctica:
-                        </strong>{' '}
-                        {turno.servicio.nombre}
+                        <strong>Práctica:</strong>{' '}
+                        {turno.servicio?.nombre}
                     </Typography>
 
                     <Typography>
-                        <strong>
-                            Estado:
-                        </strong>{' '}
+                        <strong>Estado:</strong>{' '}
                         {turno.estado}
                     </Typography>
 
@@ -149,118 +140,67 @@ export default function TurnoDialog({
                                 multiline
                                 rows={2}
                                 value={motivo}
+                                disabled={loading}
                                 onChange={(e) => {
-
-                                    setMotivo(
-                                        e.target.value
-                                    )
-
-                                    if (
-                                        errorMotivo
-                                    ) {
-                                        setErrorMotivo(
-                                            false
-                                        )
-                                    }
+                                    setMotivo(e.target.value)
+                                    if (errorMotivo) setErrorMotivo(false)
                                 }}
-
-                                error={
-                                    errorMotivo
-                                }
-
-                                helperText={
-                                    errorMotivo
-                                        ? 'El motivo es obligatorio'
-                                        : ''
-                                }
+                                error={errorMotivo}
+                                helperText={errorMotivo ? 'El motivo es obligatorio' : ''}
                                 fullWidth
                             />
+                            
                             <TextField
                                 label="Proponer nueva fecha"
                                 type="datetime-local"
-
-                                InputLabelProps={{
-                                    shrink: true
-                                }}
-
-                                value={
-                                    nuevaFecha
-                                }
-
+                                disabled={loading}
+                                InputLabelProps={{ shrink: true }}
+                                value={nuevaFecha}
                                 onChange={(e) => {
-
-                                    setNuevaFecha(
-                                        e.target.value
-                                    )
-
-                                    if (
-                                        errorFecha
-                                    ) {
-                                        setErrorFecha(
-                                            false
-                                        )
-                                    }
+                                    setNuevaFecha(e.target.value)
+                                    if (errorFecha) setErrorFecha(false)
                                 }}
-
-                                error={
-                                    errorFecha
-                                }
-
-                                helperText={
-                                    errorFecha
-                                        ? 'Seleccioná una nueva fecha'
-                                        : ''
-                                }
-
+                                error={errorFecha}
+                                helperText={errorFecha ? 'Seleccioná una nueva fecha' : ''}
                                 fullWidth
                             />
                         </>
                     )}
-
                 </Stack>
-
             </DialogContent>
 
             <DialogActions>
-
-                <Button
-                    onClick={onClose}
-                >
+                <Button onClick={onClose} disabled={loading}>
                     Cerrar
                 </Button>
 
                 {esReservado && (
                     <>
                         <Button
-                            onClick={
-                                proponerCambio
-                            }
+                            onClick={proponerCambio}
+                            disabled={loading}
                         >
                             Proponer cambio
                         </Button>
 
                         <Button
                             color="error"
-                            onClick={
-                                cancelarTurno
-                            }
+                            onClick={cancelarTurno}
+                            disabled={loading}
                         >
                             Cancelar
                         </Button>
 
                         <Button
                             variant="contained"
-                            onClick={
-                                marcarRealizado
-                            }
+                            onClick={marcarRealizado}
+                            disabled={loading}
                         >
                             Marcar realizado
                         </Button>
                     </>
                 )}
-
             </DialogActions>
-
         </Dialog>
     )
 }
