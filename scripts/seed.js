@@ -32,7 +32,6 @@ async function ejecutarSeed() {
         console.log('🌱 Insertando datos maestros...');
 
         // USUARIOS
-        // USUARIOS
         const usuarioHouse = await UsuarioModel.create({
             keycloakId: SEED_IDS.HOUSE.keycloakId,
             nombreUsuario: SEED_IDS.HOUSE.username,
@@ -196,28 +195,13 @@ async function ejecutarSeed() {
             sede: sedeNorte._id,
             servicio: {
                 tipo: "ESPECIALIDAD",
-                especialidad: {
-                    id: "2001",
-                    nombre: "Pediatría",
-                    duracionTurnoEnMins: 20,
-                    costo: 18000
-                }
+                especialidad: { id: "2001", nombre: "Pediatría", duracionTurnoEnMins: 20, costo: 18000 }
             },
             estado: "RESERVADO",
             costo: 18000,
             historialEstados: [
-                {
-                    fechaHoraIngreso: new Date("2026-07-01T10:00:00"),
-                    estado: "DISPONIBLE",
-                    usuario: usuarioMilk._id,
-                    motivo: "Inicial"
-                },
-                {
-                    fechaHoraIngreso: new Date("2026-07-10T14:00:00"),
-                    estado: "RESERVADO",
-                    usuario: usuarioPaciente._id,
-                    motivo: "Reserva desde portal"
-                }
+                { fechaHoraIngreso: new Date("2026-07-01T10:00:00"), estado: "DISPONIBLE", usuario: usuarioMilk._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-07-10T14:00:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" }
             ]
         });
 
@@ -229,30 +213,16 @@ async function ejecutarSeed() {
             sede: sedeCentral._id,
             servicio: {
                 tipo: "ESPECIALIDAD",
-                especialidad: {
-                    id: "1234",
-                    nombre: "Clínica Médica",
-                    duracionTurnoEnMins: 30,
-                    costo: 15000
-                }
+                especialidad: { id: "1234", nombre: "Clínica Médica", duracionTurnoEnMins: 30, costo: 15000 }
             },
             estado: "RESERVADO",
             costo: 15000,
             historialEstados: [
-                {
-                    fechaHoraIngreso: new Date("2026-07-01T09:00:00"),
-                    estado: "DISPONIBLE",
-                    usuario: usuarioHouse._id,
-                    motivo: "Inicial"
-                },
-                {
-                    fechaHoraIngreso: new Date("2026-07-15T16:30:00"),
-                    estado: "RESERVADO",
-                    usuario: usuarioPaciente._id,
-                    motivo: "Reserva desde portal"
-                }
+                { fechaHoraIngreso: new Date("2026-07-01T09:00:00"), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-07-15T16:30:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" }
             ]
         });
+
         // TURNO RESERVADO 3: House - Electrocardiograma
         await TurnoModel.create({
             medico: medicoHouse._id,
@@ -261,29 +231,13 @@ async function ejecutarSeed() {
             sede: sedeCentral._id,
             servicio: {
                 tipo: "PRACTICA",
-                practica: {
-                    id: "1236",
-                    codigo: "ECG001",
-                    nombre: "Electrocardiograma",
-                    duracionTurnoEnMins: 20,
-                    costo: 12000
-                }
+                practica: { id: "1236", codigo: "ECG001", nombre: "Electrocardiograma", duracionTurnoEnMins: 20, costo: 12000 }
             },
             estado: "RESERVADO",
             costo: 12000,
             historialEstados: [
-                {
-                    fechaHoraIngreso: new Date("2026-07-03T09:00:00"),
-                    estado: "DISPONIBLE",
-                    usuario: usuarioHouse._id,
-                    motivo: "Inicial"
-                },
-                {
-                    fechaHoraIngreso: new Date("2026-07-18T15:20:00"),
-                    estado: "RESERVADO",
-                    usuario: usuarioPaciente._id,
-                    motivo: "Reserva desde portal"
-                }
+                { fechaHoraIngreso: new Date("2026-07-03T09:00:00"), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-07-18T15:20:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" }
             ]
         });
 
@@ -295,31 +249,56 @@ async function ejecutarSeed() {
             sede: sedeNorte._id,
             servicio: {
                 tipo: "PRACTICA",
-                practica: {
-                    id: "2002",
-                    codigo: "RX002",
-                    nombre: "Radiografía Tórax",
-                    duracionTurnoEnMins: 15,
-                    costo: 14000
-                }
+                practica: { id: "2002", codigo: "RX002", nombre: "Radiografía Tórax", duracionTurnoEnMins: 15, costo: 14000 }
             },
             estado: "RESERVADO",
             costo: 14000,
             historialEstados: [
-                {
-                    fechaHoraIngreso: new Date("2026-07-04T10:00:00"),
-                    estado: "DISPONIBLE",
-                    usuario: usuarioMilk._id,
-                    motivo: "Inicial"
-                },
-                {
-                    fechaHoraIngreso: new Date("2026-07-20T11:45:00"),
-                    estado: "RESERVADO",
-                    usuario: usuarioPaciente._id,
-                    motivo: "Reserva desde portal"
-                }
+                { fechaHoraIngreso: new Date("2026-07-04T10:00:00"), estado: "DISPONIBLE", usuario: usuarioMilk._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-07-20T11:45:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" }
             ]
         });
+
+        console.log('✅ Sembrando turnos completados (REALIZADO)...');
+        
+        // TURNO REALIZADO 1: House - Clínica Médica (En el pasado)
+        await TurnoModel.create({
+            medico: medicoHouse._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-06-10T09:00:00"),
+            sede: sedeCentral._id,
+            servicio: {
+                tipo: "ESPECIALIDAD",
+                especialidad: { id: "1234", nombre: "Clínica Médica", duracionTurnoEnMins: 30, costo: 15000 }
+            },
+            estado: "REALIZADO",
+            costo: 15000,
+            historialEstados: [
+                { fechaHoraIngreso: new Date("2026-06-01T08:00:00"), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-06-05T10:15:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" },
+                { fechaHoraIngreso: new Date("2026-06-10T09:35:00"), estado: "REALIZADO", usuario: usuarioHouse._id, motivo: "Atención finalizada con éxito" }
+            ]
+        });
+
+        // TURNO REALIZADO 2: House - Análisis de Sangre (En el pasado)
+        await TurnoModel.create({
+            medico: medicoHouse._id,
+            paciente: PACIENTE_ID,
+            fechaHora: new Date("2026-06-12T08:15:00"),
+            sede: sedeCentral._id,
+            servicio: {
+                tipo: "PRACTICA",
+                practica: { id: "1237", codigo: "LAB101", nombre: "Análisis de Sangre", duracionTurnoEnMins: 15, costo: 8000 }
+            },
+            estado: "REALIZADO",
+            costo: 8000,
+            historialEstados: [
+                { fechaHoraIngreso: new Date("2026-06-02T08:00:00"), estado: "DISPONIBLE", usuario: usuarioHouse._id, motivo: "Inicial" },
+                { fechaHoraIngreso: new Date("2026-06-06T11:00:00"), estado: "RESERVADO", usuario: usuarioPaciente._id, motivo: "Reserva desde portal" },
+                { fechaHoraIngreso: new Date("2026-06-12T08:30:00"), estado: "REALIZADO", usuario: usuarioHouse._id, motivo: "Práctica efectuada" }
+            ]
+        });
+
 
         console.log('🔔 Sembrando notificaciones de ejemplo...');
 
@@ -357,4 +336,4 @@ async function ejecutarSeed() {
     }
 }
 
-module.exports{ ejecutarSeed }
+export { ejecutarSeed };
