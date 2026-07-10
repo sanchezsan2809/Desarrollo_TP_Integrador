@@ -18,7 +18,7 @@ import {
 import { useAuth } from '../../context/AuthContext'
 import TurnoDialog from '../../components/medico/TurnoDialog'
 
-export default function MedicoDashboard() {
+export default function MedicoAgendaPage() {
 
     const navigate = useNavigate()
 
@@ -105,7 +105,7 @@ export default function MedicoDashboard() {
                 <Typography
                     variant="h4"
                     sx={{ 
-                        fontFamily: '"Sour Gummy", sans-serif',
+                        fontFamily: '"Capriola", sans-serif',
                         borderRadius: '18px',
                         textTransform: 'none',
                         mb: 2

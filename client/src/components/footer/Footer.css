@@ -1,10 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Capriola&display=swap');
 
 
 footer{
-    width: 100%;
-    background-color:  rgba(65,139,24,1.000);
+width: 100%;
+    background-color: rgba(65,139,24,1.000);
     color: white;
-    text-align: center;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
+    
+    display: flex;
+    flex-direction: row; 
+    
+
+    justify-content: center; 
+    
+
+    align-items: center; 
+    
+
+    gap: 3rem; 
+    
+
+    padding: 0.5rem 0; 
+    
+    box-sizing: border-box;
+}
+
+footer p {
+    margin: 0;
 }

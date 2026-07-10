@@ -7,7 +7,7 @@
 
     padding: 0.75rem 2rem;
 
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
 }
 
 .medico-navbar-left {
@@ -51,7 +51,7 @@
     display: block;
 }
 
-.medico-navbar button {
+.logout-button {
     background: #3e8f14;
 
     color: white;
@@ -61,7 +61,7 @@
 
     padding: 0.6rem 1rem;
 
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
     font-size: 1rem;
 
     cursor: pointer;
@@ -71,7 +71,33 @@
     white-space: nowrap;
 }
 
-.medico-navbar button:hover {
+.logout-button:hover {
     background: #34780f;
     transform: translateY(-1px);
+}
+
+.hamburger-button{
+    display: none;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+}
+
+@media (max-width:1550px){
+
+    .hamburger-button{
+        display:flex;
+    }
+
+    .medico-navbar-left .medico-link{
+        display:none;
+    }
+
+    .medico-navbar-right{
+        display:none;
+    }
+    
+
 }

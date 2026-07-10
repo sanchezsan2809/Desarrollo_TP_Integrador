@@ -7,13 +7,13 @@
 
 .medicos-titulo {
   color: #418b18;
-  font-family: "Sour Gummy", sans-serif;
+  font-family: "Capriola", sans-serif;
 }
 
 .medicos-subtitulo {
   color: #666;
   margin-bottom: 2rem;
-  font-family: "Sour Gummy", sans-serif;
+  font-family: "Capriola", sans-serif;
 }
 
 .medicos-grid {
@@ -21,7 +21,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
-  font-family: "Sour Gummy", sans-serif;
+  font-family: "Capriola", sans-serif;
 }
 
 .medico-card {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Capriola&display=swap');
 
 .contenedor-tabla {
     display: flex;
@@ -16,7 +16,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* Bajamos un toque la opacidad para que sea más sutil */
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
 }
 
 .cabecerasTablaHistorial {
@@ -24,7 +24,7 @@
     color: white;
     padding: 15px;
     text-align: center;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
     font-weight: 600;
 }
 
@@ -41,7 +41,7 @@
     justify-content: flex-end;
     margin-bottom: 15px;
     padding-right: 20px;
-    font-family: "Sour Gummy", sans-serif;
+    font-family: "Capriola", sans-serif;
 }
 
 .filtro input {
@@ -55,8 +55,8 @@
     user-select: none;
 }
 
-/* 📱 TRANSFIGURACIÓN PARA CELULARES (Pantallas menores a 768px) */
-@media (max-width: 768px) {
+
+@media (max-width: 1550px) {
 
     /* Hacemos que el input de filtro ocupe todo el ancho en mobile */
     .filtro {

@@ -40,8 +40,9 @@ const BusquedaItem = ({ turno: itemConCobertura }) => {
             month: '2-digit', 
             year: 'numeric', 
             hour: '2-digit', 
-            minute: '2-digit' 
-        }) + " hs";
+            minute: '2-digit',
+            hour12: false
+        }) ;
     }
 
     const handleAgregar = () => {

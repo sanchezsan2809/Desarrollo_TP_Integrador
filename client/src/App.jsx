@@ -8,23 +8,23 @@ import HistorialTurnosPage from './features/historialTurnos/HistorialTurnosPage.
 import NotificacionesPage from './features/notificacionesPage/NotificacionesPage.jsx';
 import BusquedaDeTurnosPage from './features/busquedaTurnos/BusquedaTurnosPage.jsx';
 import { TurnoCartProvider } from './context/carritoTurnosContext.jsx';
-import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx'
+import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx';
 import Registrar from './components/registrar/Registrar.jsx';
-import MedicoAgendaPage from './features/pages/medico/MedicoAgendaPage.jsx';
-import GestionServicios from './components/gestionServicios/GestionServicios.jsx'
+import GestionServicios from './components/gestionServicios/GestionServicios.jsx';
 import Disponibilidad from './components/disponibilidad/Disponibilidad.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ServiciosPage from './features/serviciosPage/ServiciosPage.jsx';
 import MedicosPage from './features/medicosPage/MedicosPage.jsx';
 import ComoFuncionaPage from './features/comoFuncionaPage/ComoFuncionaPage.jsx';
-import MedicoHomePage from './features/medicoHomePage/medicoHomePage.jsx';
-import MedicoDashboard from './features/medicoHomePage/medicoHomePage.jsx';
 import ReservaExitosaPage from './features/reservaExitosaPage/ReservaExitosaPage.jsx';
 import MisTurnosPage from './features/misTurnosPage/MisTurnosPage.jsx';
+import MedicoHomePage from './features/medicoHomePage/MedicoHome.jsx';
+import MedicoAgendaPage from './features/medicoAgendaPage/MedicoAgendaPage.jsx'
+
+
 function App() {
+
   return (
-
-
     //TODO Pantallas de Disponibilidad de Médicos
     //TODO Pantallas de Gestión de Servicios
     //TODO Terminar pantallas de Búsqueda de Turnos
@@ -35,24 +35,56 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePacientePage />} />
-          <Route path="/historialDeTurnos" element={<HistorialTurnosPage />} />
+          
+          <Route path="/historialDeTurnos" element={
+            <HistorialTurnosPage />} />
+          
           <Route path="/servicios" element={<ServiciosPage />} />
+          
           <Route path="/medicos" element={<MedicosPage />} />
-          <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
-          <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
           <Route path="/reserva-exitosa" element={<ReservaExitosaPage />}/>
           <Route path="/mis-turnos" element={<MisTurnosPage />}/>
+          
+          <Route path="/busquedaDeTurnos" element={
+            <ProtectedRoute allowedRoles={['PACIENTE']}>
+            <BusquedaDeTurnosPage />
+            </ProtectedRoute>
+            } />
+          
+          <Route path="/turnos/preseleccion" element={
+            <ProtectedRoute allowedRoles={['PACIENTE']}>
+            <PreseleccionTurnosPage />
+            </ProtectedRoute>
+            } />
+          
           <Route path="/como-funciona" element={<ComoFuncionaPage />} />
-          <Route path="/notificaciones" element={<NotificacionesPage/>}/>
+          
+          <Route path="/notificaciones" element={
+            <ProtectedRoute allowedRoles={['MEDICO', 'PACIENTE']}>
+            <NotificacionesPage/>
+            </ProtectedRoute>
+            }/>
+
           <Route path="/registrar" element={<Registrar />} />
+
           <Route path="/medico" element={
               <ProtectedRoute
                 allowedRoles={['MEDICO']}
               >
-                <MedicoDashboard />
+                <MedicoAgendaPage />
               </ProtectedRoute>
 
             } />
+          
+          <Route path="/medicoHome" element={
+              <ProtectedRoute
+                allowedRoles={['MEDICO']}
+              >
+                <MedicoHomePage />
+              </ProtectedRoute>
+
+            } />
+
           <Route 
             path="/gs" 
             element={
