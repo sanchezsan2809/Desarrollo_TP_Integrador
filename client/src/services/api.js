@@ -122,6 +122,8 @@ export const turnosService = {
         }
     }
 
+    
+
 };
 
 export const usuariosService = {
@@ -134,6 +136,29 @@ export const usuariosService = {
         })
 
         return response.data
+    },
+
+    cancelar: async (idTurno, idUsuario, motivo) => {
+        try {
+            const response = await api.post(`/turnos/${idTurno}/cancelar`, {
+                idUsuario,
+                motivo
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo cancelar el turno.");
+        }
+    },
+
+    marcarComoRealizado: async (idTurno, idUsuario) => {
+        try {
+            const response = await api.patch(`/turnos/${idTurno}/realizado`, {
+                idUsuario
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || new Error("No se pudo marcar el turno como realizado.");
+        }
     }
 
 }
