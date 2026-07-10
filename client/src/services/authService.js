@@ -55,9 +55,10 @@ export async function login(
 }
 
 export async function obtenerUsuarioActual(token) {
+    const apiUrl = process.env.REACT_APP_API_URL.replace(/\/+$/, "");
 
     const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/usuarios/me`,
+        `${apiUrl}/usuario/me`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -66,6 +67,8 @@ export async function obtenerUsuarioActual(token) {
     );
 
     if (!response.ok) {
+        const error = await response.text();
+        console.error(error);
         throw new Error("No se pudo obtener el usuario.");
     }
 
