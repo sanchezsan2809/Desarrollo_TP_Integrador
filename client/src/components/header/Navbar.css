@@ -79,6 +79,7 @@
 .centro {
     display: flex;
     justify-content: center;
+    gap: 1rem;
 }
 
 .right {
@@ -129,6 +130,7 @@
 }
 
 .user-container {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -156,10 +158,6 @@
 
 .action-button:hover {
     transform: translateY(-2px);
-}
-
-.secondary {
-    background: #3e8f14;;
 }
 
 .nav-link,
@@ -197,6 +195,8 @@
 
 .hamburger-button{
     display:none;
+    color: rgba(65, 139, 24, 1);
+    font-size: 2rem;
 }
 
 @media (max-width: 1400px) {
@@ -270,10 +270,6 @@
 
 @media (max-width: 950px) {
 
-    .preseleccion-container {
-        display: none;
-    }
-
     .nav-link {
         font-size: 0.9rem;
     }
@@ -301,7 +297,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1550px) {
 
     .quick-actions {
         display: none;
@@ -320,7 +316,7 @@
     }
 }
 
-@media (max-width:768px){
+@media (max-width:1550px){
 
     .hamburger-button{
         display:flex;
@@ -328,7 +324,7 @@
 
 }
 
-@media (max-width:768px){
+@media (max-width:1550px){
 
     .navbar-seccion.left .nav-link{
         display:none;

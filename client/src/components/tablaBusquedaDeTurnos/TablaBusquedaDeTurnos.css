@@ -35,7 +35,7 @@
 }
 
 /* 📱 TRANSFIGURACIÓN DE TABLA A TARJETAS (Dentro de la media query de la tabla) */
-@media (max-width: 768px) {
+@media (max-width: 1550px) {
 
     .tablaHistorial, 
     .tablaHistorial thead, 

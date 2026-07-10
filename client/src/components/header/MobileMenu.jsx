@@ -7,7 +7,7 @@ import './MobileMenu.css';
 
 export default function MobileMenu({ onClose }) {
 
-    const { user, isAuthenticated, logout } = useAuth();
+    const { user, isAuthenticated, isPaciente, logout } = useAuth();
 
     return (
         <div className="mobile-menu">
@@ -29,6 +29,7 @@ export default function MobileMenu({ onClose }) {
                         </Link>
 
                         <button
+                             className="mobile-menu__logout"
                             onClick={() => {
                                 logout();
                                 onClose();
@@ -56,13 +57,33 @@ export default function MobileMenu({ onClose }) {
                             Reservar Turnos
                         </Link>
 
-                        <Link to="/historialDeTurnos" onClick={onClose}>
-                            Historial
-                        </Link>
+                        {isAuthenticated && isPaciente && (
+                            <Link to="/historialDeTurnos" onClick={onClose}>
+                                Historial de turnos
+                            </Link>
+                        )}
+
+                        {isAuthenticated && isPaciente && (
+                            <Link to="/mis-turnos" onClick={onClose}>
+                                Mis turnos
+                            </Link>
+                        )}
 
                         <CarritoIndicador />
 
                         <NotificacionesIndicador />
+
+                        {isAuthenticated && (
+                            <button
+                                className="mobile-menu__logout"
+                                onClick={() => {
+                                    logout();
+                                    onClose();
+                                }}
+                            >
+                                Cerrar sesión
+                            </button>
+                        )}
                     </>
                 )
             }

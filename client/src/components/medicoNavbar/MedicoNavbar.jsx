@@ -5,14 +5,16 @@ import { Link } from 'react-router-dom'
 import EventNoteIcon from '@mui/icons-material/EventNote'
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices'
 import ScheduleIcon from '@mui/icons-material/Schedule'
+import { MdAccountCircle } from 'react-icons/md'
 
 import logo from '../../assets/osecroacklogo.png'
 
 import { useAuth } from '../../context/AuthContext'
 
 import NotificacionesIndicador from '../header/NotificacionesIndicador'
+import UserMenu from '../header/UserMenu.jsx'
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import MobileMenu from "../header/MobileMenu.jsx";
@@ -20,7 +22,18 @@ import MobileMenu from "../header/MobileMenu.jsx";
 export default function MedicoNavbar() {
 
     const [menuOpen, setMenuOpen] = useState(false)
-    const { user, logout } = useAuth()
+    const [menuUsuarioAbierto, setMenuUsuarioAbierto] = useState(false)
+    const userContainerRef = useRef(null)
+    const { logout } = useAuth()
+
+    const userMenuItems = [
+        {
+            type: 'button',
+            label: 'Cerrar sesión',
+            onClick: logout,
+            isLogout: true
+        }
+    ]
 
     return (
         <>
@@ -66,12 +79,23 @@ export default function MedicoNavbar() {
 
                     <NotificacionesIndicador />
 
-                    <button
-                        onClick={logout}
-                        classaAme="logout-button"
-                    >
-                        Cerrar sesión
-                    </button>
+                     <div className="user-container" ref={userContainerRef}>
+                        <button
+                            className="user-icon"
+                            onClick={() => setMenuUsuarioAbierto((prev) => !prev)}
+                            aria-label="Abrir menú de usuario"
+                            title="Abrir menú de usuario"
+                        >
+                            <MdAccountCircle />
+                        </button>
+
+                        <UserMenu
+                            isOpen={menuUsuarioAbierto}
+                            onClose={() => setMenuUsuarioAbierto(false)}
+                            items={userMenuItems}
+                            containerRef={userContainerRef}
+                        />
+                    </div>
 
                 </div>
 

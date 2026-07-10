@@ -85,7 +85,7 @@
     cursor: pointer;
 }
 
-@media (max-width:768px){
+@media (max-width:1550px){
 
     .hamburger-button{
         display:flex;
@@ -98,5 +98,6 @@
     .medico-navbar-right{
         display:none;
     }
+    
 
 }

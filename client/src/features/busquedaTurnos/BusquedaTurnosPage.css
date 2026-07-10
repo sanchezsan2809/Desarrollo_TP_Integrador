@@ -14,7 +14,7 @@
 }
 
 /* 📱 CORRECCIÓN RESPONSIVA PARA LOS FILTROS (Celulares) */
-@media (max-width: 768px) {
+@media (max-width: 1550px) {
     .busqueda {
         flex-direction: column !important; /* Pasamos de fila a columna */
         align-items: center;

@@ -60,8 +60,8 @@
     background-color:  #2e6112;
 }
 
-/* 📱 CORRECCIÓN PARA CELULARES (Pantallas menores a 768px) */
-@media (max-width: 768px) {
+
+@media (max-width: 1550px) {
     
     .listaDeBotones {
         padding: 0; /* 🎯 ¡LA CLAVE! Eliminamos los 40px invisibles que venían por defecto */

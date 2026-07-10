@@ -8,7 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import AgendaCalendar from '../../components/medico/AgendaCalendar'
 
-export default function MedicoDashboard() {
+export default function MedicoAgendaPage() {
 
     const navigate = useNavigate()
 

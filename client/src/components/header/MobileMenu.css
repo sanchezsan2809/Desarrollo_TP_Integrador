@@ -30,7 +30,26 @@
     color: #34780f;
 }
 
-@media (max-width:768px){
+.mobile-menu__logout {
+    border: none;
+    background: none;
+    padding: 0;
+
+    font-family: "Sour Gummy", sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+
+    color: #5a6470;
+    cursor: pointer;
+}
+
+.mobile-menu__logout:hover {
+    color: #c0392b;
+}
+
+
+@media (max-width:1550px){
 
     .mobile-menu{
         display:flex;

@@ -55,8 +55,8 @@
     user-select: none;
 }
 
-/* 📱 TRANSFIGURACIÓN PARA CELULARES (Pantallas menores a 768px) */
-@media (max-width: 768px) {
+
+@media (max-width: 1550px) {
 
     /* Hacemos que el input de filtro ocupe todo el ancho en mobile */
     .filtro {
