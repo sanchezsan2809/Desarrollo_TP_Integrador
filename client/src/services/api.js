@@ -120,22 +120,6 @@ export const turnosService = {
                 "No se pudo solicitar la modificación de la fecha del turno"
             )
         }
-    }
-
-    
-
-};
-
-export const usuariosService = {
-
-    obtenerUsuarioActual: async (token) => {
-        const response = await api.get("/usuario/me", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response.data
     },
 
     cancelar: async (idTurno, idUsuario, motivo) => {
@@ -160,6 +144,22 @@ export const usuariosService = {
             throw error.response?.data || new Error("No se pudo marcar el turno como realizado.");
         }
     }
+    
+
+};
+
+export const usuariosService = {
+
+    obtenerUsuarioActual: async (token) => {
+        const response = await api.get("/usuario/me", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response.data
+    }
+
 
 }
 export const notificacionesService = {
