@@ -1,0 +1,49 @@
+.turno-dialog-paper {
+    border-radius: 16px !important;
+}
+
+.turno-dialog-title {
+    margin: 0;
+    padding: 16px 24px !important;
+    font-family: 'Capriola', sans-serif !important;
+    font-weight: bold !important;
+    color: #2e5a27 !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #dfead9;
+}
+
+.turno-acciones-box {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #f4faf2;
+    border-radius: 12px;
+}
+
+.turno-input-field {
+    background-color: white;
+}
+.turno-input-field .MuiOutlinedInput-root {
+    border-radius: 10px !important;
+}
+
+.turno-dialog-actions {
+    padding: 16px 24px !important;
+    border-top: 1px solid #dfead9;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.turno-btn {
+    border-radius: 10px !important;
+    text-transform: none !important;
+}
+
+.turno-btn-success {
+    background-color: #2e5a27 !important;
+}
+.turno-btn-success:hover {
+    background-color: #23441d !important;
+}

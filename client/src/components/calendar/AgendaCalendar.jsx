@@ -1,29 +1,19 @@
 import { useState } from "react";
-import{
-    Calendar,
-    dayjsLocalizer
-} from "react-big-calendar"
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs from "dayjs";
-import "react-big-calendar/lib/css/react-big-calendar.css"
+import "dayjs/locale/es";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./AgendaCalendar.css"; 
 
-const localizer = dayjsLocalizer(dayjs)
+dayjs.locale("es");
+const localizer = dayjsLocalizer(dayjs);
 
-export default function AgendaCalendar({
-
-    turnos = [],
-
-    onSelectTurno
-}){
-    const[
-        fechaActual,
-        setFechaActual
-    ] = useState(
-        turnos[0]?.start ??
-        new Date()
-    )
+export default function AgendaCalendar({ turnos = [], onSelectTurno }) {
+    const [fechaActual, setFechaActual] = useState(
+        turnos[0]?.start ?? new Date()
+    );
 
     const eventStyleGetter = (evento) => {
-
         const colores = {
             RESERVADO: "#418B18",
             CONFIRMADO: "#1976D2",
@@ -42,9 +32,9 @@ export default function AgendaCalendar({
     };
 
     const messages = {
-        today: "Hoy",
-        previous: "Anterior",
-        next: "Siguiente",
+        today: "Volver a Hoy",
+        previous: "‹ Mes Anterior", 
+        next: "Mes Siguiente ›",
         month: "Mes",
         week: "Semana",
         day: "Día",
@@ -56,39 +46,20 @@ export default function AgendaCalendar({
     };
 
     return (
-
-        <div
-            style={{
-                height: "70vh"
-            }}
-        >
+        <div style={{ height: "70vh" }}>
             <Calendar
                 localizer={localizer}
-
                 events={turnos}
-
                 startAccessor="start"
                 endAccessor="end"
-
                 date={fechaActual}
                 onNavigate={setFechaActual}
-
                 defaultView="month"
-
-                views={[
-                    "month",
-                    "week",
-                    "day"
-                ]}
-
-                messages= {messages}
-
+                views={["month"]}
+                messages={messages}
                 eventPropGetter={eventStyleGetter}
-                
-                events={turnos}
-
                 onSelectEvent={onSelectTurno}
             />
         </div>
-    )
+    );
 }
