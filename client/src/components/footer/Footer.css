@@ -2,29 +2,42 @@
 
 
 footer{
-width: 100%;
+    width: 100%;
     background-color: rgba(65,139,24,1.000);
     color: white;
     font-family: "Capriola", sans-serif;
     
     display: flex;
-    flex-direction: row; 
+    flex-direction: flex; 
     
 
-    justify-content: center; 
+    /* justify-content: center;  */
     
-
+    justify-content: space-around;
     align-items: center; 
     
 
-    gap: 3rem; 
+    gap: 1rem; 
     
 
     padding: 0.5rem 0; 
-    
     box-sizing: border-box;
 }
 
 footer p {
     margin: 0;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    footer p {
+        width: 100%;
+        font-size: 0.85rem;
+    }
 }
