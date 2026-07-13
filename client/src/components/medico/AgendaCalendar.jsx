@@ -4,86 +4,47 @@ import {
     dayjsLocalizer
 } from 'react-big-calendar'
 import dayjs from 'dayjs'
-import {
-    Paper
-} from '@mui/material'
 import TurnoDialog from './TurnoDialog'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { turnosAgenda } from '../../mockdata/Turnos'
 
-function convertirTurnosAgenda(turnosDisponibles) {
-    return turnosDisponibles.map((turno) => {
+const localizer = dayjsLocalizer(dayjs)
 
-        const [dia, mes, anio] =
-            turno.fechaHora.split('/')
+function convertirTurnosAgenda(turnos = []) {
+    return turnos.map((turno) => {
+        const inicio = new Date(turno.fechaHora)
 
-        const fecha =
-            new Date(anio, mes - 1, dia)
+        const duracion =
+            turno.servicio?.duracionTurnoEnMins ?? 30
 
-        // agrego hora mock para que se vea en el día
-        fecha.setHours(
-            Math.floor(Math.random() * 8) + 8,
-            0
-        )
-
-        const fin = new Date(fecha)
-        fin.setMinutes(
-            fin.getMinutes() + 30
-        )
+        const fin = new Date(inicio)
+        fin.setMinutes(fin.getMinutes() + duracion)
 
         return {
-            id: turno.id,
-
-            paciente:
-                'Turno Disponible',
-
-            medico:
-                turno.medico,
-
-            sede:
-                turno.sede,
-
-            servicio:
-                turno.servicio,
-
-            costo:
-                turno.costo,
-
-            estado:
-                'RESERVADO',
-
-            fechaHora: 
-                turno.fechaHora,
-
-            start: fecha,
-            end: fin
+            ...turno,
+            start: inicio,
+            end: fin,
+            title: `${turno.paciente?.nombre ?? 'Disponible'} - ${turno.servicio?.nombre ?? 'Turno'}`
         }
     })
 }
 
-const turnosMappeados = convertirTurnosAgenda(turnosAgenda)
-
-
-const localizer =
-    dayjsLocalizer(dayjs)
-
 export default function AgendaCalendar({
-    turnos = turnosMappeados
+    turnos = [],
+    onTurnosActualizados
 }) {
+    const [turnoSeleccionado, setTurnoSeleccionado] =
+        useState(null)
 
-    const [
-        turnoSeleccionado,
-        setTurnoSeleccionado
-    ] = useState(null)
+    const eventos = convertirTurnosAgenda(turnos)
 
-    const [
-        fechaActual,
-        setFechaActual
-    ] = useState(
-        turnos[0]?.start
-        ?? new Date()
-    )
+    const cerrarDialog = () => {
+        setTurnoSeleccionado(null)
+    }
 
+    const actualizarAgenda = async () => {
+        await onTurnosActualizados?.()
+        setTurnoSeleccionado(null)
+    }
 
     return (
         <div
@@ -94,41 +55,26 @@ export default function AgendaCalendar({
         >
             <Calendar
                 localizer={localizer}
-
-                events={turnosMappeados}
-
+                events={eventos}
                 startAccessor="start"
                 endAccessor="end"
-
+                titleAccessor="title"
                 defaultView="month"
-
                 views={[
                     'month',
                     'week',
                     'day'
                 ]}
-
-                onSelectEvent={(
-                    turno
-                ) =>
-                    setTurnoSeleccionado(
-                        turno
-                    )
+                onSelectEvent={(turno) =>
+                    setTurnoSeleccionado(turno)
                 }
             />
 
             <TurnoDialog
-                open={Boolean(
-                    turnoSeleccionado
-                )}
-                turno={
-                    turnoSeleccionado
-                }
-                onClose={() =>
-                    setTurnoSeleccionado(
-                        null
-                    )
-                }
+                open={Boolean(turnoSeleccionado)}
+                turno={turnoSeleccionado}
+                onClose={cerrarDialog}
+                onTurnoActualizado={actualizarAgenda}
             />
         </div>
     )

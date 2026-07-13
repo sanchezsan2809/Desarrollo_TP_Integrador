@@ -7,7 +7,8 @@ import './NotificacionesIndicador.css';
 
 const NotificacionesIndicador = () => {
     const { user } = useAuth();
-    const idUsuario = user?.usuario?.id;
+    // const idUsuario = user?.usuario?.id;
+    const idUsuario = user?.id;
 
     const [cantidadSinLeer, setCantidadSinLeer] = useState(0);
 

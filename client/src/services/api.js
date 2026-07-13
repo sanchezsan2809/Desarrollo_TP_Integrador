@@ -106,14 +106,15 @@ export const turnosService = {
         nuevaFecha
     ) => {
         try{
-            const { nuevoTurno, notificacionEnviada } = await api.post(
+            
+            const response = await api.post(
                 `/turnos/${turnoId}/modificacionFecha`,
                 {
                     idUsuario: usuarioId,
                     nuevaFecha: nuevaFecha
                 }
             )
-
+            const { nuevoTurno, notificacionEnviada} = response.data;
             return { nuevoTurno, notificacionEnviada }
         }catch(error){
             throw error.response || new Error(

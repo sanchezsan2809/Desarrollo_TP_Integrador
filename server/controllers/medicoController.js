@@ -11,7 +11,7 @@ export class MedicoController {
   }
 
   obtenerTurnosReservados = async (req, res) => {
-    console.log("Entré al controller");
+    
 
     const { idMedico } = req.params
     const { idPaciente, 

@@ -7,7 +7,7 @@ import {
 
 import { useNavigate } from 'react-router-dom'
 import AgendaCalendar from '../../components/calendar/AgendaCalendar'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react' // 🌟 Sumamos useCallback
 import { turnosService } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import TurnoDialog from '../../components/medico/TurnoDialog'
@@ -21,21 +21,24 @@ export default function MedicoAgendaPage() {
 
     const { user } = useAuth();
 
-    useEffect(() => {
-        async function cargarTurnos(){
-            try {
-                const respuesta = await turnosService.obtenerTurnosReservadosMedico(
-                    user?.id || user?.perfilId 
-                );
-                setTurnos(respuesta.data || [])
-            } catch(e) {
-                console.error(e)
-            } finally {
-                setLoading(false)
-            }
+    const cargarTurnos = useCallback(async () => {
+        try {
+            const respuesta = await turnosService.obtenerTurnosReservadosMedico(
+                user?.id || user?.perfilId 
+            );
+            setTurnos(respuesta.data || [])
+        } catch(e) {
+            console.error("Error al refrescar la agenda:", e)
+        } finally {
+            setLoading(false)
         }
-        cargarTurnos()
-    }, [estado])
+    }, [user?.id, user?.perfilId]);
+
+    useEffect(() => {
+        if (user) {
+            cargarTurnos()
+        }
+    }, [cargarTurnos, estado])
 
     const eventosCalendario = turnos.map(turno => {
         const inicio = new Date(turno.fechaHora);
@@ -92,6 +95,7 @@ export default function MedicoAgendaPage() {
                 open={Boolean(turnoSeleccionado)}
                 turno={turnoSeleccionado}
                 onClose={() => setTurnoSeleccionado(null)}
+                onTurnoActualizado={cargarTurnos} 
             />
         </Container>
     )

@@ -61,6 +61,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
+            
             await turnosService.cancelar(turno.id, user.id, motivo)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
@@ -75,11 +76,15 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
+            console.log("Turno recibido en el diálogo:", turno)
+            console.log("Médico:", turno?.medico)
+            console.log("Usuario del médico:", turno?.medico?.usuario)
+            console.log("Usuario autenticado:", user)
             await turnosService.marcarComoRealizado(turno.id, user.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
-            setErrorApi(error.message || "No se pudo marcar el turno como realizado.")
+            setErrorApi(error.message   || "No se pudo marcar el turno como realizado.")
         } finally {
             setLoading(false)
         }
@@ -93,7 +98,8 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.proponerCambioFecha(turno.id, user.id, nuevaFecha)
+            const fechaISO = new Date(nuevaFecha).toISOString();
+            await turnosService.proponerCambioFecha(turno.id, user.id, fechaISO)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {

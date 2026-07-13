@@ -33,6 +33,7 @@ async function ejecutarSeed() {
 
         // USUARIOS
         const usuarioHouse = await UsuarioModel.create({
+            _id: SEED_IDS.HOUSE.mongoId,
             keycloakId: SEED_IDS.HOUSE.keycloakId,
             nombreUsuario: SEED_IDS.HOUSE.username,
             nombre: "Gregory",
@@ -41,6 +42,7 @@ async function ejecutarSeed() {
         })
 
         const usuarioMilk = await UsuarioModel.create({
+            _id: SEED_IDS.MILK.mongoId,
             keycloakId: SEED_IDS.MILK.keycloakId,
             nombreUsuario: SEED_IDS.MILK.username,
             nombre: "Sapo",
@@ -49,6 +51,7 @@ async function ejecutarSeed() {
         })
 
         const usuarioPaciente = await UsuarioModel.create({
+            _id: SEED_IDS.PACIENTE.mongoId,
             keycloakId: SEED_IDS.PACIENTE.keycloakId,
             nombreUsuario: SEED_IDS.PACIENTE.username,
             nombre: "Juan",

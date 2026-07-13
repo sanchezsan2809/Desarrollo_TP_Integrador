@@ -18,7 +18,7 @@ export default function TurnoDialog({
             const resultado =
                 await turnosService.proponerCambioFecha(
                     turno.id,
-                    turno.usuario.id, // o el usuario logueado
+                    user.id, // o el usuario logueado
                     nuevaFecha
                 );
 

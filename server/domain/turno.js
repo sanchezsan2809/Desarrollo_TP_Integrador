@@ -83,7 +83,7 @@ export class Turno {
     }
     
 
-     destinatarioUltimoCambioEstado(){
+    destinatarioUltimoCambioEstado(){
         const id = this.remitenteUltimoCambioEstado().id
 
         if(this.esPaciente(id)) return this.medico.usuario

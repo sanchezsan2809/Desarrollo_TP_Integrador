@@ -39,7 +39,7 @@ export class TurnoService{
         
     }
 
-    async cancelar({id, motivo, idUsuario}){
+    async cancelar({id, motivo, idUsuario}){     
         const turno = await this.turnoRepository.findById(id)
 
         const ahora = new Date()
