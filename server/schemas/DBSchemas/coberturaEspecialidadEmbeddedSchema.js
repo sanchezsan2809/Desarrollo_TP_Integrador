@@ -14,5 +14,9 @@ export const coberturaEspecialidadEmbeddedSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    porcentaje: {
+                type: Number,
+                default: 0
+    }
 },
 {_id: false});

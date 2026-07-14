@@ -1,28 +1,49 @@
 import './MedicoHomePage.css'
-import GifSapo from "../../components/gifSapo/GifSapo.jsx";
-import BotonesHome from "../../components/botonesHome/BotonesHome.jsx";
-import GifMosuclos from '../../components/gifMosculos/GifMosculos.jsx';
-import HeroCarousel from '../../components/heroCarousel/HeroCarousel.jsx';
+import GifSapo from "../../components/gifSapo/GifSapo.jsx"
+import GifMosuclos from '../../components/gifMosculos/GifMosculos.jsx'
+import { useAuth } from '../../context/AuthContext.jsx'
 
 const MedicoHomePage = () => {
+    const { user } = useAuth()
+
+    const nombreCompleto = [
+        user?.nombre,
+        user?.apellido
+    ]
+        .filter(Boolean)
+        .join(' ')
     return (
-        <div className="home-body">
-            <div className="contenedor-gif sapo">
+
+        <main className="medico-home">
+            <div className="medico-home__decoracion medico-home__decoracion--izquierda">
                 <GifSapo />
             </div>
-            
-            <div className="contenedor-bienvenida">
 
-                Bienvenido, Doctor/a 
+            <section className="medico-home__card">
+               
 
-            </div>
+                <h1>
+                    Bienvenido, Doctor/a{' '}
+                    {nombreCompleto || user?.usuario.nombre || ' '}
+                </h1>
 
-            
-            <div className="contenedor-gif bicho">
+                <p>
+                    Desde la barra de navegación podés consultar tu agenda,
+                    gestionar tus servicios y modificar tu disponibilidad.
+                </p>
+
+                <div className="medico-home__separador" />
+
+                <p className="medico-home__mensaje">
+                    Revisá tus próximos turnos y mantené actualizada tu agenda.
+                </p>
+            </section>
+
+            <div className="medico-home__decoracion medico-home__decoracion--derecha">
                 <GifMosuclos />
             </div>
-        </div>
-    );
-};
+        </main>
+    )
+}
 
-export default MedicoHomePage;
+export default MedicoHomePage

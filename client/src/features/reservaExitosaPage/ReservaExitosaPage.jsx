@@ -55,7 +55,7 @@ const ReservaExitosaPage = () => {
                 </Link>
 
                 <Link
-                    className="btn-secudario"
+                    className="btn-secundario"
                     to="/busquedaDeTurnos"
                 >
                     Buscar más turnos

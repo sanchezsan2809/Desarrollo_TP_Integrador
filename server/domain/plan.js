@@ -7,7 +7,7 @@ export class Plan {
     constructor(nombre, coberturasEspecialidad, coberturasPractica){
         this.nombre = nombre;
         this.coberturasEspecialidad = coberturasEspecialidad ?? [];
-        this.coberturasPractica = coberturasPractica ?? [];
+        this.coberturasPractica = coberturasPractica ?? [];   
     }
 
     obtenerCoberturaEspecialidad(especialidad){

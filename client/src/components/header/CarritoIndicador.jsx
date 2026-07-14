@@ -16,7 +16,7 @@ const CarritoIndicador = () => {
     const costoTotalFinal = 
         turnos.reduce(
             (total, turno) =>
-                total + (turno.precio || 0),
+                total + Number(turno.costo || 0),
             0
     )
     
@@ -51,7 +51,7 @@ const CarritoIndicador = () => {
                     <span
                         className="carrito-titulo"
                     >
-                        Mi Preselección
+                        Preselección
                     </span>
 
                     <span

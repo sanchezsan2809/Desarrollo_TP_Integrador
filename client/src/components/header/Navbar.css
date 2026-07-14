@@ -12,7 +12,6 @@
     align-items: center;
     justify-content: space-between;
     height: 100%; 
-    height: 100%;
     overflow: visible;
     font-family: "Capriola", sans-serif;
 }
@@ -20,7 +19,31 @@
 .navbar-seccion {
     display: flex;
     align-items: center;
-    flex: 1; /* Ocupan 1/3 del total cada una */
+    flex: 1; 
+    min-width: 0; /* Previene desbordamientos extraños */
+}
+
+/* 2. La sección izquierda distribuye sus elementos al inicio del contenedor */
+.left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-start;
+}
+
+/* 3. NUEVO: Forzamos a que la sección del centro use su espacio de 1/3 para alinear su contenido justo al medio */
+.centro {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* 4. La sección derecha empuja todo su contenido hacia el extremo derecho */
+.right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end; /* Alinea los iconos perfectamente a la derecha */
 }
 
 .navbar-links {
@@ -37,6 +60,15 @@
     font-weight: 500;
     transition: color 0.2s ease;
     white-space: nowrap;
+
+    /* --- NUEVO: Corrige el área de colisión y clic --- */
+    display: inline-flex;       /* Alinea el contenido internamente de forma exacta */
+    align-items: center;        /* Centra verticalmente el texto */
+    justify-content: center;    /* Centra horizontalmente el texto */
+    padding: 6px 12px;          /* Agrega un "colchón" invisible de clic (padding) */
+    margin: 0;                  /* Evita desfases por márgenes externos */
+    cursor: pointer;            /* Asegura que siempre muestre la mano al pasar por encima */
+    box-sizing: border-box;     /* Garantiza que el padding no deforme el tamaño */
 }
 
 .nav-link:hover{
@@ -51,29 +83,27 @@
 .search-input {
     border: 1px solid #ddd;
     border-radius: 25px;
-
     padding: 8px 16px;
-
     width: 250px;
-
     outline: none;
     transition: all 0.2s ease;
-}
-
-.notificaciones-container{
-     position: relative;
-    display: flex;
-    align-items: center;
 }
 
 .search-input:focus {
     border-color: #1976d2;
 }
 
+.notificaciones-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .left {
     display: flex;
     align-items: center;
     gap: 1rem;
+    min-width: 0;
 }
 
 .centro {
@@ -86,15 +116,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-
-.menu-icon {
-    color: rgba(65,139,24,1.000);
-    font-size: 1.5rem;
-    border: none;           
-    outline: none;
-    background: none;
-    cursor: pointer;
 }
 
 .logo {
@@ -118,17 +139,6 @@
     transition: max-height 0.2s ease;
 }
 
-
-
-.user-icon {
-    color: rgba(65,139,24,1.000);
-    font-size: 1.5rem;
-    border: none;           
-    outline: none;
-    background: none;
-    cursor: pointer;
-}
-
 .user-container {
     position: relative;
     display: flex;
@@ -143,36 +153,22 @@
 }
 
 .action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     background: #3e8f14;
     color: white;
     text-decoration: none;
-
     padding: 0.55rem 0.8rem;
     font-size: 0.9rem;
     border-radius: 12px;
-
     font-weight: 600;
-
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .action-button:hover {
     transform: translateY(-2px);
-}
-
-.nav-link,
-.action-button {
-    white-space: nowrap;
-}
-
-.left {
-    min-width: 0;
-}
-
-.right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 }
 
 .preseleccion-container {
@@ -181,115 +177,204 @@
     flex-shrink: 0;
 }
 
-.action-button {
-    display: flex;
+/* ==========================================================================
+   ESTILOS PREMIUM PARA LA HAMBURGUESA Y BOTONES DE ACCIÓN (PACIENTE)
+   ========================================================================== */
+
+/* 1. Botón hamburguesa (Mobile) */
+.hamburger-button {
+    display: none; /* Por defecto oculto en desktop */
     align-items: center;
-    gap: 0.5rem;
-
-    padding: 0.55rem 0.8rem;
-    font-size: 0.9rem;
-
-    border-radius: 12px;
-    text-decoration: none;
+    justify-content: center;
+    
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    
+    color: #418B18 !important; /* El verde de tu marca */
+    padding: 8px !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+    
+    transition: background-color 0.2s ease, transform 0.1s ease !important;
 }
 
-.hamburger-button{
-    display:none;
-    color: rgba(65, 139, 24, 1);
-    font-size: 2rem;
+.hamburger-button:hover {
+    background-color: rgba(65, 139, 24, 0.08) !important;
+}
+
+.hamburger-button:active {
+    transform: scale(0.92) !important;
+}
+
+.hamburger-button svg {
+    font-size: 1.8rem !important;
+    display: block;
+}
+
+/* 2. Unificación interactiva de Iconos de Acción (Carrito, Notificaciones, Menú de Usuario) */
+.user-icon,
+.menu-icon,
+.notificaciones-container button,
+.preseleccion-container button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    
+    color: rgba(65, 139, 24, 1.000) !important;
+    padding: 8px !important;
+    border-radius: 50% !important; /* Logra el círculo interactivo perfecto */
+    cursor: pointer;
+    
+    transition: background-color 0.2s ease, transform 0.1s ease !important;
+}
+
+/* Efecto hover translúcido de la marca */
+.user-icon:hover,
+.menu-icon:hover,
+.notificaciones-container button:hover,
+.preseleccion-container button:hover {
+    background-color: rgba(65, 139, 24, 0.08) !important;
+}
+
+/* Efecto clic interactivo */
+.user-icon:active,
+.menu-icon:active,
+.notificaciones-container button:active,
+.preseleccion-container button:active {
+    transform: scale(0.92) !important;
+}
+
+/* Unificamos el tamaño de todos los iconos svg que estén adentro */
+.user-icon svg,
+.menu-icon svg,
+.notificaciones-container button svg,
+.preseleccion-container button svg {
+    font-size: 1.8rem !important;
+    display: block;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================================================== */
+
+@media (max-width: 1550px) {
+    .mobile-menu {
+        display: flex;
+    }
+
+    .navbar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .hamburger-button {
+        display: flex !important;
+        order: 1 !important;
+        margin-right: 0.5rem !important;
+    }
+
+    .navbar-seccion.left {
+        display: flex !important;
+        align-items: center !important;
+        flex: initial !important;
+        order: 2 !important;
+    }
+
+    .navbar-seccion.left .nav-link {
+        display: none !important;
+    }
+
+    .navbar-seccion.centro {
+        display: none !important;
+    }
+
+    .navbar-seccion.right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.2rem !important;
+        margin-left: auto !important; 
+        flex: initial !important;
+        order: 3 !important; 
+    }
+
+    .navbar-seccion.right .search-container,
+    .navbar-seccion.right .searchbar-wrapper,
+    .navbar-seccion.right input {
+        display: none !important;
+    }
 }
 
 @media (max-width: 1400px) {
-
     .search-input {
         width: 180px;
     }
-
     .logoHeader {
         max-height: 2.8rem;
     }
-
     .navbar-links {
         gap: 1rem;
     }
 }
 
 @media (max-width: 1200px) {
-
-    /* menos espacio general */
     .navbar {
         margin: 0 1rem;
     }
-
-    /* links más compactos */
     .nav-link {
         font-size: 0.95rem;
     }
-
-    /* ocultamos lo menos importante */
     .optional-link {
         display: none;
     }
-
-    /* search afuera */
     .search-container {
         display: none;
     }
-
-    /* botones más chicos */
     .action-button {
         padding: 0.45rem 0.65rem;
         font-size: 0.8rem;
     }
-
-    /* logo más chico */
     .logoHeader {
         max-height: 2.4rem;
     }
 }
 
-
 @media (max-width: 1050px) {
-
     .search-container {
         display: none;
     }
-
     .logoHeader {
         max-height: 2.4rem;
     }
-
     .navbar-links {
         gap: 0.8rem;
     }
-
     .nav-link {
         font-size: 0.95rem;
     }
 }
 
 @media (max-width: 950px) {
-
     .nav-link {
-        font-size: 0.9rem;
+        font-size: 0.9nrem;
     }
-
     .navbar-links {
         gap: 0.6rem;
     }
-
     .right {
         gap: 0.5rem;
     }
-
     .action-text {
         display: none;
     }
-
     .action-icon {
         display: block;
     }
-
     .action-button {
         padding: 0.5rem;
         min-width: 42px;
@@ -297,45 +382,29 @@
     }
 }
 
-@media (max-width: 1550px) {
-
-    .quick-actions {
-        display: none;
+/* --- 📱 SECCIÓN NUEVA: EXCLUSIVO PARA CELULARES (¡ESTO CURA EL DESBORDE!) --- */
+@media (max-width: 600px) {
+    .navbar-bg {
+        padding: 0 0.8rem !important; /* Achicamos el padding externo */
+        box-sizing: border-box !important;
+        width: 100% !important;
     }
 
-    .optional-link {
-        display: none;
+    .navbar {
+        margin: 0 !important; /* Eliminamos márgenes que empujen la pantalla hacia la derecha */
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
     }
 
+    /* Reducimos el tamaño del logo para que entre cómodo con los iconos */
     .logoHeader {
-        max-height: 2rem;
+        max-height: 1.8rem !important; 
+        width: auto !important;
     }
 
-    .nav-link {
-        font-size: 0.85rem;
+    /* Ajustamos el espacio de los iconos de la derecha para ganar aire */
+    .navbar-seccion.right {
+        gap: 0.6rem !important; 
     }
-}
-
-@media (max-width:1550px){
-
-    .hamburger-button{
-        display:flex;
-    }
-
-}
-
-@media (max-width:1550px){
-
-    .navbar-seccion.left .nav-link{
-        display:none;
-    }
-
-    .navbar-seccion.centro{
-        display:none;
-    }
-
-    .navbar-seccion.right{
-        display:none;
-    }
-
 }

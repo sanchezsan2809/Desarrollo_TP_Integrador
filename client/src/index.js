@@ -4,22 +4,23 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-import keycloak from './keycloak'
 import { AuthProvider } from './context/AuthContext';
+import { NotificacionesProvider } from './context/NotificacionesContext';
 
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-      <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+const root = ReactDOM.createRoot(
+    document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+root.render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <NotificacionesProvider>
+                    <App />
+                </NotificacionesProvider>
+            </AuthProvider>
+        </BrowserRouter>
+    </React.StrictMode>
+);
+
 reportWebVitals();

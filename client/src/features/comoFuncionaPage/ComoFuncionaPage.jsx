@@ -36,7 +36,7 @@ const ComoFuncionaPage = () => {
 
       <div className="cf-footer-box">
         <h3>¿Tenés alguna duda extra?</h3>
-        <p>Recordá que siempre podés revisar tus turnos confirmados en la pestaña <strong>Historial</strong> o comunicarte con atención al cliente.</p>
+        <p>Recordá que siempre podés revisar tus turnos confirmados en la pestaña <strong>Mis turnos</strong> o comunicarte con atención al cliente.</p>
       </div>
     </div>
   );

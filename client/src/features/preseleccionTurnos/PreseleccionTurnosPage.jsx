@@ -60,7 +60,8 @@ const PreseleccionTurnosPage = () => {
                         
                         <div className="resumen-acciones">
                             {/* 🔥 El botón estrella que faltaba */}
-                            <button 
+                            <button
+                                type="button"
                                 onClick={HandleConfirmarTurnos}
                                 className="btn-confirmar"
                             >
@@ -68,7 +69,8 @@ const PreseleccionTurnosPage = () => {
                             </button>
 
                             <button
-                                onClick={(limpiarTurnos)}
+                                type="button"
+                                onClick={limpiarTurnos}
                                 className="btn-vaciar"
                             >
                                 Vaciar selección

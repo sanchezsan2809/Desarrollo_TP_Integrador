@@ -1,5 +1,5 @@
 import './Navbar.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importamos useNavigate
 import CarritoIndicador from './CarritoIndicador.jsx';
 import NotificacionesIndicador from './NotificacionesIndicador';
 import { MdAccountCircle } from "react-icons/md";
@@ -15,9 +15,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import MobileMenu from "./MobileMenu";
 
-
-
 const Navbar = () => {
+    const navigate = useNavigate(); // Inicializamos el navegador de rutas
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [mostrarLogin, setMostrarLogin] = useState(false)
@@ -64,8 +63,8 @@ const Navbar = () => {
         ...(isPaciente
             ? [{
                 type: 'link',
-                label: 'Historial de turnos',
-                to: '/historialDeTurnos',
+                label: 'Mis turnos',
+                to: '/mis-turnos',
             }] 
             : []),
         {
@@ -85,24 +84,20 @@ const Navbar = () => {
                 <div className="navbar-seccion left">
 
                     <div className="logo">
-                        <Link to={'/'}
-                        aria-label="Inicio"
-                        title="Inicio"
-                        > <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
+                        <Link to={'/'} aria-label="Inicio" title="Inicio"> 
+                            <img src={logo} className="logoHeader" alt="Logo OSECROACK" /> 
+                        </Link>
                     </div>
 
-                    <Link to="/servicios" className='nav-link'>
-                        Servicios
-                    </Link>
+                    {/* SE ELIMINÓ EL LINK DE SERVICIOS AQUÍ */}
 
                     <Link to="/medicos" className='nav-link'>
                         Medicos
                     </Link>
 
-                    <Link to='/como-funciona' className='nav-link optional-link'>
+                    <Link to='/como-funciona' className='nav-link'>
                         Cómo funciona
                     </Link>
-
 
                 </div>
 

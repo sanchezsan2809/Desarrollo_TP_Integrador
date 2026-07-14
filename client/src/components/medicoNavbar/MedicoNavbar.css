@@ -1,12 +1,9 @@
 .medico-navbar {
     background-color: aliceblue;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     padding: 0.75rem 2rem;
-
     font-family: "Capriola", sans-serif;
 }
 
@@ -26,14 +23,10 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-
     text-decoration: none;
-
     color: #2c3e50;
-
     font-size: 1.1rem;
     font-weight: 500;
-
     transition: 0.2s ease;
 }
 
@@ -53,21 +46,14 @@
 
 .logout-button {
     background: #3e8f14;
-
     color: white;
-
     border: none;
     border-radius: 12px;
-
     padding: 0.6rem 1rem;
-
     font-family: "Capriola", sans-serif;
     font-size: 1rem;
-
     cursor: pointer;
-
     transition: 0.2s ease;
-
     white-space: nowrap;
 }
 
@@ -76,28 +62,113 @@
     transform: translateY(-1px);
 }
 
-.hamburger-button{
-    display: none;
+/* ==========================================================================
+   ESTILOS PREMIUM PARA LA HAMBURGUESA Y BOTONES DE ACCIÓN (MÉDICO)
+   ========================================================================== */
 
-    background: none;
-    border: none;
-
+/* 1. Botón hamburguesa (Mobile) */
+.hamburger-button {
+    display: none; /* Por defecto oculto en desktop */
+    align-items: center;
+    justify-content: center;
+    
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    
+    color: #418B18 !important; /* El verde de tu marca */
+    padding: 8px !important;
+    border-radius: 50% !important;
     cursor: pointer;
+    
+    transition: background-color 0.2s ease, transform 0.1s ease !important;
 }
 
-@media (max-width:1550px){
+.hamburger-button:hover {
+    background-color: rgba(65, 139, 24, 0.08) !important;
+}
 
-    .hamburger-button{
-        display:flex;
-    }
+.hamburger-button:active {
+    transform: scale(0.92) !important;
+}
 
-    .medico-navbar-left .medico-link{
-        display:none;
-    }
+.hamburger-button svg {
+    font-size: 1.8rem !important;
+    display: block;
+}
 
-    .medico-navbar-right{
-        display:none;
-    }
+/* 2. Botones interactivos del lado derecho (Notificaciones, Perfil de Usuario, etc.) */
+/* Aplicamos los efectos circulares a cualquier <button> que se renderice dentro del lado derecho */
+.medico-navbar-right button,
+.medico-navbar-right .user-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    
+    color: #418B18 !important; /* El verde de tu marca */
+    padding: 8px !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+    
+    transition: background-color 0.2s ease, transform 0.1s ease !important;
+}
 
+.medico-navbar-right button:hover,
+.medico-navbar-right .user-icon:hover {
+    background-color: rgba(65, 139, 24, 0.08) !important;
+}
+
+.medico-navbar-right button:active,
+.medico-navbar-right .user-icon:active {
+    transform: scale(0.92) !important;
+}
+
+/* Garantizamos que los iconos svg que estén adentro se vean del tamaño correcto */
+.medico-navbar-right button svg,
+.medico-navbar-right .user-icon svg {
+    font-size: 1.8rem !important;
+    display: block;
+}
+
+/* ==========================================================================
+   MEDIA QUERY (MOBILE Y TABLET)
+   ========================================================================== */
+@media (max-width: 1550px) {
+
+    .medico-navbar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    /* 1. El botón hamburguesa a la izquierda de todo */
+    .hamburger-button {
+        display: flex !important;
+        order: 1 !important;
+        margin-right: 0.5rem !important;
+    }
+
+    /* 2. El logo inmediatamente después */
+    .medico-navbar-left {
+        display: flex !important;
+        align-items: center !important;
+        order: 2 !important;
+    }
+
+    .medico-navbar-left .medico-link {
+        display: none !important;
+    }
+
+    /* 3. Notificaciones y usuario agrupados al extremo derecho */
+    .medico-navbar-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.2rem !important;
+        margin-left: auto !important; /* Empuja todo el grupo a la derecha */
+        order: 3 !important;
+    }
 }

@@ -5,6 +5,8 @@ import {
     NotAllowedError,  
     ValidationError
 } from "../errors/appError.js";
+import { Practica } from "../domain/practica.js";
+import { Especialidad } from "../domain/especialidad.js"
 export class TurnoService{
     constructor(
         turnoRepository, 
@@ -127,14 +129,15 @@ export class TurnoService{
         const turnosConCobertura = turnos.map( turno => 
             {
                 const servicio = turno.servicio
-                
                 let cobertura = null;
 
 
-                if (servicio.practica) {
-                    cobertura = plan.obtenerCoberturaPractica(servicio.practica);
-                } else if (servicio.especialidad) {
-                    cobertura = plan.obtenerCoberturaEspecialidad(servicio.especialidad);
+                if (servicio.codigo) {
+                    cobertura =
+                        plan.obtenerCoberturaPractica(servicio)
+                } else{
+                    cobertura =
+                        plan.obtenerCoberturaEspecialidad(servicio)
                 }
                     
                 let costoFinal = turno.costo || 0

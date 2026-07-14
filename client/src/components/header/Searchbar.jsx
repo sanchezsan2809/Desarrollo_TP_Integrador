@@ -21,7 +21,7 @@ const opciones = [
     },
     {
         titulo: "Historial de turnos",
-        url: "historialDeTurnos"
+        url: "mis-turnos"
     },
     {
         titulo: "Como sacar turnos",

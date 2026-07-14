@@ -20,7 +20,7 @@ const BotonesHome = () =>{
                     </Link> 
                 </li>
                 <li>
-                    <Link to = {'/historialDeTurnos'} className = "link-boton">
+                    <Link to = {'/mis-turnos'} className = "link-boton">
                         <button className="boton">
                             <span className="icono-btn"><LuCalendarClock /></span> 
                             Consultar historial de turnos

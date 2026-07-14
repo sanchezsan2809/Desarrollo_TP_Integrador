@@ -1,33 +1,40 @@
-.mobile-menu{
-    position: fixed;
-    top: 7.8rem;
-    left: 0;
-
-    width: 100%;
-
-    display: none;
+.mobile-menu {
+    position: fixed;            /* Se queda anclado al navbar al scrollear */
+    top: 5.5rem;                /* Justo debajo del navbar */
+    left: 2rem;                 /* ¡NUEVO! Alineado a la izquierda con el mismo margen del navbar */
+    width: 280px;               /* ¡NUEVO! Ancho fijo y compacto para que no ocupe todo el largo horizontal */
+    max-width: calc(100vw - 4rem); /* Previene que se desborde en pantallas ultra pequeñas */
+    height: auto;               /* Ocupa solo el alto que necesitan sus botones */
+    
+    background-color: aliceblue; 
+    z-index: 9999;              
+    
+    display: flex;
     flex-direction: column;
+    align-items: flex-start;    /* Alinea el texto a la izquierda dentro de la tarjeta */
+    padding: 1.5rem;            /* Espaciado interno generoso y simétrico */
+    gap: 1.2rem;
+    box-sizing: border-box;
 
-    background: white;
-
-    padding: 20px;
-
-    gap: 20px;
-
-    box-shadow: 0 5px 15px rgba(0,0,0,.15);
-
-    z-index: 99999;
-
+    /* Bordes redondeados y sombra para que parezca una tarjeta flotante (dropdown) */
+    border-radius: 12px;
+    border: 1px solid rgba(65, 139, 24, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
+/* Opcional: Aseguramos que los links dentro del menú aprovechen todo el ancho de la tarjeta */
 .mobile-menu a {
-    color: rgba(65, 139, 24, 1);
+    width: 100%;
+    text-align: left;
     text-decoration: none;
+    color: #2c3e50;
     font-weight: 500;
+    padding: 4px 0;
+    transition: color 0.2s ease;
 }
 
 .mobile-menu a:hover {
-    color: #34780f;
+    color: #1976d2;
 }
 
 .mobile-menu__logout {

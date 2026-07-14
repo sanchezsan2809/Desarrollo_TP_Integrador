@@ -1,71 +1,63 @@
-.mis-turnos-page{
-
-    max-width:1300px;
-
-    margin:auto;
-
-    padding:2rem;
-
-    font-family:"Sour Gummy",sans-serif;
-
+.mis-turnos-page {
+    max-width: 1300px !important;
+    margin: 0 auto !important;
+    padding: 2rem !important;
+    font-family: "Sour Gummy", sans-serif;
+    box-sizing: border-box !important;
 }
 
-.mis-turnos-header{
-
-    margin-bottom:2rem;
-
+.mis-turnos-header {
+    margin-bottom: 2rem !important;
 }
 
-.mis-turnos-header h1{
-
-    color:#418B18;
-
-    margin-bottom:.5rem;
-
+.mis-turnos-header h1 {
+    color: #418B18;
+    margin-bottom: .5rem;
 }
 
-.mis-turnos-content{
-
-    display:block;
-
+/* ===== CONTENIDO PRINCIPAL (FUERZA DISEÑO VERTICAL) ===== */
+/* Quitamos cualquier propiedad 'grid' o 'flex' que venga de otros lados y forzamos bloque */
+.mis-turnos-content {
+    display: block !important; 
+    width: 100% !important;
+    clear: both !important;
 }
 
-.panel-turnos{
-
-    width:100%;
-
+.panel-turnos {
+    width: 100% !important;
+    margin-bottom: 3rem !important;
 }
 
-.panel-calendario{
-
-    margin-top:3rem;
-
-    padding:2rem;
-
-    border:2px solid #418B18;
-
-    border-radius:16px;
-
-    background:white;
-
-    box-shadow:0 6px 18px rgba(0,0,0,.08);
-
+/* ===== CONTENEDOR DE TARJETAS (FUERZA GRILLA HORIZONTAL) ===== */
+/* Reemplaza la lista vertical por una cuadrícula de tarjetas una al lado de la otra */
+.turnos-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
 }
 
-.panel-calendario h2{
-
-    color:#418B18;
-
-    margin-bottom:1.5rem;
-
+/* ===== CALENDARIO ABAJO ===== */
+.panel-calendario {
+    margin-top: 3rem !important;
+    padding: 2rem !important;
+    border: 2px solid #418B18 !important;
+    border-radius: 16px !important;
+    background: white !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    clear: both !important;
 }
 
-@media(max-width:1000px){
+.panel-calendario h2 {
+    color: #418B18;
+    margin-bottom: 1.5rem;
+}
 
-    .mis-turnos-content{
-
-        grid-template-columns:1fr;
-
+/* ===== RESPONSIVE ===== */
+@media(max-width: 900px) {
+    .turnos-container {
+        grid-template-columns: 1fr !important;
     }
-
 }

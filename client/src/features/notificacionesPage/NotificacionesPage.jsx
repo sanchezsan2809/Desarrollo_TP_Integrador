@@ -1,11 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useState
+} from 'react';
+
 import { notificacionesService } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useNotificaciones } from '../../context/NotificacionesContext';
+
 import './NotificacionesPage.css';
 
 const NotificacionesPage = () => {
     const { user } = useAuth();
-    const idUsuario = user?.usuario?.id;
+
+    const idUsuario = user?.id;
+
+    const {
+        quitarNotificacionNoLeida,
+        recargarNotificaciones
+    } = useNotificaciones();
 
     const [noLeidas, setNoLeidas] = useState([]);
     const [leidas, setLeidas] = useState([]);
@@ -22,15 +35,43 @@ const NotificacionesPage = () => {
         setError('');
 
         try {
-            const [sinLeer, yaLeidas] = await Promise.all([
-                notificacionesService.obtenerNoLeidas(idUsuario),
-                notificacionesService.obtenerLeidas(idUsuario)
+            const [
+                respuestaNoLeidas,
+                respuestaLeidas
+            ] = await Promise.all([
+                notificacionesService.obtenerNoLeidas(
+                    idUsuario
+                ),
+                notificacionesService.obtenerLeidas(
+                    idUsuario
+                )
             ]);
 
-            setNoLeidas(sinLeer);
-            setLeidas(yaLeidas);
+            const notificacionesNoLeidas =
+                Array.isArray(respuestaNoLeidas)
+                    ? respuestaNoLeidas
+                    : respuestaNoLeidas?.data ??
+                      respuestaNoLeidas?.notificaciones ??
+                      [];
+
+            const notificacionesLeidas =
+                Array.isArray(respuestaLeidas)
+                    ? respuestaLeidas
+                    : respuestaLeidas?.data ??
+                      respuestaLeidas?.notificaciones ??
+                      [];
+
+            setNoLeidas(notificacionesNoLeidas);
+            setLeidas(notificacionesLeidas);
         } catch (err) {
-            setError('No pudimos cargar tus notificaciones. Intentá de nuevo.');
+            console.error(
+                'Error al cargar notificaciones:',
+                err
+            );
+
+            setError(
+                'No pudimos cargar tus notificaciones. Intentá de nuevo.'
+            );
         } finally {
             setCargando(false);
         }
@@ -40,34 +81,114 @@ const NotificacionesPage = () => {
         cargarNotificaciones();
     }, [cargarNotificaciones]);
 
-    const handleMarcarLeida = async (id) => {
+    const handleMarcarLeida = async (idNotificacion) => {
         if (!idUsuario) return;
 
-        try {
-            await notificacionesService.marcarComoLeida(idUsuario, id);
+        setError('');
 
-            setNoLeidas(prev => {
-                const notif = prev.find(n => n.id === id);
+        const notificacionOriginal = noLeidas.find(
+            (notificacion) =>
+                notificacion.id === idNotificacion
+        );
 
-                if (notif) {
-                    setLeidas(prevLeidas => [
-                        ...prevLeidas,
-                        { ...notif, leida: true, fechaHoraLeida: new Date().toISOString() }
-                    ]);
-                }
-
-                return prev.filter(n => n.id !== id);
-            });
-        } catch (err) {
-            setError('No pudimos marcar la notificación como leída.');
+        if (!notificacionOriginal) {
+            return;
         }
+
+        const notificacionActualizada = {
+            ...notificacionOriginal,
+            leida: true,
+            fechaHoraLeida: new Date().toISOString()
+        };
+
+        // Actualización optimista de la página
+        setNoLeidas((notificacionesActuales) =>
+            notificacionesActuales.filter(
+                (notificacion) =>
+                    notificacion.id !== idNotificacion
+            )
+        );
+
+        setLeidas((notificacionesActuales) => [
+            notificacionActualizada,
+            ...notificacionesActuales
+        ]);
+
+        // Actualización inmediata del badge
+        quitarNotificacionNoLeida(idNotificacion);
+
+        try {
+            await notificacionesService.marcarComoLeida(
+                idUsuario,
+                idNotificacion
+            );
+        } catch (err) {
+            console.error(
+                'Error al marcar notificación como leída:',
+                err
+            );
+
+            // Revertimos la página si el backend falla
+            setLeidas((notificacionesActuales) =>
+                notificacionesActuales.filter(
+                    (notificacion) =>
+                        notificacion.id !== idNotificacion
+                )
+            );
+
+            setNoLeidas((notificacionesActuales) => [
+                notificacionOriginal,
+                ...notificacionesActuales
+            ]);
+
+            // Recuperamos el estado real del backend
+            await recargarNotificaciones();
+
+            setError(
+                'No pudimos marcar la notificación como leída.'
+            );
+        }
+    };
+
+    const obtenerNombreRemitente = (remitente) => {
+        if (!remitente) {
+            return 'Usuario desconocido';
+        }
+
+        if (typeof remitente === 'string') {
+            return remitente;
+        }
+
+        return (
+            remitente.nombreUsuario ||
+            `${remitente.nombre ?? ''} ${remitente.apellido ?? ''}`.trim() ||
+            remitente.email ||
+            'Usuario desconocido'
+        );
+    };
+
+    const formatearFecha = (fecha) => {
+        if (!fecha) {
+            return '';
+        }
+
+        return new Date(fecha).toLocaleString(
+            'es-AR',
+            {
+                dateStyle: 'short',
+                timeStyle: 'short'
+            }
+        );
     };
 
     if (!idUsuario) {
         return (
             <div className="notificaciones-page-container">
                 <h2>Mis Notificaciones</h2>
-                <p>Iniciá sesión para ver tus notificaciones.</p>
+
+                <p>
+                    Iniciá sesión para ver tus notificaciones.
+                </p>
             </div>
         );
     }
@@ -76,6 +197,7 @@ const NotificacionesPage = () => {
         return (
             <div className="notificaciones-page-container">
                 <h2>Mis Notificaciones</h2>
+
                 <p>Cargando notificaciones...</p>
             </div>
         );
@@ -85,24 +207,55 @@ const NotificacionesPage = () => {
         <div className="notificaciones-page-container">
             <h2>Mis Notificaciones</h2>
 
-            {error && <p className="notificaciones-error">{error}</p>}
+            {error && (
+                <p className="notificaciones-error">
+                    {error}
+                </p>
+            )}
 
             <section className="notificaciones-seccion">
-                <h3>Sin Leer ({noLeidas.length})</h3>
+                <h3>
+                    Sin leer ({noLeidas.length})
+                </h3>
+
                 {noLeidas.length === 0 ? (
-                    <p>No tenés notificaciones nuevas.</p>
+                    <p>
+                        No tenés notificaciones nuevas.
+                    </p>
                 ) : (
                     <div className="notificaciones-lista">
-                        {noLeidas.map(notif => (
-                            <div key={notif.id} className="notificacion-card no-leida">
+                        {noLeidas.map((notificacion) => (
+                            <div
+                                key={notificacion.id}
+                                className="notificacion-card no-leida"
+                            >
                                 <div className="notificacion-header">
-                                    <strong>De: {notif.remitente}</strong>
-                                    <span>{new Date(notif.fechaHoraCreacion).toLocaleDateString('es-AR')}</span>
+                                    <strong>
+                                        De:{' '}
+                                        {obtenerNombreRemitente(
+                                            notificacion.remitente
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        {formatearFecha(
+                                            notificacion.fechaHoraCreacion
+                                        )}
+                                    </span>
                                 </div>
-                                <p>{notif.mensaje}</p>
-                                <button 
+
+                                <p>
+                                    {notificacion.mensaje}
+                                </p>
+
+                                <button
+                                    type="button"
                                     className="btn-marcar-leida"
-                                    onClick={() => handleMarcarLeida(notif.id)}
+                                    onClick={() =>
+                                        handleMarcarLeida(
+                                            notificacion.id
+                                        )
+                                    }
                                 >
                                     Marcar como leída
                                 </button>
@@ -115,18 +268,39 @@ const NotificacionesPage = () => {
             <hr className="separador-seccion" />
 
             <section className="notificaciones-seccion">
-                <h3>Leídas</h3>
+                <h3>
+                    Leídas ({leidas.length})
+                </h3>
+
                 {leidas.length === 0 ? (
-                    <p>No hay notificaciones en el historial.</p>
+                    <p>
+                        No hay notificaciones en el historial.
+                    </p>
                 ) : (
                     <div className="notificaciones-lista">
-                        {leidas.map(notif => (
-                            <div key={notif.id} className="notificacion-card leida">
+                        {leidas.map((notificacion) => (
+                            <div
+                                key={notificacion.id}
+                                className="notificacion-card leida"
+                            >
                                 <div className="notificacion-header">
-                                    <strong>De: {notif.remitente}</strong>
-                                    <span>{new Date(notif.fechaHoraCreacion).toLocaleDateString('es-AR')}</span>
+                                    <strong>
+                                        De:{' '}
+                                        {obtenerNombreRemitente(
+                                            notificacion.remitente
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        {formatearFecha(
+                                            notificacion.fechaHoraCreacion
+                                        )}
+                                    </span>
                                 </div>
-                                <p>{notif.mensaje}</p>
+
+                                <p>
+                                    {notificacion.mensaje}
+                                </p>
                             </div>
                         ))}
                     </div>

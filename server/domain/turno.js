@@ -126,7 +126,7 @@ export class Turno {
     }
 
     solicitarCambioFecha(fecha, usuario, motivo){
-        this.fechaHoraPropuesta = fecha
+        this.fechaHora = fecha
         this.actualizarEstado(
             EstadoTurno.RESERVADO,
             usuario, 

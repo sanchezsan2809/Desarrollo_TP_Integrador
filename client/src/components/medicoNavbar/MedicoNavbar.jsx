@@ -41,7 +41,7 @@ export default function MedicoNavbar() {
 
                 <div className="medico-navbar-left">
 
-                    <Link to="/medico">
+                    <Link to="/medicoHome">
                         <img
                             src={logo}
                             alt="Logo"
@@ -50,7 +50,7 @@ export default function MedicoNavbar() {
                     </Link>
 
                     <Link
-                        to="/medico"
+                        to="/agenda"
                         className="medico-link"
                     >
                         <EventNoteIcon />
@@ -58,15 +58,15 @@ export default function MedicoNavbar() {
                     </Link>
 
                     <Link
-                        to="/dh"
+                        to="/disponibilidadHoraria"
                         className="medico-link"
                     >
                         <ScheduleIcon />
                         Disponibilidad
-                    </Link>
+                    </Link> 
 
                     <Link
-                        to="/gs"
+                        to="/gestionDeServicios"
                         className="medico-link"
                     >
                         <MedicalServicesIcon />

@@ -105,12 +105,12 @@ async function ejecutarSeed() {
             nombre: "Plan Premium",
             coberturasEspecialidad: [
                 { especialidad: { id: "1234", nombre: "Clínica Médica", duracionTurnoEnMins: 30, costo: 15000 }, nivel: "TOTAL" },
-                { especialidad: { id: "1235", nombre: "Diagnóstico", duracionTurnoEnMins: 60, costo: 25000 }, nivel: "PARCIAL" },
+                { especialidad: { id: "1235", nombre: "Diagnóstico", duracionTurnoEnMins: 60, costo: 25000 }, nivel: "PARCIAL", porcentaje: 50},
                 { especialidad: { id: "2001", nombre: "Pediatría", duracionTurnoEnMins: 20, costo: 18000 }, nivel: "TOTAL" }
             ],
             coberturasPractica: [
                 { practica: { id: "1236", codigo: "ECG001", nombre: "Electrocardiograma", duracionTurnoEnMins: 20, costo: 12000 }, nivel: "TOTAL" },
-                { practica: { id: "1237", codigo: "LAB101", nombre: "Análisis de Sangre", duracionTurnoEnMins: 15, costo: 8000 }, nivel: "PARCIAL" },
+                { practica: { id: "1237", codigo: "LAB101", nombre: "Análisis de Sangre", duracionTurnoEnMins: 15, costo: 8000 }, nivel: "PARCIAL", porcentaje:50 },
                 { practica: { id: "2002", codigo: "RX002", nombre: "Radiografía Tórax", duracionTurnoEnMins: 15, costo: 14000 }, nivel: "TOTAL" }
             ]
         });
