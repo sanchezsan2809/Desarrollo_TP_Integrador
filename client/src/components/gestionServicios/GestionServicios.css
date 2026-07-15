@@ -1,43 +1,49 @@
 .gs-page {
   max-width: 700px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  /* Reducimos el padding lateral en móviles (de 1.5rem a 0.75rem) 
+     para aprovechar al máximo el espacio de la pantalla */
+  padding: 2rem 0.75rem; 
   font-family: "Segoe UI", system-ui, sans-serif;
   color: #1a2332;
 }
 
-.gs-titulo {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0 0 1.5rem;
-  color: #1a2332;
-}
-
-/* TABLA */
+/* TABLA WRAPPER */
 .gs-tabla-wrapper {
   border-radius: 10px;
-  overflow: hidden;
+  /* NUEVO: Esto permite que aparezca una barra de scroll horizontal 
+     adentro del wrapper en dispositivos móviles si la tabla se pasa de ancho */
+  overflow-x: auto; 
+  overflow-y: hidden;
   border: 1px solid #c8e6c0;
   margin-bottom: 1.5rem;
+  
+  /* Optimizamos el scroll touch suave en iOS */
+  -webkit-overflow-scrolling: touch; 
 }
 
 .gs-tabla {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
+  /* Aseguramos un ancho mínimo razonable para que el texto no se amontone 
+     demasiado al colapsar horizontalmente */
+  min-width: 480px; 
 }
 
 .gs-tabla th {
   background: #3a7d2c;
   color: #fff;
-  padding: 0.75rem 1rem;
+  /* Ajustamos paddings laterales levemente para ganar espacio */
+  padding: 0.75rem 0.6rem; 
   text-align: left;
   font-size: 0.85rem;
   font-weight: 700;
+  white-space: nowrap; /* Evita que los encabezados se rompan en dos líneas */
 }
 
 .gs-tabla td {
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 0.6rem;
   border-bottom: 1px solid #f0f0f0;
   color: #333;
 }

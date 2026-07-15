@@ -1,9 +1,11 @@
+/* --- TOOLBAR BASE (Escritorio / Tablets) --- */
 .rbc-toolbar {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     position: relative !important;
     margin-bottom: 15px !important;
+    flex-wrap: wrap; /* Permite envolver si es necesario */
 }
 
 .rbc-toolbar-label {
@@ -29,15 +31,7 @@
     z-index: 2;
 }
 
-.rbc-toolbar .rbc-btn-group:first-child button:nth-child(1) { 
-    order: 2; 
-}
-.rbc-toolbar .rbc-btn-group:first-child button:nth-child(2) { 
-    order: 1;
-}
-.rbc-toolbar .rbc-btn-group:first-child button:nth-child(3) { 
-    order: 3;
-}
+/* ... Mantener acá tus reglas de ordenamiento (nth-child) y estilos de botones intactos ... */
 
 .rbc-toolbar .rbc-btn-group:first-child button {
     color: #2e5a27 !important;
@@ -48,11 +42,42 @@
     padding: 6px 14px !important;
     cursor: pointer;
     transition: all 0.2s ease;
-    margin: 0 !important; /* Limpiamos márgenes nativos */
+    margin: 0 !important;
+    white-space: nowrap; /* Evita que el texto interno se parta en dos líneas */
 }
 
 .rbc-toolbar .rbc-btn-group:first-child button:hover {
     background-color: #dfead9 !important;
+}
+
+
+/* --- RESPONSIVE: AJUSTES PARA MÓVILES (Pantallas menores a 600px) --- */
+@media (max-width: 600px) {
+    .rbc-toolbar {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: center !important;
+    }
+
+    .rbc-toolbar-label {
+        position: relative !important;
+        left: 0 !important;
+        transform: none !important;
+        text-align: center !important;
+        font-size: 1.2rem !important;
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+
+    .rbc-toolbar .rbc-btn-group:first-child {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    .rbc-toolbar .rbc-btn-group:first-child button {
+        padding: 8px 16px !important; /* Botones ligeramente más cómodos para el touch */
+        font-size: 0.9rem !important;
+    }
 }
 
 .rbc-month-view .rbc-today {
