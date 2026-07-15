@@ -126,7 +126,7 @@ export class Turno {
     }
 
     solicitarCambioFecha(fecha, usuario, motivo){
-        this.fechaHora = fecha
+        this.fechaHoraPropuesta = fecha
         this.actualizarEstado(
             EstadoTurno.RESERVADO,
             usuario, 
@@ -139,7 +139,7 @@ export class Turno {
         this.fechaHoraPropuesta = null
 
         this.actualizarEstado(
-            EstadoTurno.CONFIRMADO, 
+            EstadoTurno.RESERVADO, 
             usuario,
             "Cambio de fecha confirmado"
         )
@@ -149,7 +149,7 @@ export class Turno {
         this.fechaHoraPropuesta = null
 
         this.actualizarEstado(
-            EstadoTurno.CONFIRMADO,
+            EstadoTurno.RESERVADO,
             usuario,
             "Cambio de fecha rechazado"
         )

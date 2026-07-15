@@ -72,20 +72,24 @@ export class TurnoService{
         return {turnoCancelado, notificacionGuardada}
     }
 
-    async marcarComoConfirmado({ id, idUsuario })
-    {
+    async marcarComoConfirmado({ id, idUsuario }) {
         const turnoSinConfirmar = await this.turnoRepository.findById(id)
-
         const usuario = turnoSinConfirmar.obtenerUsuario(idUsuario)
 
         if(!usuario || turnoSinConfirmar.destinatarioUltimoCambioEstado().id !== idUsuario){
             throw new NotAllowedError("El usuario no puede confirmar este turno")
         }
 
+        // 1. Consolidamos la fecha propuesta como la definitiva
+        if (turnoSinConfirmar.fechaHoraPropuesta) {
+            turnoSinConfirmar.fechaHora = turnoSinConfirmar.fechaHoraPropuesta;
+            turnoSinConfirmar.fechaHoraPropuesta = null;
+        }
+
         turnoSinConfirmar.actualizarEstado(
-            EstadoTurno.CONFIRMADO,
+            EstadoTurno.RESERVADO, // <-- Mantenemos RESERVADO para que el Front lo siga listando
             usuario,
-            "El turno fue confirmado"
+            "El turno fue confirmado con la nueva fecha"
         )
 
         const notificacionConfirmado = factoryNotificacion.crearSegunEstadoTurno(turnoSinConfirmar)
@@ -96,7 +100,7 @@ export class TurnoService{
                 this.notificacionRepository.save(notificacionConfirmado)
             ])
 
-        return {turno, notificacion}
+        return { turno, notificacion }
     }
 
     async obtenerHistorial({ filtros, page, limit}){
@@ -286,7 +290,7 @@ export class TurnoService{
         turno.solicitarCambioFecha(
             fecha, 
             usuario, 
-            "El usuario solicitó el cambio de fecha"
+            `El usuario solicitó el cambio de fecha al ${fecha.toLocaleString()}`
         )
 
         const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
@@ -310,5 +314,26 @@ export class TurnoService{
                 excluirTurnoId: turno.id
             })
 
+    }
+
+    async rechazarCambioFecha({ id, idUsuario }) {
+        const turnoSinConfirmar = await this.turnoRepository.findById(id)
+        const usuario = turnoSinConfirmar.obtenerUsuario(idUsuario)
+
+        if(!usuario || turnoSinConfirmar.destinatarioUltimoCambioEstado().id !== idUsuario){
+            throw new NotAllowedError("El usuario no puede rechazar este cambio de fecha")
+        }
+
+        turnoSinConfirmar.rechazarCambioFecha(usuario)
+
+        const notificacionRechazado = factoryNotificacion.crearSegunEstadoTurno(turnoSinConfirmar)
+
+        const [turno, notificacion] =
+            await Promise.all([
+                this.turnoRepository.save(turnoSinConfirmar),
+                this.notificacionRepository.save(notificacionRechazado)
+            ])
+
+        return { turno, notificacion }
     }
 }

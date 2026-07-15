@@ -47,6 +47,8 @@ class TurnoMapper{
 
         turno.paciente = paciente
         
+        turno.fechaHoraPropuesta = data.fechaHoraPropuesta ? new Date(data.fechaHoraPropuesta) : null
+
         const historialEstados = data.historialEstados ?
             await Promise.all (data.historialEstados.map(mongoCambioEstadoTurno =>
                 this.cambioEstadoTurnoMapper.mongoCambioEstadoTurnoToDomain(mongoCambioEstadoTurno, turno))
@@ -70,6 +72,8 @@ class TurnoMapper{
         return {
             id: turno.id,
             fechaHora: turno.fechaHora,
+            fechaHoraPropuesta: turno.fechaHoraPropuesta || null,
+            ultimoRemitenteId: turno.fechaHoraPropuesta ? turno.remitenteUltimoCambioEstado().id : null,
             estado: turno.estado,
             costo: turno.costo,
             medico: {
@@ -121,7 +125,8 @@ class TurnoMapper{
             costo: turno.costo,
             historialEstados: turno.historialEstados.map(
                 cambioEstadoTurno => this.cambioEstadoTurnoMapper.cambioEstadoTurnoToMongo(cambioEstadoTurno)
-            )
+            ),
+            fechaHoraPropuesta: turno.fechaHoraPropuesta
         }
     }
 }

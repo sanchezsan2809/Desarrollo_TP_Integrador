@@ -68,6 +68,12 @@ router.post(
     asyncHandler(controller.marcarComoConfirmado)
 )
 
+router.post(
+    "/:id/rechazar",
+    validate(modificarEstadoTurnoSchema),
+    asyncHandler(controller.rechazarCambioFecha)
+)
+
 router.patch(
     "/:id/realizado",
     validate(modificarEstadoTurnoSchema),

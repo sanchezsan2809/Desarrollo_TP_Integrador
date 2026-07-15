@@ -58,6 +58,11 @@ const turnoSchema = new mongoose.Schema({
         required: true
     },
 
+    fechaHoraPropuesta: {
+        type: Date,
+        required: false
+    }
+
 }, {
     timestamps: true,
     collection: 'turnos'

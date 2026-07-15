@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MisTurnosPage.css"
 import { turnosService } from "../../services/api";
@@ -6,6 +6,7 @@ import TurnoReservadoCard from "./TurnoReservadoCard"
 import MisTurnosTabs from "./MisTurnosTabs";
 import AgendaCalendar from "../../components/calendar/AgendaCalendar";
 import { useAuth } from "../../context/AuthContext.jsx";
+import TurnoDialogPaciente from "./TurnoDialogPaciente.jsx";
 
 const MisTurnosPage = () => {
     const { user, isPaciente, isAuthenticated } = useAuth();
@@ -14,6 +15,8 @@ const MisTurnosPage = () => {
     const [turnos, setTurnos] = useState([])
     const [loading, setLoading] = useState(true)
     const [estadoSeleccionado, setEstadoSeleccionado] = useState("RESERVADO")
+    // Estado para manejar el diálogo modal
+    const [turnoSeleccionado, setTurnoSeleccionado] = useState(null)
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -23,29 +26,28 @@ const MisTurnosPage = () => {
         }
     }, [isAuthenticated, isPaciente, navigate]);
 
-    useEffect(() => {
+    // Envolvemos cargarTurnos en useCallback para poder pasarla como callback de refresco
+    const cargarTurnos = useCallback(async () => {
         if (!isPaciente || !user?.perfilId) return;
-
-        async function cargarTurnos(){
-            try {
-                setLoading(true);
-                const respuesta = await turnosService.obtenerTurnosPaciente(
-                    user.perfilId,
-                    {
-                        estado: estadoSeleccionado
-                    }
-                )
-
-                setTurnos(respuesta.data || [])
-
-            } catch(e) {
-                console.error("Error al cargar los turnos del paciente:", e)
-            } finally {
-                setLoading(false)
-            }
+        try {
+            setLoading(true);
+            const respuesta = await turnosService.obtenerTurnosPaciente(
+                user.perfilId,
+                {
+                    estado: estadoSeleccionado
+                }
+            )
+            setTurnos(respuesta.data || [])
+        } catch(e) {
+            console.error("Error al cargar los turnos del paciente:", e)
+        } finally {
+            setLoading(false)
         }
+    }, [estadoSeleccionado, user, isPaciente]);
+
+    useEffect(() => {
         cargarTurnos()
-    }, [estadoSeleccionado, user, isPaciente])
+    }, [cargarTurnos])
 
     if (!isAuthenticated || !isPaciente) {
         return (
@@ -93,6 +95,8 @@ const MisTurnosPage = () => {
                                 <TurnoReservadoCard
                                     key={turno.id || turno._id}
                                     turno={turno}
+                                    // Pasamos la acción de abrir el modal a la tarjeta
+                                    onVerDetalle={() => setTurnoSeleccionado(turno)}
                                 />
                             ))}
                         </div>
@@ -103,12 +107,20 @@ const MisTurnosPage = () => {
                     <h2>Calendario</h2>
                     <AgendaCalendar
                         turnos={eventosCalendario}
-                        onSelectTurno={(turno)=>{
-                            console.log(turno)
-                        }}
+                        // Ahora al hacer clic en el calendario, se guarda el turno y se abre el modal
+                        onSelectEvent={(evento) => setTurnoSeleccionado(evento)}
+                        onSelectTurno={(evento) => setTurnoSeleccionado(evento)}
                     />
                 </section>
             </section>
+
+            {/* Renderizamos el modal en la parte inferior */}
+            <TurnoDialogPaciente
+                open={Boolean(turnoSeleccionado)}
+                turno={turnoSeleccionado}
+                onClose={() => setTurnoSeleccionado(null)}
+                onTurnoActualizado={cargarTurnos} // Refresca la lista y el calendario automáticamente al confirmar/rechazar
+            />
         </main>
     )
 }

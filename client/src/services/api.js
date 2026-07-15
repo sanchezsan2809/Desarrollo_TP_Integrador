@@ -123,6 +123,28 @@ export const turnosService = {
         }
     },
 
+    confirmarTurno: async (turnoId, usuarioId) => {
+        try {
+            const response = await api.post(`/turnos/${turnoId}/confirmar`, {
+                idUsuario: usuarioId
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response || new Error("No se pudo confirmar el cambio de fecha.");
+        }
+    },
+
+    rechazarCambioFecha: async (turnoId, usuarioId) => {
+        try {
+            const response = await api.post(`/turnos/${turnoId}/rechazar`, {
+                idUsuario: usuarioId
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response || new Error("No se pudo rechazar el cambio de fecha.");
+        }
+    },
+
     cancelar: async (idTurno, idUsuario, motivo) => {
         try {
             const response = await api.post(`/turnos/${idTurno}/cancelar`, {

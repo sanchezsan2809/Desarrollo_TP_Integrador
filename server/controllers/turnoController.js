@@ -150,6 +150,20 @@ export class TurnoController {
         res.status(200).json(data)
     }
 
+    rechazarCambioFecha = async (req, res) => {
+        const { id } = req.params
+        const { idUsuario } = req.body
+
+        const { turno, notificacion } = await this.turnoService.rechazarCambioFecha({ id, idUsuario })
+
+        const data = {
+            turno: turnoMapper.turnoToDTO(turno),
+            notificacion: notificacionMapper.notificacionToDTO(notificacion)
+        }
+
+        res.status(200).json(data)
+    }
+
     generarTurnosDisponibles = async (req, res) => {
         const turnosGuardados = await this.turnoService.generarTurnosDisponibles()
 

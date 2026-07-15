@@ -1,15 +1,12 @@
-import "./TurnoReservadoCard.css"
-
 import "./TurnoReservadoCard.css";
-
 import {
     FaUserDoctor,
     FaLocationDot,
     FaClock
 } from "react-icons/fa6";
 
-const TurnoReservadoCard = ({ turno }) => {
-
+// Recibe la nueva prop onVerDetalle
+const TurnoReservadoCard = ({ turno, onVerDetalle }) => {
     const fecha = new Date(turno.fechaHora);
 
     const meses = [
@@ -21,12 +18,11 @@ const TurnoReservadoCard = ({ turno }) => {
         "Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"
     ];
 
+    const tienePropuestaCambio = !!turno.fechaHoraPropuesta;
+
     return (
-
         <article className="turno-reservado-card">
-
             <div className="fecha-card">
-
                 <div className="mes">
                     {meses[fecha.getMonth()]}
                 </div>
@@ -46,73 +42,58 @@ const TurnoReservadoCard = ({ turno }) => {
                         minute: "2-digit"
                     })}
                 </div>
-
             </div>
 
             <div className="turno-info">
-
                 <div className="card-header">
-
                     <h2>{turno.servicio.nombre}</h2>
-
-                    <span className="estado">
-                        {turno.estado}
-                    </span>
-
+                    {/* Si tiene una propuesta de cambio, mostramos una etiqueta llamativa */}
+                    {tienePropuestaCambio ? (
+                        <span className="estado propuesta-pendiente">
+                            Reprog. Pendiente
+                        </span>
+                    ) : (
+                        <span className="estado">
+                            {turno.estado}
+                        </span>
+                    )}
                 </div>
 
                 <div className="detalle">
-
                     <FaUserDoctor className="icono" />
-
                     <p>
-
-                        <strong>Médico:</strong>{" "}
-
-                        {turno.medico.nombre}
-
+                        <strong>Médico:</strong> {turno.medico.nombre}
                     </p>
-
                 </div>
 
                 <div className="detalle">
-
                     <FaLocationDot className="icono" />
-
                     <p>
-
-                        <strong>Sede:</strong>{" "}
-
-                        {turno.sede.nombre}
-
+                        <strong>Sede:</strong> {turno.sede.nombre}
                     </p>
-
                 </div>
 
                 <div className="detalle">
-
                     <FaClock className="icono" />
-
                     <p>
-
                         <strong>Fecha:</strong>{" "}
-
                         {fecha.toLocaleDateString("es-AR")}{" "}
                         {fecha.toLocaleTimeString("es-AR", {
                             hour: "2-digit",
                             minute: "2-digit"
                         })}
-
                     </p>
-
                 </div>
 
+                {/* Botón para abrir el detalle/diálogo interactivo */}
+                <div className="card-footer-acciones">
+                    <button className="btn-ver-detalle" onClick={onVerDetalle}>
+                        {tienePropuestaCambio ? "Responder Propuesta" : "Ver Detalle"}
+                    </button>
+                </div>
             </div>
-
         </article>
-
     );
-
 };
 
 export default TurnoReservadoCard;

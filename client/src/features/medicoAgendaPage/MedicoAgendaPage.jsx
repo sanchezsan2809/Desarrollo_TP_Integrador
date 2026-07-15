@@ -7,7 +7,7 @@ import {
 
 import { useNavigate } from 'react-router-dom'
 import AgendaCalendar from '../../components/calendar/AgendaCalendar'
-import { useEffect, useState, useCallback } from 'react' // 🌟 Sumamos useCallback
+import { useEffect, useState, useCallback } from 'react'
 import { turnosService } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import TurnoDialog from '../../components/medico/TurnoDialog'
@@ -42,10 +42,10 @@ export default function MedicoAgendaPage() {
 
     const eventosCalendario = turnos.map(turno => {
         const inicio = new Date(turno.fechaHora);
-        const fin = new Date(inicio.getTime() + turno.servicio.duracionTurnoEnMins * 60000);
+        const fin = new Date(inicio.getTime() + (turno.servicio?.duracionTurnoEnMins ?? 30) * 60000);
         return {
-            ...turno,
-            title: turno.servicio.nombre,
+            ...turno, // Mantenemos el objeto entero de la BD intacto
+            title: `${turno.paciente?.nombre ?? 'Paciente'} - ${turno.servicio?.nombre ?? 'Turno'}`,
             start: inicio,
             end: fin
         };
@@ -56,7 +56,7 @@ export default function MedicoAgendaPage() {
             <Box
                 display="flex"
                 justifyContent="center"
-                alignItems="center"
+                alignInstance="center"
                 minHeight="60vh"
             >
                 <CircularProgress />

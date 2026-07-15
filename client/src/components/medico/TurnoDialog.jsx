@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import { turnosService } from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
@@ -52,7 +53,38 @@ export default function TurnoDialog({
     if (!turno) return null
 
     const esReservado = turno.estado === 'RESERVADO'
+    const tienePropuestaCambio = !!turno.fechaHoraPropuesta
 
+    // --- ACCIONES DE PROPUESTAS ---
+    const handleAceptarPropuesta = async () => {
+        try {
+            setLoading(true)
+            setErrorApi(null)
+            await turnosService.confirmarTurno(turno.id || turno._id, user.id)
+            if (onTurnoActualizado) onTurnoActualizado()
+            onClose()
+        } catch (error) {
+            setErrorApi(error.response?.data?.message || "No se pudo aceptar la reprogramación.")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleRechazarPropuesta = async () => {
+        try {
+            setLoading(true)
+            setErrorApi(null)
+            await turnosService.rechazarCambioFecha(turno.id || turno._id, user.id)
+            if (onTurnoActualizado) onTurnoActualizado()
+            onClose()
+        } catch (error) {
+            setErrorApi(error.response?.data?.message || "No se pudo rechazar la reprogramación.")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    // --- ACCIONES MÉDICAS STANDARD ---
     const cancelarTurno = async () => {
         const motivoInvalido = !motivo.trim()
         setErrorMotivo(motivoInvalido)
@@ -61,8 +93,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            
-            await turnosService.cancelar(turno.id, user.id, motivo)
+            await turnosService.cancelar(turno.id || turno._id, user.id, motivo)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -76,15 +107,11 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            console.log("Turno recibido en el diálogo:", turno)
-            console.log("Médico:", turno?.medico)
-            console.log("Usuario del médico:", turno?.medico?.usuario)
-            console.log("Usuario autenticado:", user)
-            await turnosService.marcarComoRealizado(turno.id, user.id)
+            await turnosService.marcarComoRealizado(turno.id || turno._id, user.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
-            setErrorApi(error.message   || "No se pudo marcar el turno como realizado.")
+            setErrorApi(error.message || "No se pudo marcar el turno como realizado.")
         } finally {
             setLoading(false)
         }
@@ -99,7 +126,7 @@ export default function TurnoDialog({
             setLoading(true)
             setErrorApi(null)
             const fechaISO = new Date(nuevaFecha).toISOString();
-            await turnosService.proponerCambioFecha(turno.id, user.id, fechaISO)
+            await turnosService.proponerCambioFecha(turno.id || turno._id, user.id, fechaISO)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -108,6 +135,12 @@ export default function TurnoDialog({
             setLoading(false)
         }
     }
+
+    // Formatear fechas legibles
+    const fechaOriginalFormateada = new Date(turno.fechaHora).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' })
+    const fechaPropuestaFormateada = tienePropuestaCambio 
+        ? new Date(turno.fechaHoraPropuesta).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' }) 
+        : null
 
     return (
         <Dialog
@@ -119,7 +152,7 @@ export default function TurnoDialog({
         >
             <DialogTitle className="turno-dialog-title">
                 Detalles del Turno
-                <IconButton aria-label="close" onClick={onClose} sx={{ color: (theme) => theme.palette.grey[500] }}>
+                <IconButton aria-label="close" onClick={onClose} sx={{ position: 'absolute', right: 12, top: 12, color: (theme) => theme.palette.grey[500] }}>
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -146,10 +179,31 @@ export default function TurnoDialog({
                     </Typography>
 
                     <Typography>
+                        <strong>Fecha Original:</strong> {fechaOriginalFormateada}
+                    </Typography>
+
+                    <Typography>
                         <strong>Estado:</strong> {turno.estado}
                     </Typography>
 
-                    {esReservado && (
+                    {/* SECCIÓN VISUAL DE PROPUESTA PENDIENTE */}
+                    {tienePropuestaCambio && (
+                        <Box sx={{ p: 2, bgcolor: '#fff3e0', border: '1px solid #ffcc80', borderRadius: '12px' }}>
+                            <Typography variant="subtitle2" sx={{ color: '#d35400', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                ⚠️ PROPUESTA DE CAMBIO PENDIENTE
+                            </Typography>
+                            <Typography variant="body2" sx={{ mt: 1 }}>
+                                {turno.ultimoRemitenteId === user.id ? (
+                                    <>Propusiste mover el turno al: <strong>{fechaPropuestaFormateada}</strong></>
+                                ) : (
+                                    <>El paciente solicitó mover el turno al: <strong>{fechaPropuestaFormateada}</strong></>
+                                )}
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {/* Solo mostramos los inputs tradicionales si NO hay una propuesta esperando */}
+                    {esReservado && !tienePropuestaCambio && (
                         <Stack spacing={2} className="turno-acciones-box">
                             <Typography variant="subtitle2" sx={{ color: '#2e5a27', fontWeight: 'bold' }}>
                                 Acciones Médicas
@@ -191,39 +245,80 @@ export default function TurnoDialog({
             </DialogContent>
 
             <DialogActions className="turno-dialog-actions">
-                {esReservado && (
-                    <Stack direction="row" spacing={1.5} alignItems="center">
-                        <Button
-                            variant="outlined"
-                            startIcon={<DateRangeIcon />}
-                            onClick={proponerCambio}
-                            disabled={loading}
-                            className="turno-btn"
-                        >
-                            Proponer cambio
-                        </Button>
+                {tienePropuestaCambio ? (
+                    /* CASO A: Hay una propuesta de cambio activa */
+                    turno.ultimoRemitenteId !== user.id ? (
+                        // El cambio lo inició el paciente -> El médico lo puede responder
+                        <Stack direction="row" spacing={1.5} width="100%" justifyContent="flex-end">
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                startIcon={<HighlightOffIcon />}
+                                onClick={handleRechazarPropuesta}
+                                disabled={loading}
+                                className="turno-btn"
+                            >
+                                Rechazar Cambio
+                            </Button>
+                            <Button
+                                variant="contained"
+                                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CheckCircleOutlineIcon />}
+                                onClick={handleAceptarPropuesta}
+                                disabled={loading}
+                                className="turno-btn"
+                                sx={{ backgroundColor: '#e67e22 !important', '&:hover': { backgroundColor: '#d35400 !important' } }}
+                            >
+                                Aceptar Cambio
+                            </Button>
+                        </Stack>
+                    ) : (
+                        // El cambio lo inició el médico -> Solo ve botón para cerrar
+                        <Stack direction="row" spacing={1.5} width="100%" justifyContent="flex-end">
+                            <Typography variant="body2" color="text.secondary" sx={{ alignSelf: 'center', mr: 2, fontStyle: 'italic' }}>
+                                Esperando confirmación del paciente...
+                            </Typography>
+                            <Button variant="contained" onClick={onClose} className="turno-btn" sx={{ backgroundColor: '#418B18 !important', color: 'white !important', '&:hover': { backgroundColor: '#326d11 !important' } }}>
+                                Cerrar
+                            </Button>
+                        </Stack>
+                    )
+                ) : (
+                    /* CASO B: Turno normal (Acciones estándar) */
+                    esReservado && (
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Button
+                                variant="outlined"
+                                startIcon={<DateRangeIcon />}
+                                onClick={proponerCambio}
+                                disabled={loading}
+                                className="turno-btn"
+                            >
+                                Proponer cambio
+                            </Button>
 
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            startIcon={<CancelOutlinedIcon />}
-                            onClick={cancelarTurno}
-                            disabled={loading}
-                            className="turno-btn"
-                        >
-                            Cancelar Turno
-                        </Button>
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                startIcon={<CancelOutlinedIcon />}
+                                onClick={cancelarTurno}
+                                disabled={loading}
+                                className="turno-btn"
+                            >
+                                Cancelar Turno
+                            </Button>
 
-                        <Button
-                            variant="contained"
-                            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CheckCircleOutlineIcon />}
-                            onClick={marcarRealizado}
-                            disabled={loading}
-                            className="turno-btn turno-btn-success"
-                        >
-                            {loading ? 'Procesando...' : 'Marcar Realizado'}
-                        </Button>
-                    </Stack>
+                            <Button
+                                variant="contained"
+                                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CheckCircleOutlineIcon />}
+                                onClick={marcarRealizado}
+                                disabled={loading}
+                                className="turno-btn turno-btn-success"
+                                sx={{ backgroundColor: '#418B18 !important', '&:hover': { backgroundColor: '#326d11 !important' } }}
+                            >
+                                Marcar Realizado
+                            </Button>
+                        </Stack>
+                    )
                 )}
             </DialogActions>
         </Dialog>

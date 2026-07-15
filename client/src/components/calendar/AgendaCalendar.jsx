@@ -14,6 +14,7 @@ export default function AgendaCalendar({ turnos = [], onSelectTurno }) {
     );
 
     const eventStyleGetter = (evento) => {
+        // Colores base de los estados
         const colores = {
             RESERVADO: "#418B18",
             CONFIRMADO: "#1976D2",
@@ -21,12 +22,17 @@ export default function AgendaCalendar({ turnos = [], onSelectTurno }) {
             REALIZADO: "#757575"
         };
 
+        // Si tiene una propuesta de cambio pendiente de confirmación, le damos color distintivo
+        const tienePropuestaPendiente = !!evento.fechaHoraPropuesta;
+        const colorFondo = tienePropuestaPendiente ? "#E67E22" : (colores[evento.estado] || "#418B18");
+
         return {
             style: {
-                backgroundColor: colores[evento.estado] || "#418B18",
-                border: "none",
+                backgroundColor: colorFondo,
+                border: tienePropuestaPendiente ? "2px dashed #D35400" : "none", // Borde punteado si es propuesta
                 borderRadius: "8px",
-                color: "white"
+                color: "white",
+                fontWeight: tienePropuestaPendiente ? "bold" : "normal"
             }
         };
     };
