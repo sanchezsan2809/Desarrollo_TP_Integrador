@@ -1,4 +1,4 @@
-import { usuarioMapper } from "../middlewares/mappers/usuarioMapper";
+import { usuarioMapper } from "../middlewares/mappers/usuarioMapper.js";
 
 export class UsuarioController {
 

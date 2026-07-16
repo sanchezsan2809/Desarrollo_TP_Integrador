@@ -338,7 +338,5 @@ async function ejecutarSeed() {
         await mongoose.disconnect();
     }
 }
-
-ejecutarSeed()
-
+await ejecutarSeed();
 export { ejecutarSeed };

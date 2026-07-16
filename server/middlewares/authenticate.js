@@ -1,5 +1,5 @@
-import { UnauthorizedError } from "../errors/appError";
-import { verifyToken } from "../infrastructure/keycloak/keycloakVerifier";
+import { UnauthorizedError } from "../errors/appError.js";
+import { verifyToken } from "../infrastructure/keycloak/keycloakVerifier.js";
 
 export const authenticate = 
     async(req, res, next) => {
