@@ -16,44 +16,19 @@
     color: #5a6470;
 }
 
-.login-card-link {
-    color: #2c3e50;
-    text-decoration: none;
-    font-family: "Sour Gummy", sans-serif;
-    font-size: 0.9rem;
-    transition: color 0.15s ease;
-}
-
-.login-card-link:hover {
-    font-family: "Sour Gummy", sans-serif;
-    color: #3e8f14;
-}
-
-.login-card-footer-text {
-    font-family: "Sour Gummy", sans-serif;
-    color: #5a6470;
-}
-
 /* ==========================================================
-   NUEVO: Arreglo responsivo forzado para celulares
+   Arreglo responsivo optimizado para móviles
    ========================================================== */
 @media (max-width: 600px) {
-    /* Combinamos tu clase con la de MUI que me marcaste */
     .MuiPaper-root.login-card {
-        position: fixed !important;
-        top: 80px !important;
-        
-        /* Reseteamos los desplazamientos raros y centramos en la pantalla */
-        left: 0 !important;
-        right: 0 !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        
-        /* Le damos un ancho fijo controlado para que no se estire ni tape de más */
-        width: 320px !important; 
-        max-width: 90vw !important;
-        
+        display: flex !important;
+        flex-direction: column !important;
         box-sizing: border-box !important;
-        z-index: 9999 !important;
+
+        height: auto !important;
+        min-height: max-content !important; 
+        
+        max-height: calc(100vh - 100px) !important; 
+        overflow-y: auto !important; 
     }
 }

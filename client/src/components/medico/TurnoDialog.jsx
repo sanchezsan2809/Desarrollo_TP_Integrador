@@ -31,7 +31,7 @@ export default function TurnoDialog({
     onTurnoActualizado
 }) {
     const { user } = useAuth() 
-
+    console.log("Usuario del AuthContext:", user)
     const [motivo, setMotivo] = useState('')
     const [nuevaFecha, setNuevaFecha] = useState('')
 
@@ -60,7 +60,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.confirmarTurno(turno.id || turno._id, user.id)
+            await turnosService.confirmarTurno(turno.id || turno._id, user.usuario.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -74,7 +74,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.rechazarCambioFecha(turno.id || turno._id, user.id)
+            await turnosService.rechazarCambioFecha(turno.id || turno._id, user.usuario.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -93,7 +93,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.cancelar(turno.id || turno._id, user.id, motivo)
+            await turnosService.cancelar(turno.id || turno._id, user.usuario.id, motivo)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -107,7 +107,7 @@ export default function TurnoDialog({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.marcarComoRealizado(turno.id || turno._id, user.id)
+            await turnosService.marcarComoRealizado(turno.id || turno._id, user.usuario.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -126,7 +126,7 @@ export default function TurnoDialog({
             setLoading(true)
             setErrorApi(null)
             const fechaISO = new Date(nuevaFecha).toISOString();
-            await turnosService.proponerCambioFecha(turno.id || turno._id, user.id, fechaISO)
+            await turnosService.proponerCambioFecha(turno.id || turno._id, user.usuario.id, fechaISO)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -193,7 +193,7 @@ export default function TurnoDialog({
                                 ⚠️ PROPUESTA DE CAMBIO PENDIENTE
                             </Typography>
                             <Typography variant="body2" sx={{ mt: 1 }}>
-                                {turno.ultimoRemitenteId === user.id ? (
+                                {turno.ultimoRemitenteId === user.usuario.id ? (
                                     <>Propusiste mover el turno al: <strong>{fechaPropuestaFormateada}</strong></>
                                 ) : (
                                     <>El paciente solicitó mover el turno al: <strong>{fechaPropuestaFormateada}</strong></>
@@ -247,7 +247,7 @@ export default function TurnoDialog({
             <DialogActions className="turno-dialog-actions">
                 {tienePropuestaCambio ? (
                     /* CASO A: Hay una propuesta de cambio activa */
-                    turno.ultimoRemitenteId !== user.id ? (
+                    turno.ultimoRemitenteId !== user.usuario.id ? (
                         // El cambio lo inició el paciente -> El médico lo puede responder
                         <Stack direction="row" spacing={1.5} width="100%" justifyContent="flex-end">
                             <Button

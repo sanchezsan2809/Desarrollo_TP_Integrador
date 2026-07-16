@@ -61,7 +61,7 @@ export default function TurnoDialogPaciente({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.confirmarTurno(turno.id, user.id)
+            await turnosService.confirmarTurno(turno.id, user.usuario.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -76,7 +76,7 @@ export default function TurnoDialogPaciente({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.rechazarCambioFecha(turno.id, user.id)
+            await turnosService.rechazarCambioFecha(turno.id, user.usuario.id)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -95,7 +95,7 @@ export default function TurnoDialogPaciente({
         try {
             setLoading(true)
             setErrorApi(null)
-            await turnosService.cancelar(turno.id, user.id, motivoCancelacion)
+            await turnosService.cancelar(turno.id, user.usuario.id, motivoCancelacion)
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
         } catch (error) {
@@ -120,7 +120,7 @@ export default function TurnoDialogPaciente({
             const fechaISO = new Date(nuevaFechaHora).toISOString();
             
             // Enviamos la fecha formateada correctamente
-            await turnosService.proponerCambioFecha(turno.id, user.id, fechaISO)
+            await turnosService.proponerCambioFecha(turno.id, user.usuario.id, fechaISO)
             
             if (onTurnoActualizado) onTurnoActualizado()
             onClose()
@@ -189,7 +189,7 @@ export default function TurnoDialogPaciente({
                                 ⚠️ PROPUESTA DE REPROGRAMACIÓN
                             </Typography>
                             <Typography variant="body2" sx={{ mt: 1 }}>
-                                El profesional médico ha propuesto reprogramar este turno para el: <br />
+                               Se espera la confirmación para la reprogramación de este turno para el: <br />
                                 <strong>{fechaPropuestaFormateada}</strong>
                             </Typography>
                         </Box>
@@ -242,7 +242,7 @@ export default function TurnoDialogPaciente({
             <DialogActions className="turno-dialog-actions">
                 {tienePropuestaCambio ? (
                     /* CASO A: Hay una propuesta de cambio de fecha activa */
-                    turno.ultimoRemitenteId !== user.id ? (
+                    turno.ultimoRemitenteId !== user.usuario.id ? (
                         <Stack direction="row" spacing={1.5}>
                             <Button
                                 variant="outlined"

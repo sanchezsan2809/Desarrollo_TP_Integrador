@@ -23,7 +23,10 @@ const BRAND_GREEN_HOVER = '#34780f'
 const BRAND_TEXT = '#2c3e50'
 
 const textFieldSx = {
+    // Forzamos a que el TextField mantenga siempre una altura mínima saludable
+    minHeight: '56px', 
     '& .MuiOutlinedInput-root': {
+        height: '56px', // Asegura que la caja del input no se reduzca a 0px
         borderRadius: '12px',
         fontFamily: '"Sour Gummy", sans-serif',
         '& fieldset': {
@@ -38,38 +41,33 @@ const textFieldSx = {
     },
     '& .MuiInputLabel-root': {
         fontFamily: '"Sour Gummy", sans-serif',
+        // Aseguramos que la etiqueta se posicione correctamente al transformarse
+        transform: 'translate(14px, 16px) scale(1)', 
+        '&.MuiInputLabel-shrink': {
+            transform: 'translate(14px, -9px) scale(0.75)', // Esto evita que colisione al irse arriba
+        },
         '&.Mui-focused': {
             color: BRAND_GREEN
         }
     }
 }
 
-//TODO Al cerrar sesión se debería retornar a Home
-
 const LoginCard = ({ onClose }) => {
-
     const [username, setUsername] = useState('')
-    
     const [password, setPassword] = useState('')
-
     const [loading, setLoading] = useState(false)
-
     const [error, setError] = useState('')
 
     const navigate = useNavigate()
-
     const { login: authLogin } = useAuth()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
         setError('')
         setLoading(true)
 
-        try{
-
+        try {
             const tokens = await login(username, password);
-
             const me = await usuariosService.obtenerUsuarioActual(tokens.access_token);
 
             authLogin({
@@ -84,21 +82,16 @@ const LoginCard = ({ onClose }) => {
                 case "MEDICO":
                     navigate("/medico");
                     break;
-
                 case "ADMIN":
                     navigate("/admin");
                     break;
-
                 default:
                     navigate("/");
                     break;
             }
-
-            
-
-        } catch(err){
+        } catch(err) {
             setError('Usuario o contraseña incorrectos')
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -107,22 +100,26 @@ const LoginCard = ({ onClose }) => {
         <Card
             className="login-card"
             sx={{
-                position: 'absolute',
-                top: '60px',
-                right: 0,
-
-                width: 340,
+                position: { xs: 'fixed', sm: 'absolute' },
+                // En móviles lo despegamos un poco más del header de emergencias
+                top: { xs: '85px', sm: '60px' }, 
+                right: { xs: '50%', sm: 0 },
+                transform: { xs: 'translateX(50%)', sm: 'none' }, 
+                
+                width: { xs: '90%', sm: 340 },
+                maxWidth: '340px',
+                minWidth: '280px',
 
                 borderRadius: '16px',
                 border: '1px solid #e8eef5',
                 boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12)',
 
-                p: 3,
+                p: { xs: 2.5, sm: 3 }, 
                 zIndex: 1000,
-                fontFamily: '"Sour Gummy", sans-serif'
+                fontFamily: '"Sour Gummy", sans-serif',
+                boxSizing: 'border-box'
             }}
         >
-            {}
             <Box
                 display="flex"
                 justifyContent="space-between"
@@ -161,24 +158,26 @@ const LoginCard = ({ onClose }) => {
                     severity="error"
                     sx={{
                         fontFamily: '"Sour Gummy", sans-serif',
-                        borderRadius: '12px'
+                        borderRadius: '12px',
+                        mb: 1.5
                     }}
                 >
                     {error}
                 </Alert>
             )}
 
-            {}
             <Box
                 component="form"
                 onSubmit={handleSubmit}
-                mt={2}
+                mt={1}
             >
-                <Stack spacing={2}>
-
+                {/* Usamos flexGrow: 0 y prevenimos que Stack encoja sus elementos hijos
+                */}
+                <Stack spacing={2.5} sx={{ '& > *': { flexShrink: 0 } }}>
                     <TextField
                         label="Usuario"
                         type="text"
+                        name="username"
                         fullWidth
                         required
                         value={username}
@@ -189,6 +188,7 @@ const LoginCard = ({ onClose }) => {
                     <TextField
                         label="Contraseña"
                         type="password"
+                        name="password"
                         fullWidth
                         required
                         value={password}
@@ -209,6 +209,7 @@ const LoginCard = ({ onClose }) => {
                             fontFamily: '"Sour Gummy", sans-serif',
                             fontWeight: 600,
                             fontSize: '1rem',
+                            height: '48px', // Altura fija garantizada para el botón
                             backgroundColor: BRAND_GREEN,
                             boxShadow: 'none',
                             '&:hover': {
@@ -217,22 +218,16 @@ const LoginCard = ({ onClose }) => {
                             }
                         }}
                     >
-                        {
-                            loading
-                                ? 'Ingresando...'
-                                : 'Iniciar sesión'
-                        }
+                        {loading ? 'Ingresando...' : 'Iniciar sesión'}
                     </Button>
-
                 </Stack>
             </Box>
 
-            
             <Box
-                mt={3}
+                mt={2.5}
                 display="flex"
                 flexDirection="column"
-                gap={1}
+                gap={1.5}
             >
                 <Link to="/recuperar-password" className="login-card-link">
                     ¿Olvidaste tu contraseña?
