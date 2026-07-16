@@ -59,6 +59,12 @@ const Navbar = () => {
         }
     }, [mostrarLogin])
 
+    const handleLogout = () => {
+        logout();
+        setMenuUsuarioAbierto(false);
+        navigate("/");
+    };
+
     const userMenuItems = [
         ...(isPaciente
             ? [{
@@ -70,7 +76,7 @@ const Navbar = () => {
         {
             type: 'button',
             label: 'Cerrar sesión',
-            onClick: logout,
+            onClick: handleLogout,
             isLogout: true
         }
     ]

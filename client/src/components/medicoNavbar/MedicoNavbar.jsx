@@ -1,6 +1,6 @@
 import './MedicoNavbar.css'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import EventNoteIcon from '@mui/icons-material/EventNote'
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices'
@@ -20,17 +20,24 @@ import CloseIcon from "@mui/icons-material/Close";
 import MobileMenu from "../header/MobileMenu.jsx";
 
 export default function MedicoNavbar() {
+    const navigate = useNavigate()
 
     const [menuOpen, setMenuOpen] = useState(false)
     const [menuUsuarioAbierto, setMenuUsuarioAbierto] = useState(false)
     const userContainerRef = useRef(null)
     const { logout } = useAuth()
 
+    const handleLogout = () => {
+        logout()
+        setMenuUsuarioAbierto(false)
+        navigate('/')
+    }
+
     const userMenuItems = [
         {
             type: 'button',
             label: 'Cerrar sesión',
-            onClick: logout,
+            onClick: handleLogout,
             isLogout: true
         }
     ]
