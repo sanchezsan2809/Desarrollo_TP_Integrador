@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
 
         setUser(null)
 
-        window.location.reload()
+       
     }
 
     return (
