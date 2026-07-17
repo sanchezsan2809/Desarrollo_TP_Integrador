@@ -305,7 +305,7 @@
 
     .navbar-seccion.right .search-container,
     .navbar-seccion.right .searchbar-wrapper,
-    .navbar-seccion.right input {
+    .navbar-seccion.right .search-container input {
         display: none !important;
     }
 }
